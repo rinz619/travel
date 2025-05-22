@@ -88,7 +88,7 @@ class dashboard(LoginRequiredMixin, View):
 
 
 
-# Banner module start
+# Agents module start
 class agentslist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
@@ -181,7 +181,10 @@ class agentscreate(LoginRequiredMixin, View):
         data.save()
         return redirect('superadmin:agentslist')
 
-    # Banner module end
+    # Agents module end
+
+
+
 
 
 

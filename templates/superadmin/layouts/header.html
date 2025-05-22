@@ -55,8 +55,8 @@
                   <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <div class="drop-heading">
                       <div class="text-center">
-                        <h5 class="text-dark mb-0 fs-14 fw-semibold">Username</h5>
-                        <small class="text-muted">Admin</small>
+                        <h5 class="text-dark mb-0 fs-14 fw-semibold">{{request.user.name}}</h5>
+                        <small class="text-muted">{% if request.user.user_type == 1 %}Superadmin{% elif request.user.user_type == 2 %}Sub admin{% elif request.user.user_type == 3 %}Agent{% endif %}</small>
                       </div>
                     </div>
                     <div class="dropdown-divider m-0"></div>
