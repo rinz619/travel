@@ -150,7 +150,7 @@
 /*Transparent variables*/
 /* ###### Bootstrap ###### */
 :root {
-    --primary-bg-color: #4BA210 ;
+    --primary-bg-color: #a21010 ;
     --primary-bg-hover: #4BA210;
     --primary-bg-border: #8DEC4C;
     --dark-body: #292e4a;
@@ -76098,5 +76098,14 @@ th, td {
         width: 60% !important;
     }
 }
+.side-menu__label{
+    color:#fff;
+}
+.app-sidebar{
+        background: #5b5b5b !important; 
+}
+.side-menu .side-menu__icon{
+    color:#fff !important; 
 
+}
 /*# sourceMappingURL=style.css.map */
