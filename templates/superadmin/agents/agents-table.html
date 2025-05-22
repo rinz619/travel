@@ -17,10 +17,12 @@
             <!-- <th>sequence</th> -->
             <th>Thumbnail</th>
             <th>Agent ID</th>
-            <th>Name</th>
+            <th>Agency Name</th>
+            <th>Contact Person</th>
             <th>phone</th>
             <th>username</th>
             <th>password</th>
+            <th>Address</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -43,9 +45,11 @@
                 {% endif %}</td>
                 <td><b>{{i.unique_id}}</b></td>
                 <td>{{i.name}}</td>
+                <td>{{i.contactperson}}</td>
             <td>{{i.phone}}</td>
             <td><b>{{i.email}}</b></td>
             <td><b>{{i.password_text}}</b></td>
+            <td><b>{{i.address}}</b></td>
            
                 <td>
                     <div class="material-switch">

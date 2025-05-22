@@ -170,10 +170,16 @@ class agentscreate(LoginRequiredMixin, View):
             messages.info(request, 'Successfully Added')
 
         uploaded_file = request.FILES.get('imagefile')
+        attachment = request.FILES.get('attachment')
         if uploaded_file:
             data.image = uploaded_file
+        if attachment:
+            data.attachement = attachment
         data.user_type = 3
+        data.address = request.POST.get('address')
         data.name = request.POST.get('name')
+        data.contactperson = request.POST.get('contactperson')
+        data.trn = request.POST.get('trn')
         data.phone = request.POST.get('phone')
         data.email = request.POST.get('email')
         data.password_text = request.POST.get('password')
