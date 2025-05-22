@@ -1,0 +1,99 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Agents</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:agentslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                         <form method="post" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 col-xl-4 col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Add New Agents</h4>
+                                    </div>
+                                    <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-sm-12 mb-4 mb-lg-0">
+                                                    <input
+                                                type="file"
+                                                class="dropify"
+                                                data-bs-height="180"
+                                                {% if not data %}
+                                                required
+                                                {% endif %}
+                                                name="imagefile"
+                                                accept=".jpg,.png,.jpeg"
+                                                data-default-file="{{data.image.url}}"
+                                              />
+                                                </div>
+                                               
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+						<div class="col-md-8 col-xl-8 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        
+                                            <div class="row">
+
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Name</label>
+                                                    <input type="text" name="name" required id="" class="form-control" placeholder="First Name " value="{{data.name}}" >
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Phone</label>
+                                                    <input type="number" name="phone" required id="" class="form-control" placeholder="Phone" value="{{data.phone}}" >
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Email</label>
+                                                    <input type="text" name="email" required id="" class="form-control" placeholder="Email" value="{{data.email}}" >
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Password</label>
+                                                    <input type="text" name="password" required id="" class="form-control" placeholder="Password" value="{{data.password_text}}" >
+
+                                                </div>
+                                               
+												
+                   
+												
+											<div class="form-group col-lg-12 col-12">
+                                                <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+											</div>
+											
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+
+                    </div>
+                </form>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            </div>
+            <!--app-content close-->
+			
+            {% include 'superadmin/layouts/footer.html' %}

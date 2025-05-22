@@ -1,0 +1,132 @@
+<input type="hidden" id="url" name="url" value="{{request.path}}">
+<input type="hidden" id="page" name="page" value="{{page}}">
+
+{% if messages %}
+<div id="message_div" class="succs-msg cutomAlert">
+    {% for message in messages %}
+      
+            <p>{{message}}</p>
+        
+    {% endfor %}
+</div>
+{% endif %}
+<table class="table border-top table-bordered mb-0 table-hover">
+    <thead>
+        <tr>
+            <th>Sl No</th>
+            <!-- <th>sequence</th> -->
+            <th>Thumbnail</th>
+            <th>Agent ID</th>
+            <th>Name</th>
+            <th>phone</th>
+            <th>username</th>
+            <th>password</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if datas %}
+        {% for i in datas %}
+        <tr>
+            <td>{{forloop.counter0|add:datas.start_index}}</td> 
+            <!-- <td></td> -->
+            <td>{% if i.image %}
+                <ul id="lightgallery" style="display: flex;">
+                    <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
+                    <a href="javascript:void(0)">
+                    <img class="img-responsive br-5" src="{{i.image.url}}" alt="Thumb-1">
+                    </a>
+                    </li>
+                    
+                </ul>
+                {% endif %}</td>
+                <td><b>{{i.unique_id}}</b></td>
+                <td>{{i.name}}</td>
+            <td>{{i.phone}}</td>
+            <td><b>{{i.email}}</b></td>
+            <td><b>{{i.password_text}}</b></td>
+           
+                <td>
+                    <div class="material-switch">
+                             <input id="someSwitchOptionSuccess{{i.id}}" name="someSwitchOption001" type="checkbox" {% if i.is_active %}checked onclick="categorystatus({{i.id}},2)"{% else %}onclick="categorystatus({{i.id}},1)" {% endif %}  />
+                             <label for="someSwitchOptionSuccess{{i.id}}" class="label-success"></label>
+                         </div>
+               </td>
+              
+               <td>
+                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:agentsedit' i.id %}"><i
+                           class="side-menu__icon fe fe-edit"></i></a>
+                   <a class="btn btn-danger btn-sm mb-1" href="#"><i
+                           class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
+               </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="10" align="center">
+                    No Data
+                </td>
+            </tr>
+            {% endif %}
+    </tbody>
+    </table>
+    
+    
+    <div class="card-body  text-center mt-5">
+    <div>
+    Showing {{ datas.start_index }}-{{ datas.end_index }} of {{ datas.paginator.count }}
+    </div>
+    {% if datas.has_other_pages %}
+    <ul class="pagination pt-4">
+    
+    {% if datas.number == 1 %}
+    <li class="page-item disabled">
+    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">First</a>
+    </li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="return filtercategory('{{ 1 }}');">First</a></li>
+    
+    {% endif %}
+    {% if datas.has_previous %}
+    <li class="page-item page-prev">
+    <a class="page-link" href="javascript:void(0)" onclick="return filtercategory('{{ datas.previous_page_number }}');" tabindex="-1">Prev</a>
+    </li>
+    {% else %}
+    <li class="page-item page-prev">
+    <span class="page-link"   tabindex="-1">Prev</span>
+    </li>
+    {% endif %}
+    {% for i in datas.paginator.page_range %}
+    {% if datas.number == i %}
+    <li class="page-item active"><span class="page-link">
+    {{ i }}</span><span class="sr-only">(current)</span></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="return filtercategory('{{ i }}');">{{i}}</a></li>
+    {% endif %}
+    {% endfor %}
+    
+    {% if datas.has_next %}
+    <li class="page-item page-next">
+    <a class="page-link" href="javascript:void(0)" onclick="return filtercategory('{{ datas.next_page_number }}');">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item page-next"><span class="page-link">Next</span></li>
+    {% endif %}
+    {% if datas.number == datas.paginator.num_pages %}
+    <li class="page-item disabled">
+    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Last</a>
+    </li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="return filtercategory('{{ datas.paginator.num_pages }}');">Last</a></li>
+    {% endif %}
+    </ul>
+    {% endif %}
+    <!-- pagination-wrapper -->
+    </div>
+    
+    <script>
+    $("#message_div").fadeOut(3000);
+    </script>
+    
+    

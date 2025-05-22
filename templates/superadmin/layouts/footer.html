@@ -1,0 +1,409 @@
+
+{% load static %}
+        </div>
+
+
+
+      
+
+        <!-- FOOTER -->
+<!-- 
+        <footer class="footer">
+
+            <div class="container">
+
+                <div class="row align-items-center flex-row-reverse">
+
+                    <div class="col-md-12 col-sm-12 text-center">
+
+                        Copyright © <span id="year"></span> <a href="">ExamWinner Admin</a> All rights reserved.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </footer> -->
+
+        <!-- FOOTER END -->
+
+
+
+    </div>
+
+    <div class="modal  fade" id="modaldemo5" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered text-center" role="document">
+            <div class="modal-content ">
+                
+                <div class="modal-body">
+                    <button aria-label="Close" class="btn-close position-absolute" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <i class="icon icon-close fs-70 text-danger lh-1 my-5 d-inline-block"></i>
+                    <h4 class="text-danger">Are You Sure Do You Want To Delete ?</h4>
+                    <p class="mg-b-20 mg-x-20">Item Will be Deleted Permanently</p>
+                    <input type="hidden" id="hid">
+                    <button class="btn btn-success" onclick="deletecategory()">Yes</button>
+                    <button aria-label="Close" class="btn btn-danger pd-x-25" data-bs-dismiss="modal">Cancel</button>
+                </div>
+                <div class="modal-footer">
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>	
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default action
+                document.getElementById('import_submit').click(); // Trigger the modal
+            }
+        });
+    </script>
+
+    <div class="loading_pop"  style="display: none;" id="loaderid">
+
+        <div class="spinner-border text-light" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+       </div>
+    
+    
+    </div>
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function() {
+            document.getElementById("submitButton").disabled = true;
+        });
+    </script>
+
+    <!-- BACK-TO-TOP -->
+
+    <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+
+    <!-- JQUERY JS -->
+
+    <script src="{% static 'superadmin/assets/js/jquery.min.js' %}"></script>
+
+
+
+    <!-- BOOTSTRAP JS -->
+
+    <script src="{% static 'superadmin/assets/plugins/bootstrap/js/popper.min.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+	
+
+    <!-- SPARKLINE JS-->
+
+    <script src="{% static 'superadmin/assets/js/jquery.sparkline.min.js' %}"></script>
+
+
+
+    <!-- Sticky js -->
+
+    <script src="{% static 'superadmin/assets/js/sticky.js' %}"></script>
+
+
+
+    <!-- CHART-CIRCLE JS-->
+
+   
+
+
+
+   
+
+
+
+    <!-- SIDEBAR JS -->
+
+    <script src="{% static 'superadmin/assets/plugins/sidebar/sidebar.js' %}"></script>
+
+
+
+   
+
+   
+
+    <!-- INTERNAL Flot JS -->
+
+    <script src="{% static 'superadmin/assets/plugins/flot/jquery.flot.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/flot/jquery.flot.fillbetween.js' %}"></script>
+
+   <script src="{% static 'superadmin/assets/plugins/p-scroll/perfect-scrollbar.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/p-scroll/pscroll.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/p-scroll/pscroll-1.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/flot/dashboard.sampledata.js' %}"></script>
+
+
+
+    
+
+
+
+    <!-- SIDE-MENU JS-->
+
+    <script src="{% static 'superadmin/assets/plugins/sidemenu/sidemenu.js' %}"></script>
+
+	
+
+	<script src="{% static 'superadmin/assets/plugins/date-picker/date-picker.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/date-picker/jquery-ui.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/input-mask/jquery.maskedinput.js' %}"></script>
+
+	
+
+    <script src="{% static 'superadmin/assets/plugins/fileuploads/js/fileupload.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/fileuploads/js/file-upload.js' %}"></script>
+
+	
+
+	<script src="{% static 'superadmin/assets/plugins/select2/select2.full.min.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/js/select2.js' %}"></script>
+
+	 <script src="{% static 'superadmin/assets/plugins/multipleselect/multiple-select.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/multipleselect/multi-select.js' %}"></script>
+
+    <!-- Color Theme js -->
+
+    <script src="{% static 'superadmin/assets/js/themeColors.js' %}"></script>
+
+
+
+    <!-- CUSTOM JS -->
+
+    <script src="{% static 'superadmin/assets/js/custom.js' %}"></script>
+
+   <script src="{% static 'superadmin/assets/plugins/summernote/summernote1.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/js/summernote.js' %}"></script>
+
+	  
+
+ <script src="{% static 'superadmin/assets/plugins/gallery/picturefill.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lightgallery.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lightgallery-1.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-pager.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-autoplay.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-fullscreen.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-zoom.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-hash.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/gallery/lg-share.js' %}"></script>
+
+	<script src="{% static 'superadmin/assets/js/formelementadvnced.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/js/form-elements.js' %}"></script>
+
+	
+
+    <script src="{% static 'superadmin/assets/js/custom-js-new.js' %}"></script>
+    <script src="{% static 'superadmin/custom/custom.js' %}"></script>
+
+	 
+
+	<script src="{% static 'superadmin/assets/plugins/time-picker/jquery.timepicker.js' %}"></script>
+
+    <script src="{% static 'superadmin/assets/plugins/time-picker/toggles.min.js' %}"></script>
+
+	<script src="{% static 'superadmin/assets/js/show-password.min.js' %}"></script>
+	<script src="{% static 'superadmin/assets/plugins/bootstrap-daterangepicker/moment.min.js' %}"></script>
+    <script src="{% static 'superadmin/assets/plugins/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+    <script src="{% static 'superadmin/assets/js/formelementadvnced.js' %}"></script>
+    <script src="{% static 'superadmin/assets/js/form-elements.js' %}"></script>
+   
+    <script src="{% static 'superadmin/assets/plugins/notify/js/rainbow.js' %}"></script>
+    <script src="{% static 'superadmin/assets/plugins/notify/js/sample.js' %}"></script>
+    <script src="{% static 'superadmin/assets/plugins/notify/js/notifIt.js' %}"></script>
+
+<script>
+
+function not1(msg) {
+    notif({
+        msg: msg,
+        type: "success"
+    });
+}
+
+function not2() {
+    notif({
+        msg: "<b>Oops!</b> An Error Occurred",
+        type: "error",
+        position: "center"
+    });
+}
+
+ $('.fc-datepicker').datepicker({
+        showOtherMonths: false,
+        selectOtherMonths: false
+    });
+
+</script>
+<style>
+    /* Default styles */
+    /* Default styles */
+    input:required,textarea:required,select:required, input[type="file"]:required, .summernote {
+        border: 1px solid #ccc;
+        background-color: white;
+    }
+    
+    /* Show error styling only after submit is clicked */
+    .form-submitted input:required:invalid,
+    .form-submitted select:required:invalid,
+    .form-submitted input[type="file"]:required:invalid,
+    .form-submitted textarea:required:invalid,
+    .form-submitted .summernote-error {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+    
+    
+    /* Default Dropify styles */
+    .dropify-wrapper {
+        border: 1px solid #ccc;
+        transition: border 0.3s ease-in-out;
+    }
+    
+    /* Show red border when there's an error */
+    .form-submitted .dropify-wrapper.dropify-error {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+    
+        
+    .dropify-wrapper .dropify-clear {
+        display: none !important;
+    }
+    .summernote-error {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+    .note-editable .summernote-error {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+    
+    .select-error .select2-selection {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+    
+         </style>
+         <style>
+            .no-bullets, .no-bullets li {
+             list-style: none !important;
+         }
+             </style>
+             <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const form = document.getElementById("myForm");
+                    const submitButton = document.getElementById("submitButton");
+                
+                    // Initialize Dropify
+                    // $('.dropify').dropify();
+                
+                    // Initialize Summernote
+                    // $('.summernote').summernote({
+                    //     height: 200,
+                    //     placeholder: "Enter description...",
+                    // });
+                
+                    if (submitButton) {
+                        submitButton.addEventListener("click", function (event) {
+                            form.classList.add("form-submitted"); // Add class to trigger styles
+                            let isValid = true;
+                
+                            document.querySelectorAll(".dropify").forEach(fileInput => {
+                                const wrapper = fileInput.closest(".dropify-wrapper");
+                
+                                // Only validate if the input has the 'required' attribute
+                                if (fileInput.hasAttribute("required") && !fileInput.files.length) {
+                                    wrapper.classList.add("dropify-error"); // Apply error styling
+                                    isValid = false;
+                                } else {
+                                    wrapper.classList.remove("dropify-error");
+                                }
+                            });
+                
+                            document.querySelectorAll("select[required]").forEach(select => {
+                                const select2Container = $(select).next(".select2-container"); // Get the Select2 container
+                                
+                                if (!select.value.trim()) {
+                                    select2Container.addClass("select-error"); // Apply error styling
+                                    isValid = false;
+                                } else {
+                                    select2Container.removeClass("select-error");
+                                }
+                            });
+                
+                            document.querySelectorAll(".summernote").forEach(editor => {
+                                const summernoteContent = $(editor).summernote("code").trim(); // Get HTML content
+                                const summernoteWrapper = $(editor).closest(".note-editor"); // Get Summernote wrapper
+                
+                                if (!summernoteContent || summernoteContent === "<p><br></p>") {
+                                    $(".note-editable").addClass('summernote-error');
+                                    // summernoteWrapper.addClass("summernote-error"); // Apply error styling
+                                    isValid = false;
+                                } else {
+                                    $(".note-editable").removeClass('summernote-error');
+                                    // summernoteWrapper.removeClass("summernote-error");
+                                }
+                            });
+                
+                
+                            // Prevent form submission if validation fails
+                            if (!isValid) {
+                                event.preventDefault();
+                            }
+                        });
+                    } else {
+                        console.error("Submit button not found!");
+                    }
+                });
+                
+                
+                        
+                        </script>
+
+<script>
+    $('.multi-field-wrapper').each(function () {
+      var $wrapper = $('.multi-fields', this);
+      $(".add-field", $(this)).click(function (e) {
+        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input,textarea').val('')
+          .focus();
+      });
+      $('.multi-field .remove-field', $wrapper).click(function () {
+        if ($('.multi-field', $wrapper).length > 1)
+          $(this).parent('.multi-field').remove();
+      });
+    });
+  </script>
+
+
+</body>
+
+
+
+</html>

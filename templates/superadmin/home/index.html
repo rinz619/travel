@@ -1,0 +1,102 @@
+{% include 'superadmin/layouts/header.html' %}
+ <!--app-content open-->
+
+            <div class="main-content app-content mt-0">
+
+                <div class="side-app">
+
+
+
+                    <!-- CONTAINER -->
+
+                    <div class="main-container container-fluid">
+
+
+
+                        <!-- PAGE-HEADER -->
+
+                        <div class="page-header">
+
+                            <h1 class="page-title">Dashboard</h1>
+
+                           
+
+                        </div>
+
+                        <!-- PAGE-HEADER END -->
+						
+						 <!-- ROW OPEN -->
+                        <div class="row row-cards">
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-header pb-0 border-bottom-0">
+                                        <h3 class="card-title">Total Country</h3>
+                                        <div class="card-options">
+                                            <a class="btn btn-sm btn-primary" href="javascript:void(0)"><i class="fe fe-users mb-0"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <h3 class="d-inline-block mb-2">{{country}}</h3>
+                                        <div class="progress h-2 mt-2 mb-2">
+                                            <div class="progress-bar bg-primary" style="width: 50%;" role="progressbar"></div>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- COL END -->
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-header pb-0 border-bottom-0">
+                                        <h3 class="card-title">Total Universities</h3>
+                                        <div class="card-options">
+                                            <a class="btn btn-sm btn-success" href="javascript:void(0)"><i class="fe fe-box mb-0"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <h3 class="d-inline-block mb-2">{{university}}</h3>
+                                        <div class="progress h-2 mt-2 mb-2">
+                                            <div class="progress-bar bg-success" style="width: 50%;" role="progressbar"></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- COL END -->
+							
+							<!-- <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-header pb-0 border-bottom-0">
+                                        <h3 class="card-title">Mentors</h3>
+                                        <div class="card-options">
+                                            <a class="btn btn-sm btn-info" href="javascript:void(0)"><i class="fe fe-layers mb-0"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <h3 class="d-inline-block mb-2">23,536</h3>
+                                        <div class="progress h-2 mt-2 mb-2">
+                                            <div class="progress-bar bg-info" style="width: 50%;" role="progressbar"></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- COL END -->
+                            
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+                    </div>
+
+                    <!-- CONTAINER END -->
+
+                </div>
+
+            </div>
+
+            <!--app-content close-->
+
+			
+
+{% include 'superadmin/layouts/footer.html' %}
