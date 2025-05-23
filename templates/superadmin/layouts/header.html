@@ -9,7 +9,7 @@
     <!-- FAVICON -->
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'superadmin/assets/images_ex/fav.svg' %}" />
     <!-- TITLE -->
-    <title>Medicomentr.com Admin | Dashboard</title>
+    <title>Travel Buzz | Dashboard</title>
     <!-- BOOTSTRAP CSS -->
     <link id="style" href="{% static 'superadmin/assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     <!-- STYLE CSS -->
@@ -38,7 +38,7 @@
                 <img src="{% static 'superadmin/assets/images_ex/logo.svg' %}" class="header-brand-img light-logo1" alt="logo">
               </a>
               <div class="d-flex order-lg-2 ms-auto header-right-icons">
-                <div class="d-flex country">
+                <!-- <div class="d-flex country">
                   <a class="nav-link icon theme-layout nav-link-bg layout-setting">
                     <span class="dark-layout">
                       <i class="fe fe-moon"></i>
@@ -47,7 +47,7 @@
                       <i class="fe fe-sun"></i>
                     </span>
                   </a>
-                </div>
+                </div> -->
                 <div class="dropdown d-flex profile-1">
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                     <img src="{% static 'superadmin/assets/images_ex/user.png' %}" alt="profile-user" class="avatar  profile-user brround cover-image">
@@ -95,75 +95,95 @@
                   <h3>Main</h3>
                 </li>
                 <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:dashboard' %}">
-                    <i class="side-menu__icon fe fe-home"></i>
-                    <span class="side-menu__label">Dashboard</span>
-                  </a>
-                </li>
-                
-                <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:agentslist' %}">
-                    <i class="side-menu__icon fe fe-image"></i>
-                    <span class="side-menu__label">Agents</span>
-                  </a>
-                </li>
+  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:dashboard' %}">
+    <i class="side-menu__icon fe fe-home"></i>  <!-- Changed -->
+    <span class="side-menu__label">Dashboard</span>
+  </a>
+</li>
 
-             
-                <li class="slide">
-                  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
-                    <i class="side-menu__icon fe fe-grid"></i>
-                    <span class="side-menu__label">Bookings</span>
-                    <i class="angle fe fe-chevron-right"></i>
-                  </a>
-                  <ul class="slide-menu">
-					          <li>
-                      <a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a>
-                    </li>
-                    <li>
-                      <a href="" class="slide-item">Refunds</a>
-                    </li>
-                    
-                  </ul>
-                </li>
+{% if request.user.user_type != 3 %}
+<li class="slide">
+  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:agentslist' %}">
+    <i class="side-menu__icon fe fe-users"></i>  <!-- Changed -->
+    <span class="side-menu__label">Agents</span>
+  </a>
+</li>
+
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-calendar"></i>  <!-- Changed -->
+    <span class="side-menu__label">Bookings</span>
+    <i class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+    <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
+    <li><a href="" class="slide-item">Refunds</a></li>
+  </ul>
+</li>
+
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-credit-card"></i>  <!-- Changed -->
+    <span class="side-menu__label">Accounts</span>
+    <i class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+    <li><a href="" class="slide-item">Cash Receipt</a></li>
+    <li><a href="" class="slide-item">Account Ledger</a></li>
+    <li><a href="" class="slide-item">Update Wallet</a></li>
+  </ul>
+</li>
+
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-bar-chart-2"></i>  <!-- Changed -->
+    <span class="side-menu__label">DSR</span>
+    <i class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+    <li><a href="" class="slide-item">Sales Report</a></li>
+    <li><a href="" class="slide-item">Sales Dashboard</a></li>
+  </ul>
+</li>
+
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-message-square"></i>  <!-- Changed -->
+    <span class="side-menu__label">CRM</span>
+    <i class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+    <li><a href="" class="slide-item">Leads</a></li>
+    <li><a href="" class="slide-item">CRM Report</a></li>
+  </ul>
+</li>
+
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-briefcase"></i>  <!-- Changed -->
+    <span class="side-menu__label">HR</span>
+    <i class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+    <li><a href="" class="slide-item">Attendance</a></li>
+    <li><a href="" class="slide-item">Attendance Report</a></li>
+    <li><a href="" class="slide-item">Staff Management</a></li>
+  </ul>
+</li>
+
 
                 
-              <li class="slide">
-                <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:countrieslist' %}">
-                  <i class="side-menu__icon fe fe-globe"></i><span class="side-menu__label">Countries</span>
-                </a>
-              </li> 
+              
 
                
-                <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:universitylist' %}">
-                    <i class="side-menu__icon fe fe-box"></i>
-                    <span class="side-menu__label">Universities</span>
-                  </a>
-                </li>
-                <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:serviceslist' %}">
-                    <i class="side-menu__icon fe fe-layers"></i>
-                    <span class="side-menu__label">Services</span>
-                  </a>
-                </li>
-				        <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:testimonialslist' %}">
-                    <i class="side-menu__icon fe fe-book-open"></i>
-                    <span class="side-menu__label">Testimonials </span>
-                  </a>
-                </li>
-                <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:eventslist' %}">
-                    <i class="side-menu__icon fe fe-folder"></i>
-                    <span class="side-menu__label">Events</span>
-                  </a>
-                </li>
-               <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:enquierylist' %}">
-                    <i class="side-menu__icon fe fe-folder"></i>
-                    <span class="side-menu__label">Enquiry</span>
-                  </a>
-                </li>
+                
+                {% else %}
+<li class="slide">
+                <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:accountledger' %}">
+                  <i class="side-menu__icon fe fe-file-text"></i><span class="side-menu__label">Account Ledgder</span>
+                </a>
+              </li> 
+                {% endif %}
                 <!-- <li class="slide">
                   <a class="side-menu__item has-link" data-bs-toggle="slide" href="mentor_view.php">
                     <i class="side-menu__icon fe fe-book-open"></i>

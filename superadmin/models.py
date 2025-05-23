@@ -141,6 +141,7 @@ class User(AbstractBaseUser):
 
 class Bookings(models.Model):
     agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    unique_id = models.TextField(null=True, blank=True)
     servicetype = models.TextField(null=True, blank=True)
     fromairport = models.TextField(null=True, blank=True)
     toairport = models.TextField(null=True, blank=True)

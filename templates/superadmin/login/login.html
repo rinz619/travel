@@ -12,6 +12,8 @@
   <title>Fahrchule Admin | Login</title>
   <!-- BOOTSTRAP CSS -->
   <link id="style" href="{% static 'superadmin/assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+  
   <!-- STYLE CSS -->
   <link href="{% static 'superadmin/assets/css/style.css' %}" rel="stylesheet" />
   <link href="{% static 'superadmin/assets/css/style-custom.css' %}" rel="stylesheet" />
@@ -20,6 +22,12 @@
   <link href="{% static 'superadmin/assets/css/skin-modes.css' %}" rel="stylesheet" />
   <!--- FONT-ICONS CSS -->
   <link href="{% static 'superadmin/assets/css/icons.css' %}" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
   <!-- COLOR SKIN CSS -->
   <link id="theme" rel="stylesheet" type="text/css" media="all" href="{% static 'superadmin/assets/colors/color1.css' %}" />
  </head>
@@ -32,13 +40,44 @@
   </a>
 </div>
 
+
+
+
+ 
+
+<style>
+  .container-login100{
+    justify-content: right !important;
+  }
+</style>
+
   <div class="">
    <!-- PAGE -->
    <div class="page">
     <div class="">
      <!-- CONTAINER OPEN -->
      <div class="container-login100">
-      <div class="wrap-login100 p-6">
+
+          <div class="row">
+        <!-- Left side: Image Slider -->
+<div class="col-md-6 d-none d-md-block">
+  <div id="loginCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner rounded">
+      <div class="carousel-item active">
+        <img src="https://specials-images.forbesimg.com/imageserve/602ec05ef215fafffd25fbd9/960x0.jpg?fit=scale" class="d-block w-100" alt="Slide 1">
+      </div>
+      <div class="carousel-item">
+        <img src="https://th.bing.com/th/id/OIP.PomUT4zzniCUkt9LhCVLKgHaE7?w=800&h=533&rs=1&pid=ImgDetMain" class="d-block w-100" alt="Slide 2">
+      </div>
+      <div class="carousel-item">
+        <img src="https://www.slideteam.net/wp/wp-content/uploads/2020/07/Microsoft-UI-imternal-1-1001x559.png" class="d-block w-100" alt="Slide 3">
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="col-lg-6">
+        <div class="wrap-login100 p-6">
        <div class="col col-login mx-auto m-5">
 	   
         <div class="text-center">   
@@ -65,12 +104,12 @@
 			 </a>
 			 <input class="input100 border-start-0 form-control ms-0" type="password" placeholder="password" required name="password" value="{{password}}">
         </div>
-        <!-- <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
 			 <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
-			  <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+			  <i class="zmdi zmdi-account-box text-muted" aria-hidden="true"></i>
 			 </a>
-			 <input class="input100 border-start-0 form-control ms-0" type="text" placeholder="Client ID" required name="password" value="{{password}}">
-        </div> -->
+			 <input class="input100 border-start-0 form-control ms-0" type="text" placeholder="Client ID"  name="clientid" value="{{clientid}}">
+        </div>
 				 {% if messages %}
 <div id="message_div" class="succs-msg">
     {% for message in messages %}
@@ -86,6 +125,14 @@
 		
        </form>
       </div>
+    </div>
+</div>
+
+
+
+
+
+
      </div>
      <!-- CONTAINER CLOSED -->
     </div>
@@ -94,11 +141,19 @@
   </div>
   <!-- BACKGROUND-IMAGE CLOSED -->
   <!-- JQUERY JS -->
+
+
+
+
   <script src="{% static 'superadmin/assets/js/jquery.min.js' %}"></script>
   <!-- BOOTSTRAP JS -->
   <script src="{% static 'superadmin/assets/plugins/bootstrap/js/popper.min.js' %}"></script>
   <script src="{% static 'superadmin/assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <!-- SHOW PASSWORD JS -->
+
   <script src="{% static 'superadmin/assets/js/show-password.min.js' %}"></script>
   <!-- GENERATE OTP JS -->
   <script src="{% static 'superadmin/assets/js/generate-otp.js' %}"></script>

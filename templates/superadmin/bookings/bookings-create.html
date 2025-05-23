@@ -32,7 +32,7 @@
                                                      <select class="form-control select2" data-placeholder="Choose Agency" required name="agent">
                                                         <option value="">Select</option>
                                                         {% for i in agents %}
-                                                            <option value="{{i.id}}">{{i.name}}</option>
+                                                            <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
                                                         {% endfor %}
 													</select>
 
@@ -42,94 +42,101 @@
                                                     <label for="exampleInputEmail1" class="form-label">Service Type</label>
                                                      <select class="form-control select2" data-placeholder="Choose Service Type" required name="servicetype" onchange="airticket(this.value)">
                                                         <option value="">Select</option>
-                                                        <option value="AIR TICKETS">AIR TICKETS</option>
-                                                        <option value="UAE VISA 30 DAYS">UAE VISA 30 DAYS</option>
-                                                        <option value="UAE VISA 60 DAYS">UAE VISA 60 DAYS</option>
-                                                        <option value="UAE TRANSIT VISA">UAE TRANSIT VISA</option>
-                                                        <option value="GLOBAL VISA">GLOBAL VISA</option>
-                                                        <option value="HOLIDAY PACKAGE">HOLIDAY PACKAGE</option>
-                                                        <option value="TRANSPORTATION">TRANSPORTATION</option>
-                                                        <option value="HOTEL BOOKING">HOTEL BOOKING</option>
-                                                        <option value="VISA CHANGE BY BUS">VISA CHANGE BY BUS</option>
-                                                        <option value="VISA CHANGE BY FLIGHT">VISA CHANGE BY FLIGHT</option>
+                                                        <option value="AIR TICKETS" {% if data.servicetype == 'AIR TICKETS' %}selected{% endif %}>AIR TICKETS</option>
+                                                        <option value="UAE VISA 30 DAYS" {% if data.servicetype == 'UAE VISA 30 DAYS' %}selected{% endif %}>UAE VISA 30 DAYS</option>
+                                                        <option value="UAE VISA 60 DAYS" {% if data.servicetype == 'UAE VISA 60 DAYS' %}selected{% endif %}>UAE VISA 60 DAYS</option>
+                                                        <option value="UAE TRANSIT VISA" {% if data.servicetype == 'UAE TRANSIT VISA' %}selected{% endif %}>UAE TRANSIT VISA</option>
+                                                        <option value="GLOBAL VISA" {% if data.servicetype == 'GLOBAL VISA' %}selected{% endif %}>GLOBAL VISA</option>
+                                                        <option value="HOLIDAY PACKAGE" {% if data.servicetype == 'HOLIDAY PACKAGE' %}selected{% endif %}>HOLIDAY PACKAGE</option>
+                                                        <option value="TRANSPORTATION" {% if data.servicetype == 'TRANSPORTATION' %}selected{% endif %}>TRANSPORTATION</option>
+                                                        <option value="HOTEL BOOKING" {% if data.servicetype == 'HOTEL BOOKING' %}selected{% endif %}>HOTEL BOOKING</option>
+                                                        <option value="VISA CHANGE BY BUS" {% if data.servicetype == 'VISA CHANGE BY BUS' %}selected{% endif %}>VISA CHANGE BY BUS</option>
+                                                        <option value="VISA CHANGE BY FLIGHT" {% if data.servicetype == 'VISA CHANGE BY FLIGHT' %}selected{% endif %}>VISA CHANGE BY FLIGHT</option>
+
 
 													</select>
 
                                                 </div>
-                                                <div class="row" style="display: none;" id="airticket_div">
+                                                <div class="row" {% if data.servicetype == 'AIR TICKETS' %}  {% else %}style="display: none;" {% endif %} id="airticket_div">
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputEmail1" class="form-label">From Airport</label>
-                                                        <select class="form-control select2" data-placeholder="Choose Airport" required name="fromairport">
+                                                        <select class="form-control select2" data-placeholder="Choose Airport"  name="fromairport">
                                                             <option value="">Select</option>
-                                                            <option value="select 1">Select1</option>
-                                                            <option value="select 2">Select2</option>
+                                                            <option value="Airport 1" {% if data.fromairport == 'Airport 1' %}selected {% endif %}>Airport 1</option>
+                                                            <option value="Airport 2" {% if data.fromairport == 'Airport 2' %}selected {% endif %}>Airport 2</option>
+                                                            <option value="Airport 3" {% if data.fromairport == 'Airport 3' %}selected {% endif %}>Airport 3</option>
+                                                            <option value="Airport 4" {% if data.fromairport == 'Airport 4' %}selected {% endif %}>Airport 4</option>
+                                                            <option value="Airport 5" {% if data.fromairport == 'Airport 5' %}selected {% endif %}>Airport 5</option>
                                                         </select>
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputEmail1" class="form-label">To Airport</label>
-                                                        <select class="form-control select2" data-placeholder="Choose Airport" required name="toairport">
+                                                        <select class="form-control select2" data-placeholder="Choose Airport"  name="toairport">
                                                             <option value="">Select</option>
-                                                            <option value="select 1">Select1</option>
-                                                            <option value="select 2">Select2</option>
+                                                            <option value="Airport 1" {% if data.toairport == 'Airport 1' %}selected {% endif %}>Airport 1</option>
+                                                            <option value="Airport 2" {% if data.toairport == 'Airport 2' %}selected {% endif %}>Airport 2</option>
+                                                            <option value="Airport 3" {% if data.toairport == 'Airport 3' %}selected {% endif %}>Airport 3</option>
+                                                            <option value="Airport 4" {% if data.toairport == 'Airport 4' %}selected {% endif %}>Airport 4</option>
+                                                            <option value="Airport 5" {% if data.toairport == 'Airport 5' %}selected {% endif %}>Airport 5</option>
                                                         </select>
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Departure Date</label>
-                                                    <input type="date" name="departuredate" required id="" class="form-control" placeholder="Departure Date" value="{{data.contactperson}}" >
+                                                    <input type="date" name="departuredate"  id="" class="form-control" placeholder="Departure Date" value="{{data.departuredate|date:'Y-m-d'}}" >
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Airline</label>
-                                                    <input type="text" name="airline" required id="" class="form-control" placeholder="Airline" value="{{data.contactperson}}" >
+                                                    <input type="text" name="airline"  id="" class="form-control" placeholder="Airline" value="{{data.airline}}" >
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputEmail1" class="form-label">PNR</label>
-                                                        <input type="text" name="pnr" required id="" class="form-control" placeholder="PNR Number" value="{{data.contactperson}}" >
+                                                        <input type="text" name="pnr"  id="" class="form-control" placeholder="PNR Number" value="{{data.pnr}}" >
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputEmail1" class="form-label">Ticket Number</label>
-                                                        <input type="text" name="ticketnumber" required id="" class="form-control" placeholder="Ticket Number" value="{{data.contactperson}}" >
+                                                        <input type="text" name="ticketnumber"  id="" class="form-control" placeholder="Ticket Number" value="{{data.ticketnumber}}" >
 
                                                     </div>
                                                 </div>
                          
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Passenger Name</label>
-                                                    <input type="text" name="passengername" required id="" class="form-control" placeholder="Passenger Name" value="{{data.contactperson}}" >
+                                                    <input type="text" name="passengername" required id="" class="form-control" placeholder="Passenger Name" value="{{data.passengername}}" >
 
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Service Description</label>
-                                                    <textarea  name="servicedescription" required id="" class="form-control" placeholder="Service Description" >{{data.address}}</textarea>
+                                                    <textarea  name="servicedescription" required id="" class="form-control" placeholder="Service Description" >{{data.servicedescription}}</textarea>
 
                                                 </div>
                          
                                                 <div class="form-group col-lg-4">
                                                     <label for="exampleInputEmail1" class="form-label">Net Amount</label>
-                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.email}}" onkeyup="calculations()" >
+                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.netamount}}" onkeyup="calculations()" >
 
                                                 </div>
                                                 
                                                 <div class="form-group col-lg-4">
                                                     <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
-                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.email}}" onkeyup="calculationsmarkup()" >
+                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" >
 
                                                 </div>
                                                 
                                                 <div class="form-group col-lg-4">
                                                     <label for="exampleInputEmail1" class="form-label">Markup</label>
-                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Gross Amount" value="{{data.email}}" onkeyup="calculationsgross()" >
+                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Gross Amount" value="{{data.markup}}" onkeyup="calculationsgross()" >
 
                                                 </div>
                                                 
                                                 
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Remarks</label>
-                                                    <textarea  name="remarks" required id="" class="form-control" placeholder="Remarks" >{{data.address}}</textarea>
+                                                    <textarea  name="remarks" required id="" class="form-control" placeholder="Remarks" >{{data.remarks}}</textarea>
 
                                                 </div>
                                                
@@ -196,6 +203,18 @@
                     } else {
                         document.getElementById("airticket_div").style.display = "none";
                     }
+
+                    const airticketDiv = document.getElementById("airticket_div");
+                    const inputs = airticketDiv.querySelectorAll("input, select, textarea");
+
+                    if (val === "AIR TICKETS") {
+                        airticketDiv.style.display = "";
+                        inputs.forEach(el => el.setAttribute("required", "required"));
+                    } else {
+                        airticketDiv.style.display = "none";
+                        inputs.forEach(el => el.removeAttribute("required"));
+                    }
+
 
                 }
             </script>

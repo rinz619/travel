@@ -12,8 +12,11 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import loader
 import random
+from datetime import datetime
 # def custom_404_view(request, exception):
 #     return render(request, '404.html', status=404)
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Create your views here.
 class index(View):
@@ -28,15 +31,38 @@ class index(View):
         context = {}
         username = request.POST['username']
         password = request.POST['password']
+        clientid = request.POST.get('clientid')
+        try:
+            user = User.objects.get(email=username, password=password, unique_id=clientid, user_type=3)
+            print('user===',user)
+        except Exception as e:
+            print('error====',e)
+            try:
+                user = User.objects.get(email=username, password=password, user_type=1)
+                print('user===',user)
+            except:
+                user = None
+
         user = authenticate(username=username, password=password)
-        # return HttpResponse(user)
 
         if user:
-            login(request, user)
-            return redirect('superadmin:dashboard')
+            if user.user_type == 1:
+                login(request, user)
+                return redirect('superadmin:dashboard')
+            elif user.user_type == 3 and user.unique_id == clientid:
+                login(request, user)
+                return redirect('superadmin:dashboard')
+            else:
+                context['username'] = username
+                context['password'] = password
+                context['clientid'] = clientid
+                messages.info(request, 'Invalid Username or Password')
+                return renderhelper(request, 'login', 'login', context)
+            
         else:
             context['username'] = username
             context['password'] = password
+            context['clientid'] = clientid
             messages.info(request, 'Invalid Username or Password')
             return renderhelper(request, 'login', 'login', context)
         
@@ -266,10 +292,13 @@ class offlinebookingscreate(LoginRequiredMixin, View):
     def post(self, request, id=None):
         try:
             data = Bookings.objects.get(id=id)
+            
             messages.info(request, 'Successfully Updated')
         except:
+            now = datetime.now()
+            year_month_format = f"{now.year % 100:02d}{now.month:02d}"
             data = Bookings()
-            data.unique_id = 'AG-'+str(random.randint(11111,99999))
+            data.unique_id = f'INV{str(year_month_format)}{random.randint(111,9999)}'
             messages.info(request, 'Successfully Added')
 
 
@@ -277,7 +306,11 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         data.servicetype = request.POST.get('servicetype')
         data.fromairport = request.POST.get('fromairport')
         data.toairport = request.POST.get('toairport')
-        data.departuredate = request.POST.get('departuredate')
+        departuredate = request.POST.get('departuredate')
+        if departuredate:
+            data.departuredate = departuredate
+        else:
+            data.departuredate = None
         data.airline = request.POST.get('airline')
         data.pnr = request.POST.get('pnr')
         data.ticketnumber = request.POST.get('ticketnumber')
@@ -293,6 +326,69 @@ class offlinebookingscreate(LoginRequiredMixin, View):
     # Agents module end
 
 
+
+
+# accountledger module start
+class accountledger(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = Banner.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = Banner.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                Banner.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                Banner.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(title__icontains=search)
+            data_list = Banner.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/ledger/ledger-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'ledger', 'ledger-view', context)
 
 
 

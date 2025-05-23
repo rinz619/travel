@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Travel Buzz Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+
+    .container {
+      width: 794px;
+      margin: 0 auto;
+      padding: 30px;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #e60000;
+      line-height: 1;
+    }
+
+    .company-details {
+      border: 1px solid #000;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .invoice-details {
+      margin-top: 10px;
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .title {
+      background: #e0e0e0;
+      text-align: center;
+      font-weight: bold;
+      padding: 8px;
+      margin-top: 20px;
+    }
+
+    .billed-to {
+      margin-top: 10px;
+    }
+
+    .billed-to strong {
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th {
+      background: #c00;
+      color: white;
+      padding: 6px;
+      border: 1px solid #000;
+    }
+
+    td {
+      padding: 6px;
+      border: 1px solid #000;
+      text-align: center;
+    }
+
+    td.description {
+      text-align: left;
+    }
+
+    .summary {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .summary table {
+      width: 300px;
+      float: right;
+      margin-top: 10px;
+    }
+
+    .summary td {
+      padding: 4px 6px;
+    }
+
+    .amount-in-words {
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .signature {
+      margin-top: 20px;
+      border-top: 1px solid #000;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 5px;
+    }
+
+    .bottom-bar {
+      background: #c00;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      margin-top: 30px;
+    }
+
+    .qr {
+      margin-top: 20px;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        travel<br />buzz
+      </div>
+      <div class="company-details">
+        <strong>TRAVEL BUZZ TOURISM LLC</strong><br />
+        M6, M Floor City Avenue Building<br />
+        Port Saeed - Dubai DU United Arab Emirates<br />
+        VAT: 104664441300001
+      </div>
+    </div>
+
+    <div class="invoice-details">
+      <strong>Invoice No:</strong> <span style="color:#c00;">151515</span><br />
+      <strong>Date:</strong> 17/05/2025
+    </div>
+
+    <div class="title">TAX INVOICE</div>
+
+    <div class="billed-to">
+      <strong>Invoiced to :</strong><br />
+      <strong>FIRST NAME_LAST NAME</strong><br />
+      ABCD STREET, DUBAI, UAE
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>QTY</th>
+          <th>Price</th>
+          <th>VAT %</th>
+          <th>VAT Amount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody style="height:500px">
+        <tr>
+          <td class="description">Payment Against XXXXXX<br />DXB-COK<br />17 May 2025</td>
+          <td>1</td>
+          <td>AED 2520</td>
+          <td>0%</td>
+          <td>0</td>
+          <td>AED 2520</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <table>
+        <tr>
+          <td>Untaxed Amount :</td>
+          <td>AED 2520.00</td>
+        </tr>
+        <tr>
+          <td>VAT :</td>
+          <td>AED 0.00</td>
+        </tr>
+        <tr style="background:#c00; color:white; font-weight:bold;">
+          <td>Total :</td>
+          <td>AED 2520.00</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="clear: both;"></div>
+    <div class="amount-in-words">
+      [ Two thousand five hundred and twenty AED Only ]
+    </div>
+
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=Invoice151515" alt="QR Code" />
+    </div>
+
+    <div class="footer">
+      Computer generated, no signature required
+      <div class="signature">Authorised Signature</div>
+    </div>
+
+    <div class="bottom-bar">
+      www.travelbuzztourism.com | operations@travelbuzztourism.com | +971 52 802 6220
+    </div>
+  </div>
+</body>
+</html>

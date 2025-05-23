@@ -14,14 +14,16 @@
     <thead>
         <tr>
             <th>Sl No</th>
-            <th>Passenger</th>
-            <th>Service type</th>
-            <th>Details</th>
-            <th>Service description</th>
-            <th>Amount</th>
-            <th>Agent</th>
-            <th>Remarks</th>
-            <th>Action</th>
+            <!-- <th>sequence</th> -->
+            <th>Invoice No</th>
+            <th>Transaction Date</th>
+            <th>Transaction Type</th>
+            <th>PNR</th>
+            <th>Sector</th>
+            <th>description</th>
+            <th>debit</th>
+            <th>credit</th>
+            <th>running balance</th>
         </tr>
     </thead>
     <tbody>
@@ -29,25 +31,23 @@
         {% for i in datas %}
         <tr>
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
+            <!-- <td></td> -->
+            <td>{% if i.image %}
+                <ul id="lightgallery-{{ forloop.counter }}" style="display: flex;">
+                <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
+                <a href="javascript:void(0)">
+                <img class="img-responsive br-5" src="{{i.image.url}}" alt="Thumb-1">
+                </a>
+                </li>
+                
+            </ul>
+                {% endif %}</td>
+                <td><b>{{i.unique_id}}</b></td>
+                <td>{{i.name}}</td>
+                <td>{{i.contactperson}}</td>
+                <td>{{i.trn}}</td>
+            <td>{{i.phone}}</td>
             
-            <td>{{i.passengername}}</td>
-            <td>{{i.servicetype}}</td>
-            <td>From : <b>{{i.fromairport}}</b></br>To : <b>{{i.toairport}}</b></br>Date : {% if i.departuredate %}<b>{{i.departuredate}}</b>{% endif %}</br>Airline : <b>{{i.airline}}</b></br>PNR : <b>{{i.pnr}}</b></br>Ticket : <b>{{i.ticketnumber}}</b></td>
-            <td>{{i.servicedescription}}</td>
-            <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
-            <td>{{i.agent.name}}</td>
-            <td>{{i.remarks}}</td>
-            
-           
-
-              
-               <td>
-                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:offlinebookingsedit' i.id %}"><i
-                           class="side-menu__icon fe fe-edit"></i></a>
-                   <a class="btn btn-danger btn-sm mb-1" href="#"><i
-                           class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
-               </td>
-            </tr>
             {% endfor %}
             {% else %}
             <tr>

@@ -23,6 +23,7 @@ urlpatterns = [
     path('offlinebookingscreate', views.offlinebookingscreate.as_view(), name='offlinebookingscreate'),
     path('offlinebookingsedit/<int:id>', views.offlinebookingscreate.as_view(), name='offlinebookingsedit'),
 
+    path('accountledger', views.accountledger.as_view(), name='accountledger'),
 
 
 
