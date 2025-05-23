@@ -1,0 +1,202 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Offline Bookings</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:offlinebookingslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                         <form method="post" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                        <div class="row">
+                            
+						<div class="col-md-8 col-xl-12 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        
+                                            <div class="row">
+
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Agency Name</label>
+                                                     <select class="form-control select2" data-placeholder="Choose Agency" required name="agent">
+                                                        <option value="">Select</option>
+                                                        {% for i in agents %}
+                                                            <option value="{{i.id}}">{{i.name}}</option>
+                                                        {% endfor %}
+													</select>
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Service Type</label>
+                                                     <select class="form-control select2" data-placeholder="Choose Service Type" required name="servicetype" onchange="airticket(this.value)">
+                                                        <option value="">Select</option>
+                                                        <option value="AIR TICKETS">AIR TICKETS</option>
+                                                        <option value="UAE VISA 30 DAYS">UAE VISA 30 DAYS</option>
+                                                        <option value="UAE VISA 60 DAYS">UAE VISA 60 DAYS</option>
+                                                        <option value="UAE TRANSIT VISA">UAE TRANSIT VISA</option>
+                                                        <option value="GLOBAL VISA">GLOBAL VISA</option>
+                                                        <option value="HOLIDAY PACKAGE">HOLIDAY PACKAGE</option>
+                                                        <option value="TRANSPORTATION">TRANSPORTATION</option>
+                                                        <option value="HOTEL BOOKING">HOTEL BOOKING</option>
+                                                        <option value="VISA CHANGE BY BUS">VISA CHANGE BY BUS</option>
+                                                        <option value="VISA CHANGE BY FLIGHT">VISA CHANGE BY FLIGHT</option>
+
+													</select>
+
+                                                </div>
+                                                <div class="row" style="display: none;" id="airticket_div">
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">From Airport</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Airport" required name="fromairport">
+                                                            <option value="">Select</option>
+                                                            <option value="select 1">Select1</option>
+                                                            <option value="select 2">Select2</option>
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">To Airport</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Airport" required name="toairport">
+                                                            <option value="">Select</option>
+                                                            <option value="select 1">Select1</option>
+                                                            <option value="select 2">Select2</option>
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Departure Date</label>
+                                                    <input type="date" name="departuredate" required id="" class="form-control" placeholder="Departure Date" value="{{data.contactperson}}" >
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Airline</label>
+                                                    <input type="text" name="airline" required id="" class="form-control" placeholder="Airline" value="{{data.contactperson}}" >
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">PNR</label>
+                                                        <input type="text" name="pnr" required id="" class="form-control" placeholder="PNR Number" value="{{data.contactperson}}" >
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">Ticket Number</label>
+                                                        <input type="text" name="ticketnumber" required id="" class="form-control" placeholder="Ticket Number" value="{{data.contactperson}}" >
+
+                                                    </div>
+                                                </div>
+                         
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Passenger Name</label>
+                                                    <input type="text" name="passengername" required id="" class="form-control" placeholder="Passenger Name" value="{{data.contactperson}}" >
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Service Description</label>
+                                                    <textarea  name="servicedescription" required id="" class="form-control" placeholder="Service Description" >{{data.address}}</textarea>
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Net Amount</label>
+                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.email}}" onkeyup="calculations()" >
+
+                                                </div>
+                                                
+                                                <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
+                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.email}}" onkeyup="calculationsmarkup()" >
+
+                                                </div>
+                                                
+                                                <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Markup</label>
+                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Gross Amount" value="{{data.email}}" onkeyup="calculationsgross()" >
+
+                                                </div>
+                                                
+                                                
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Remarks</label>
+                                                    <textarea  name="remarks" required id="" class="form-control" placeholder="Remarks" >{{data.address}}</textarea>
+
+                                                </div>
+                                               
+												
+                   
+												
+											<div class="form-group col-lg-12 col-12">
+                                                <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+                                                <a href="" class="btn btn-default mt-4 mb-0"  >Reset</a>
+											</div>
+											
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+
+                    </div>
+                </form>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            </div>
+            <!--app-content close-->
+			<script>
+                function calculations(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    var markup = document.getElementById("markup").value;
+                    if (grossamount != "" && netamount != ""){
+                        markup = parseFloat(grossamount) - parseFloat(netamount)
+                        document.getElementById("markup").value = markup;
+                    }
+                    if (netamount != "" && markup != ""){
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    }
+
+                }
+                function calculationsgross(){
+                    var netamount = document.getElementById("netamount").value;
+                    var markup = document.getElementById("markup").value;
+
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    
+
+                }
+                function calculationsmarkup(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    markup = parseFloat(grossamount) - parseFloat(netamount)
+                    document.getElementById("markup").value = markup;
+                    
+
+                }
+
+
+                function airticket(val){
+                    if (val === "AIR TICKETS") {
+                        document.getElementById("airticket_div").style.display = "";
+                    } else {
+                        document.getElementById("airticket_div").style.display = "none";
+                    }
+
+                }
+            </script>
+            {% include 'superadmin/layouts/footer.html' %}

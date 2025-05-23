@@ -108,6 +108,24 @@
                   </a>
                 </li>
 
+             
+                <li class="slide">
+                  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                    <i class="side-menu__icon fe fe-grid"></i>
+                    <span class="side-menu__label">Bookings</span>
+                    <i class="angle fe fe-chevron-right"></i>
+                  </a>
+                  <ul class="slide-menu">
+					          <li>
+                      <a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a>
+                    </li>
+                    <li>
+                      <a href="" class="slide-item">Refunds</a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
                 
               <li class="slide">
                 <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:countrieslist' %}">
@@ -115,12 +133,7 @@
                 </a>
               </li> 
 
-                <li class="slide">
-                  <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:patrnerslist' %}">
-                    <i class="side-menu__icon fe fe-grid"></i>
-                    <span class="side-menu__label">Partners</span>
-                  </a>
-                </li>
+               
                 <li class="slide">
                   <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:universitylist' %}">
                     <i class="side-menu__icon fe fe-box"></i>

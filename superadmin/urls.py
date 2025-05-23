@@ -19,6 +19,13 @@ urlpatterns = [
     path('agentscreate', views.agentscreate.as_view(), name='agentscreate'),
     path('agentsedit/<int:id>', views.agentscreate.as_view(), name='agentsedit'),
 
+    path('offlinebookingslist', views.offlinebookingslist.as_view(), name='offlinebookingslist'),
+    path('offlinebookingscreate', views.offlinebookingscreate.as_view(), name='offlinebookingscreate'),
+    path('offlinebookingsedit/<int:id>', views.offlinebookingscreate.as_view(), name='offlinebookingsedit'),
+
+
+
+
     path('bannerlist', views.bannerlist.as_view(), name='bannerlist'),
     path('bannercreate', views.bannercreate.as_view(), name='bannercreate'),
     path('banneredit/<int:id>', views.bannercreate.as_view(), name='banneredit'),

@@ -123,7 +123,7 @@ class agentslist(LoginRequiredMixin, View):
             if status:
                 conditions &= Q(is_active=status)
             if search:
-                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search)| Q(unique_id__icontains=search)
+                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
             conditions &= Q(user_type=3)
             data_list = User.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
@@ -186,6 +186,109 @@ class agentscreate(LoginRequiredMixin, View):
         data.set_password(request.POST.get('password'))
         data.save()
         return redirect('superadmin:agentslist')
+
+    # Agents module end
+
+
+
+# Agents module start
+class offlinebookingslist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = Bookings.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = Bookings.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                Bookings.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                Bookings.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
+            data_list = Bookings.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/bookings/bookings-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'bookings', 'bookings-view', context)
+
+class offlinebookingscreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = Bookings.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+        return renderhelper(request, 'bookings', 'bookings-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = Bookings.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = Bookings()
+            data.unique_id = 'AG-'+str(random.randint(11111,99999))
+            messages.info(request, 'Successfully Added')
+
+
+        data.agent_id = request.POST.get('agent')
+        data.servicetype = request.POST.get('servicetype')
+        data.fromairport = request.POST.get('fromairport')
+        data.toairport = request.POST.get('toairport')
+        data.departuredate = request.POST.get('departuredate')
+        data.airline = request.POST.get('airline')
+        data.pnr = request.POST.get('pnr')
+        data.ticketnumber = request.POST.get('ticketnumber')
+        data.passengername = request.POST.get('passengername')
+        data.servicedescription = request.POST.get('servicedescription')
+        data.netamount = request.POST.get('netamount')
+        data.grossamount = request.POST.get('grossamount')
+        data.markup = request.POST.get('markup')
+        data.remarks = request.POST.get('remarks')
+        data.save()
+        return redirect('superadmin:offlinebookingslist')
 
     # Agents module end
 

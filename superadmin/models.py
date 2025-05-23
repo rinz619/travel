@@ -139,6 +139,26 @@ class User(AbstractBaseUser):
 
 
 
+class Bookings(models.Model):
+    agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    servicetype = models.TextField(null=True, blank=True)
+    fromairport = models.TextField(null=True, blank=True)
+    toairport = models.TextField(null=True, blank=True)
+    departuredate = models.DateField(null=True, blank=True)
+    airline = models.TextField(null=True, blank=True)
+    pnr = models.TextField(null=True, blank=True)
+    ticketnumber = models.TextField(null=True, blank=True)
+    passengername = models.TextField(null=True, blank=True)
+    servicedescription = models.TextField(null=True, blank=True)
+    netamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    grossamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    markup = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class Banner(models.Model):
     image = models.ImageField(upload_to='banner', null=True, blank=True)
     sequence = models.IntegerField(default=1)

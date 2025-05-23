@@ -14,17 +14,14 @@
     <thead>
         <tr>
             <th>Sl No</th>
-            <!-- <th>sequence</th> -->
-            <th>Thumbnail</th>
-            <th>Agent ID</th>
-            <th>Agency Name</th>
-            <th>Contact Person</th>
-            <th>TRN number</th>
-            <th>phone</th>
-            <th>Credentials</th>
-            <th>Address</th>
-            <th>Attachement</th>
-            <th>Status</th>
+            <th>Passenger</th>
+            <th>Service type</th>
+            <th>Details</th>
+            <th>Service description</th>
+            <th>Amount</th>
+            <th>Agent</th>
+            <th>Remarks</th>
+            <!-- <th>Status</th> -->
             <th>Action</th>
         </tr>
     </thead>
@@ -33,32 +30,22 @@
         {% for i in datas %}
         <tr>
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            <!-- <td></td> -->
-            <td>{% if i.image %}
-                <ul id="lightgallery-{{ forloop.counter }}" style="display: flex;">
-                <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
-                <a href="javascript:void(0)">
-                <img class="img-responsive br-5" src="{{i.image.url}}" alt="Thumb-1">
-                </a>
-                </li>
-                
-            </ul>
-                {% endif %}</td>
-                <td><b>{{i.unique_id}}</b></td>
-                <td>{{i.name}}</td>
-                <td>{{i.contactperson}}</td>
-                <td>{{i.trn}}</td>
-            <td>{{i.phone}}</td>
-            <td>username : <b>{{i.email}}</b></br>Password : <b>{{i.password_text}}</b></td>
-            <td><b>{{i.address}}</b></td>
-            <td align="center">{% if i.attachement %}<a target="_blank" href="{{i.attachement.url}}" class="btn btn-primary btn-sm">View</a> {% endif %}</td>
+            
+            <td>{{i.passengername}}</td>
+            <td>{{i.servicetype}}</td>
+            <td>From : <b>{{i.fromairport}}</b></br>To : <b>{{i.toairport}}</b></br>Date : <b>{{i.departuredate}}</b></br>Airline : <b>{{i.airline}}</b></br>PNR : <b>{{i.pnr}}</b></br>Ticket : <b>{{i.ticketnumber}}</b></td>
+            <td>{{i.servicedescription}}</td>
+            <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
+            <td>{{i.agent.name}}</td>
+            <td>{{i.remarks}}</td>
+            
            
-                <td>
+                <!-- <td>
                     <div class="material-switch">
                              <input id="someSwitchOptionSuccess{{i.id}}" name="someSwitchOption001" type="checkbox" {% if i.is_active %}checked onclick="categorystatus({{i.id}},2)"{% else %}onclick="categorystatus({{i.id}},1)" {% endif %}  />
                              <label for="someSwitchOptionSuccess{{i.id}}" class="label-success"></label>
                          </div>
-               </td>
+               </td> -->
               
                <td>
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:agentsedit' i.id %}"><i

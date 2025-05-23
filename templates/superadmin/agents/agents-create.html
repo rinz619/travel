@@ -32,9 +32,7 @@
                                                 type="file"
                                                 class="dropify"
                                                 data-bs-height="180"
-                                                {% if not data %}
-                                                required
-                                                {% endif %}
+                                               
                                                 name="imagefile"
                                                 accept=".jpg,.png,.jpeg"
                                                 data-default-file="{{data.image.url}}"
@@ -71,12 +69,12 @@
                                                 
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Phone</label>
-                                                    <input type="number" name="phone" required id="" class="form-control" placeholder="Phone" value="{{data.phone}}" >
+                                                    <input type="text" maxlength="10" name="phone" required id="" class="form-control" placeholder="Phone" value="{{data.phone}}" onkeypress="return restrictAlphabets(event)" >
 
                                                 </div>
                                                  <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">TRN Number</label>
-                                                    <input type="number" name="phone" required id="" class="form-control" placeholder="Tax Registration Number" value="{{data.trn}}" >
+                                                    <input type="text" maxlength="10" name="trn" required id="" class="form-control" placeholder="Tax Registration Number" value="{{data.trn}}" onkeypress="return restrictAlphabets(event)" >
 
                                                 </div>
                                                 <div class="form-group col-lg-6">
@@ -86,7 +84,7 @@
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Attachement</label>
-                                                    <input type="file" name="attachment" required id="" class="form-control" placeholder="Password" value="{{data.attachement}}" >
+                                                    <input type="file" name="attachment" {% if not data %} required{% endif %} id="" class="form-control" placeholder="" value="{{data.attachement}}" >
 
                                                 </div>
                                                 <div class="form-group col-lg-6">
@@ -100,6 +98,7 @@
 												
 											<div class="form-group col-lg-12 col-12">
                                                 <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+                                                <a href="" class="btn btn-default mt-4 mb-0"  >Reset</a>
 											</div>
 											
                                     </div>
