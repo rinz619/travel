@@ -160,6 +160,25 @@ class Bookings(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+
+
+class Airports(models.Model):
+    city_airport = models.CharField(max_length=255)
+    country = models.CharField(max_length=100)
+    iata_code = models.CharField(max_length=10, blank=True, null=True)
+    alpha_2 = models.CharField(max_length=5)
+    alpha_3 = models.CharField(max_length=5)
+    un_code = models.IntegerField()
+
+
+
+class Airlines(models.Model):
+    iata = models.CharField(max_length=10, blank=True, null=True)
+    name = models.CharField(max_length=255)
+    country_or_region = models.CharField(max_length=100)
+    
+
+
 class Banner(models.Model):
     image = models.ImageField(upload_to='banner', null=True, blank=True)
     sequence = models.IntegerField(default=1)

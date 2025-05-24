@@ -62,11 +62,11 @@
                                                         <label for="exampleInputEmail1" class="form-label">From Airport</label>
                                                         <select class="form-control select2" data-placeholder="Choose Airport"  name="fromairport">
                                                             <option value="">Select</option>
-                                                            <option value="Airport 1" {% if data.fromairport == 'Airport 1' %}selected {% endif %}>Airport 1</option>
-                                                            <option value="Airport 2" {% if data.fromairport == 'Airport 2' %}selected {% endif %}>Airport 2</option>
-                                                            <option value="Airport 3" {% if data.fromairport == 'Airport 3' %}selected {% endif %}>Airport 3</option>
-                                                            <option value="Airport 4" {% if data.fromairport == 'Airport 4' %}selected {% endif %}>Airport 4</option>
-                                                            <option value="Airport 5" {% if data.fromairport == 'Airport 5' %}selected {% endif %}>Airport 5</option>
+                                                            {% for i in airports %}
+                                                                <option value="{{i.city_airport}}" {% if data.fromairport == i.city_airport %}selected {% endif %}>{{i.city_airport}} ( {{i.country}} )</option>
+
+                                                            {% endfor %}
+                                                           
                                                         </select>
 
                                                     </div>
@@ -74,11 +74,10 @@
                                                         <label for="exampleInputEmail1" class="form-label">To Airport</label>
                                                         <select class="form-control select2" data-placeholder="Choose Airport"  name="toairport">
                                                             <option value="">Select</option>
-                                                            <option value="Airport 1" {% if data.toairport == 'Airport 1' %}selected {% endif %}>Airport 1</option>
-                                                            <option value="Airport 2" {% if data.toairport == 'Airport 2' %}selected {% endif %}>Airport 2</option>
-                                                            <option value="Airport 3" {% if data.toairport == 'Airport 3' %}selected {% endif %}>Airport 3</option>
-                                                            <option value="Airport 4" {% if data.toairport == 'Airport 4' %}selected {% endif %}>Airport 4</option>
-                                                            <option value="Airport 5" {% if data.toairport == 'Airport 5' %}selected {% endif %}>Airport 5</option>
+                                                             {% for i in airports %}
+                                                                <option value="{{i.city_airport}}" {% if data.toairport == i.city_airport %}selected {% endif %}>{{i.city_airport}} ( {{i.country}} )</option>
+
+                                                            {% endfor %}
                                                         </select>
 
                                                     </div>
@@ -89,7 +88,15 @@
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Airline</label>
-                                                    <input type="text" name="airline"  id="" class="form-control" placeholder="Airline" value="{{data.airline}}" >
+                                                    <select class="form-control select2" data-placeholder="Choose Airline"  name="airline">
+                                                            <option value="">Select</option>
+                                                             {% for i in airlines %}
+                                                                <option value="{{i.name}}" {% if data.airline == i.name %}selected {% endif %}>{{i.name}} ( {{i.iata}} )</option>
+
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    {% comment %} <input type="text" name="airline"  id="" class="form-control" placeholder="Airline" value="{{data.airline}}" > {% endcomment %}
 
                                                     </div>
                                                     <div class="form-group col-lg-6">
@@ -207,13 +214,15 @@
                     const airticketDiv = document.getElementById("airticket_div");
                     const inputs = airticketDiv.querySelectorAll("input, select, textarea");
 
-                    if (val === "AIR TICKETS") {
-                        airticketDiv.style.display = "";
-                        inputs.forEach(el => el.setAttribute("required", "required"));
-                    } else {
-                        airticketDiv.style.display = "none";
-                        inputs.forEach(el => el.removeAttribute("required"));
-                    }
+                   const div = document.getElementById('airticket_div');
+
+    if (val === 'AIR TICKETS') {
+        div.style.display = 'flex'; // or 'block' if it's not using bootstrap grid
+        // Reinitialize select2 for any new selects inside the div
+        $(div).find('select').select2();
+    } else {
+        div.style.display = 'none';
+    }
 
 
                 }

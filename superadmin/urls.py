@@ -13,7 +13,7 @@ urlpatterns = [
     path('profile', views.profile.as_view(), name='profile'),
     path('dashboard', views.dashboard.as_view(), name='dashboard'),
 
-    path('logpageview', views.LogPageView.as_view(), name='logpageview'),
+    path('fileuploads', views.fileuploads.as_view(), name='fileuploads'),
 
     path('agentslist', views.agentslist.as_view(), name='agentslist'),
     path('agentscreate', views.agentscreate.as_view(), name='agentscreate'),

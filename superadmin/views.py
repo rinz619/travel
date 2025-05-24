@@ -287,6 +287,8 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         except:
             context['data'] = None
         context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+        context['airports'] = Airports.objects.all().order_by('city_airport')
+        context['airlines'] = Airlines.objects.all().order_by('name')
         return renderhelper(request, 'bookings', 'bookings-create', context)
 
     def post(self, request, id=None):
@@ -1129,3 +1131,24 @@ class enquierylist(LoginRequiredMixin, View):
         context['page'] = page_num
 
         return renderhelper(request, 'enquires', 'enquiry-view', context)
+
+
+import pandas as pd
+
+
+class fileuploads(LoginRequiredMixin, View):
+    def get(self, request):
+        context = {}
+        return renderhelper(request, 'file', 'file', context)
+    def post(self, request):
+        file_path = request.FILES.get('myfile')
+        df = pd.read_excel(file_path)
+
+        for _, row in df.iterrows():
+            Airlines.objects.create(
+            iata=row['IATA'],
+            name=row['Airline'],
+            country_or_region=row['Country/Region']
+            )
+        print(file_path)
+        return HttpResponse('in')
