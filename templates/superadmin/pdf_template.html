@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><style>table, th, td { border: 1px solid black; border-collapse: collapse; }</style></head>
+<body>
+    <h2>Transaction Report</h2>
+    <table width="100%">
+        <thead>
+            <tr>
+                <th>Sl No</th>
+                <th>Invoice No</th>
+                <th>Transaction Date</th>
+                <th>Transaction Type</th>
+                <th>PNR</th>
+                <th>Sector</th>
+                <th>Description</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Running Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in datas %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.unique_id }}</td>
+                <td>{{ i.date }}</td>
+                <td>{{ i.transactiontype }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{% if i.debit %}{{ i.debit }}{% else %}-{% endif %}</td>
+                <td>{% if i.credit %}{{ i.credit }}{% else %}-{% endif %}</td>
+                <td>{% if i.balance %}{{ i.balance }}{% else %}0.00{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

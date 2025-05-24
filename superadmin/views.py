@@ -18,6 +18,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from num2words import num2words
+import openpyxl
 
 
 # Create your views here.
@@ -296,7 +297,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
     def post(self, request, id=None):
         try:
             data = Bookings.objects.get(id=id)
-            
+            account = AccountLedgers.objects.get(unique_id=data.unique_id)
             messages.info(request, 'Successfully Updated')
         except:
             
@@ -317,8 +318,11 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         
             # now = datetime.now()
             # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
+            account = AccountLedgers()
             data = Bookings()
             data.unique_id = f"{prefix}{next_seq}"
+            account.unique_id = f"{prefix}{next_seq}"
+
             messages.info(request, 'Successfully Added')
 
 
@@ -341,6 +345,12 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         data.markup = request.POST.get('markup')
         data.remarks = request.POST.get('remarks')
         data.save()
+        
+        account.agent_id = request.POST.get('agent')
+        account.transactiontype = 'Offline Booking'
+        account.date = datetime.now().date()
+        account.debit = request.POST.get('grossamount')
+        account.save()
         return redirect('superadmin:offlinebookingslist')
 
     # Agents module end
@@ -353,18 +363,21 @@ class accountledger(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         conditions = Q()
-        data = Banner.objects.all().order_by('-id')
+        if request.user.user_type == 3:
+            data = AccountLedgers.objects.filter(agent=request.user.id).order_by('-id')
+        else:    
+            data = AccountLedgers.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
+            fromdate = request.GET.get('fromdate')
+            todate = request.GET.get('todate')
             type = request.GET.get('type')
             if type == '1':
                 id = request.GET.get('id')
                 vl = request.GET.get('vl')
-                cat = Banner.objects.get(id=id)
+                cat = AccountLedgers.objects.get(id=id)
                 if vl == '2':
                     cat.is_active = False
                 else:
@@ -374,17 +387,22 @@ class accountledger(LoginRequiredMixin, View):
             elif type == '4':
                 id = request.GET.get('id')
                 seq = request.GET.get('seq')
-                Banner.objects.filter(id=id).update(sequence=seq)
+                AccountLedgers.objects.filter(id=id).update(sequence=seq)
                 messages.info(request, 'Successfully Updated')
             elif type == '2':
                 id = request.GET.get('id')
-                Banner.objects.filter(id=id).delete()
+                AccountLedgers.objects.filter(id=id).delete()
                 messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search)
-            data_list = Banner.objects.filter(conditions).order_by('-id')
+            if fromdate:
+                conditions &= Q(date__gte=fromdate)
+            if todate:
+                conditions &= Q(date__lte=todate)
+                
+            if request.user.user_type == 3:
+                conditions &= Q(agent=request.user.id)
+                    
+                
+            data_list = AccountLedgers.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
             try:
@@ -415,750 +433,41 @@ class invoice(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         try:
-            context['data'] =data= Bookings.objects.get(id=id)
+            context['data'] =data= Bookings.objects.get(unique_id=id)
             num = data.grossamount
-            context['num_in_words'] = num2words(num, to='cardinal', lang='en').title() + 'AED Only'
+            context['num_in_words'] = num2words(num, to='cardinal', lang='en').title() + ' AED Only '
         except:
             context['data'] = None
         return renderhelper(request, 'invoice', 'invoice', context)
 
 
-# Banner module start
-class bannerlist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Banner.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Banner.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Banner.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Banner.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search)
-            data_list = Banner.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
 
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/banner/banner-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
 
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'banner', 'banner-view', context)
-
-class bannercreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Banner.objects.get(id=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'banner', 'banner-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Banner.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Banner()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-        data.title = request.POST['title']
-        data.description = request.POST['description']
-        data.save()
-        return redirect('superadmin:bannerlist')
-
-    # Banner module end
-
-
-# Countries module start
-class countrieslist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Countries.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Countries.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Countries.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Countries.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search) | Q(subtitle__icontains=search)
-            data_list = Countries.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/countries/countries-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'countries', 'countries-view', context)
-
-class countriescreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Countries.objects.get(id=id)
-            context['faqs'] = Faqs.objects.filter(country=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'countries', 'countries-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Countries.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Countries()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-
-        uploaded_file_flag = request.FILES.get('flagfile')
-        if uploaded_file_flag:
-            data.flag = uploaded_file_flag
-
-        data.title = request.POST['title']
-        data.subtitle = request.POST['subtitle']
-        data.description = request.POST['description']
-        data.why = request.POST['why']
-        data.eligblity = request.POST.getlist('eligiblity')
-        data.save()
-        question = request.POST.getlist('question')
-        answer = request.POST.getlist('answer')
-        Faqs.objects.filter(country=data.id).delete()
-        for i in range(0,len(question)):
-            Faqs(country=data,title=question[i],subtitle=answer[i]).save()
-        return redirect('superadmin:countrieslist')
-
-    # Countries module end
-
-# Partners module start
-class patrnerslist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Partners.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Partners.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Partners.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Partners.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search) | Q(subtitle__icontains=search)
-            data_list = Partners.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/partners/partner-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'partners', 'partner-view', context)
-
-class partnerscreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Partners.objects.get(id=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'partners', 'partner-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Partners.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Partners()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-
-
-        data.save()
-        return redirect('superadmin:patrnerslist')
-
-    # Banner module end
-
-# University module start
-class universitylist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Universities.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Universities.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Universities.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Universities.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search) | Q(country__title__icontains=search)
-            data_list = Universities.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/university/university-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'university', 'university-view', context)
-
-class universitycreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Universities.objects.get(id=id)
-        except:
-            context['data'] = None
-        context['countries'] = Countries.objects.filter(is_active=True)
-        return renderhelper(request, 'university', 'university-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Universities.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Universities()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-        data.country_id = request.POST.get('country')
-        data.title = request.POST.get('title')
-        data.duration = request.POST.get('duration')
-        data.ranking = request.POST.get('ranking')
-        data.indian = request.POST.get('indian')
-        data.description = request.POST.get('description')
-        data.save()
-        return redirect('superadmin:universitylist')
-
-    # University module end
-
-# Service module start
-class serviceslist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Services.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Services.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Services.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Services.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search)
-            data_list = Services.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/services/services-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'services', 'services-view', context)
-
-class servicescreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Services.objects.get(id=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'services', 'services-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Services.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Services()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-        data.title = request.POST.get('title')
-
-        data.save()
-        return redirect('superadmin:serviceslist')
-
-    # Banner module end
-
-# Testimonials module start
-class testimonialslist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Testimonials.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Testimonials.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Testimonials.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Testimonials.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search)
-            data_list = Testimonials.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/testimonials/testimonials-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'testimonials', 'testimonials-view', context)
-
-class testimonialscreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Testimonials.objects.get(id=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'testimonials', 'testimonials-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Testimonials.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Testimonials()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-        data.title = request.POST.get('title')
-        data.link = request.POST.get('link')
-        data.description = request.POST.get('description')
-
-        data.save()
-        return redirect('superadmin:testimonialslist')
-
-    # Testimonials module end
-
-# Events module start
-class eventslist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Events.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Events.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Events.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Events.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(title__icontains=search)
-            data_list = Events.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/events/events-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'events', 'events-view', context)
-
-class eventscreate(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        try:
-            context['data'] = Events.objects.get(id=id)
-        except:
-            context['data'] = None
-        return renderhelper(request, 'events', 'events-create', context)
-
-    def post(self, request, id=None):
-        try:
-            data = Events.objects.get(id=id)
-            messages.info(request, 'Successfully Updated')
-        except:
-            data = Events()
-            messages.info(request, 'Successfully Added')
-
-        uploaded_file = request.FILES.get('imagefile')
-        if uploaded_file:
-            data.image = uploaded_file
-        data.title = request.POST.get('title')
-        data.start = request.POST.get('startdate')
-        data.end = request.POST.get('enddate')
-
-        data.save()
-        return redirect('superadmin:eventslist')
-
-    # Testimonials module end
-
-from django.conf import settings
-import os
-
-
-class LogPageView(View):
-    def get(self, request):
-        context={}
-        # Use BASE_DIR from settings to construct the path
-        log_file_path = os.path.join(settings.BASE_DIR, 'django_debug.log')
- 
-        try:
-            with open(log_file_path, 'r') as log_file:
-                # Read the file content and split into lines
-                log_lines = log_file.readlines()
-                # Reverse the lines for descending order
-                log_lines.reverse()
-                # Join the lines back
-                log_content = ''.join(log_lines)
-        except FileNotFoundError:
-            log_content = "Log file not found."
-        except Exception as e:
-            log_content = f"An error occurred while reading the log file: {e}"
-        context['log_content']=log_content
-        return renderhelper(request,'log','log',context)
-    
-
-
-
-# Events module start
-class enquierylist(LoginRequiredMixin, View):
-    def get(self, request, id=None):
-        context = {}
-        conditions = Q()
-        data = Enquiries.objects.all().order_by('-id')
-        context['range'] = range(1,len(data)+1)
-        if is_ajax(request):
-            page = request.GET.get('page', 1)
-            context['page'] = page
-            status = request.GET.get('status')
-            search = request.GET.get('search')
-            type = request.GET.get('type')
-            if type == '1':
-                id = request.GET.get('id')
-                vl = request.GET.get('vl')
-                cat = Enquiries.objects.get(id=id)
-                if vl == '2':
-                    cat.is_active = False
-                else:
-                    cat.is_active = True
-                cat.save()
-                messages.info(request, 'Successfully Updated')
-            elif type == '4':
-                id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Enquiries.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
-            elif type == '2':
-                id = request.GET.get('id')
-                Enquiries.objects.filter(id=id).delete()
-                messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
-            if search:
-                conditions &= Q(name__icontains=search) |  Q(phone__icontains=search) |  Q(email__icontains=search) |  Q(university__icontains=search) 
-            data_list = Enquiries.objects.filter(conditions).order_by('-id')
-            paginator = Paginator(data_list, 20)
-
-            try:
-                datas = paginator.page(page)
-            except PageNotAnInteger:
-                datas = paginator.page(1)
-            except EmptyPage:
-                datas = paginator.page(paginator.num_pages)
-            context['datas'] = datas
-            template = loader.get_template('superadmin/enquires/enquiry-table.html')
-            html_content = template.render(context, request)
-            return JsonResponse({'status': True, 'template': html_content})
-
-       
-        p = Paginator(data, 20)
-        page_num = request.GET.get('page', 1)
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context['datas'] = page
-        context['page'] = page_num
-
-        return renderhelper(request, 'enquires', 'enquiry-view', context)
+def download_excel(request):
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = 'Transactions'
+
+    headers = ["Sl No", "Invoice No", "Transaction Date", "Transaction Type", "PNR", "Sector", "Description", "Debit", "Credit", "Running Balance"]
+    sheet.append(headers)
+
+    datas = AccountLedgers.objects.all()
+    for idx, i in enumerate(datas, start=1):
+        sheet.append([
+            idx,
+            i.unique_id,
+            i.date.strftime("%Y-%m-%d") if i.date else '',
+            i.transactiontype,
+            '', '', '',  # Fill PNR, Sector, Description if you have them
+            i.debit if i.debit else '-',
+            i.credit if i.credit else '-',
+            i.balance if i.balance else '0.00'
+        ])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=transactions.xlsx'
+    workbook.save(response)
+    return response
 
 
 import pandas as pd
@@ -1180,3 +489,18 @@ class fileuploads(LoginRequiredMixin, View):
             )
         print(file_path)
         return HttpResponse('in')
+
+# from django.template.loader import get_template
+# from xhtml2pdf import pisa
+# from django.http import HttpResponse
+
+# def download_pdf(request):
+#     datas = AccountLedgers.objects.all()  # or filtered data
+#     template = get_template('your_app/pdf_template.html')  # adjust path
+#     html = template.render({'datas': datas})
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="transactions.pdf"'
+#     pisa_status = pisa.CreatePDF(html, dest=response)
+#     if pisa_status.err:
+#         return HttpResponse("Error generating PDF", status=500)
+#     return response

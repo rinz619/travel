@@ -29,8 +29,8 @@
         {% if datas %}
         {% for i in datas %}
         <tr>
-            <td>{{i.unique_id}}</td> 
-            {% comment %} <td>{{forloop.counter0|add:datas.start_index}}</td>  {% endcomment %}
+            {% comment %} <td>{{i.unique_id}}</td>  {% endcomment %}
+            <td>{{forloop.counter0|add:datas.start_index}}</td> 
             
             <td>{{i.passengername}}</td>
             <td>{{i.servicetype}}</td>
@@ -39,7 +39,7 @@
             <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
             <td>{{i.agent.name}}</td>
             <td>{{i.remarks}}</td>
-            <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.id %}">View</a></td>
+            <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.unique_id %}">View</a></td>
             
            
 

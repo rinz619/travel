@@ -35,6 +35,32 @@ function restrictAlphabets(e) {
       },
     });
   }
+
+  
+  function filterledger(data) {
+    var page = "1";
+    if (data != "None") {
+      page = data;
+    }
+  
+    var fromdate = $("#fromdate").val();
+    var todate = $("#todate").val();
+  
+    var url = $("#url").val();
+    $.ajax({
+      url: url,
+      type: "GET",
+      data: { page: page, fromdate: fromdate, todate: todate },
+  
+      beforeSend: function () {
+          $("#loaderid").show();
+        },
+        success: function (data) {
+          $("#loaderid").hide();
+        $(".table-responsive").html(data.template);
+      },
+    });
+  }
   
   function categorystatus(id, vl) {
     page = $("#page").val();

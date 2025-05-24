@@ -14,7 +14,6 @@
     <thead>
         <tr>
             <th>Sl No</th>
-            <!-- <th>sequence</th> -->
             <th>Invoice No</th>
             <th>Transaction Date</th>
             <th>Transaction Type</th>
@@ -30,23 +29,16 @@
         {% if datas %}
         {% for i in datas %}
         <tr>
-            <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            <!-- <td></td> -->
-            <td>{% if i.image %}
-                <ul id="lightgallery-{{ forloop.counter }}" style="display: flex;">
-                <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
-                <a href="javascript:void(0)">
-                <img class="img-responsive br-5" src="{{i.image.url}}" alt="Thumb-1">
-                </a>
-                </li>
-                
-            </ul>
-                {% endif %}</td>
-                <td><b>{{i.unique_id}}</b></td>
-                <td>{{i.name}}</td>
-                <td>{{i.contactperson}}</td>
-                <td>{{i.trn}}</td>
-            <td>{{i.phone}}</td>
+            <td>{{forloop.counter0|add:datas.start_index}}</td>            
+                <td><a target="_blank" href="{% url 'superadmin:invoice' i.unique_id %}"><b>{{i.unique_id}}</b></a></td>
+                <td>{{i.date}}</td>
+                <td>{{i.transactiontype}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{% if i.debit %}{{i.debit}}{% else %} - {% endif %}</td>
+                <td>{% if i.credit %}{{i.credit}}{% else %} - {% endif %}</td>
+                <td>{% if i.balance %}{{i.balance}}{% else %}0.00{% endif %}</td>
             
             {% endfor %}
             {% else %}
