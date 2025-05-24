@@ -21,6 +21,7 @@
             <th>Amount</th>
             <th>Agent</th>
             <th>Remarks</th>
+            <th>invoice</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -38,6 +39,7 @@
             <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
             <td>{{i.agent.name}}</td>
             <td>{{i.remarks}}</td>
+            <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.id %}">View</a></td>
             
            
 

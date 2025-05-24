@@ -17,6 +17,7 @@ from datetime import datetime
 #     return render(request, '404.html', status=404)
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
+from num2words import num2words
 
 
 # Create your views here.
@@ -414,7 +415,9 @@ class invoice(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         try:
-            context['data'] = Countries.objects.get(id=id)
+            context['data'] =data= Bookings.objects.get(id=id)
+            num = data.grossamount
+            context['num_in_words'] = num2words(num, to='cardinal', lang='en').title() + 'AED Only'
         except:
             context['data'] = None
         return renderhelper(request, 'invoice', 'invoice', context)

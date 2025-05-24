@@ -136,8 +136,8 @@
             </div>
         </div>
         <div class="invoice-details" style="padding-top: 161px;">
-            <strong>Invoice No:</strong> <span style="color: red;">151515</span><br>
-            <strong>Date:</strong> 17/05/2025
+            <strong>Invoice No:</strong> <span style="color: red;">{{data.unique_id}}</span><br>
+            <strong>Date:</strong> {{data.created_at.date|date:'d/m/Y'}}
         </div>
     </div>
 
@@ -145,7 +145,7 @@
 
     <div class="invoice-to">
         <strong>Invoiced to :</strong><br>
-        <strong>FIRST NAME_LAST NAME</strong><br>
+        <strong>{{data.passengername}}</strong><br>
         ABCD STREET, DUBAI, UAE
     </div>
 
@@ -162,9 +162,9 @@
         </thead>
         <tbody style="height:300px">
             <tr>
-                <td >Payment Aginst XXXXX<br>DXB-COK<br>17 May 2025</td>
+                <td >{{data.servicetype}}</td>
                 <td>1</td>
-                <td>AED 2520</td>
+                <td>AED {{data.grossamount}}</td>
                 <td>0%</td>
                 <td>0</td>
                 <td>AED 2520</td>
@@ -172,16 +172,16 @@
         </tbody>
         <tfoot style="align:right">
             <tr>
-                <td colspan="3" rowspan="3"> <p>[ Two thousand five hundred and twenty AED Only ]</p></td>
+                <td colspan="3" rowspan="3"> <p>[ {{num_in_words}} ]</p></td>
                 <td colspan="2">Untaxed Amount :</td>
-                <td>AED 2520.00</td>
+                <td>AED {{data.grossamount}}</td>
             </tr>
             <tr>
                 <td colspan="2">VAT :</td>
                 <td>AED 0.00</td>
             </tr>
             <tr>
-                <td style="background-color:#aa0000;color:#fff" colspan="3">Total : AED 2520.00</td>
+                <td style="background-color:#aa0000;color:#fff" colspan="3">Total : AED {{data.grossamount}}</td>
                
             </tr>
         </tfoot>

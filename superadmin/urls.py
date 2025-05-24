@@ -25,7 +25,7 @@ urlpatterns = [
 
     path('accountledger', views.accountledger.as_view(), name='accountledger'),
     
-    path('invoice', views.invoice.as_view(), name='invoice'),
+    path('invoice/<int:id>', views.invoice.as_view(), name='invoice'),
 
 
 
