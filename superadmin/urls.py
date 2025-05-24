@@ -24,6 +24,8 @@ urlpatterns = [
     path('offlinebookingsedit/<int:id>', views.offlinebookingscreate.as_view(), name='offlinebookingsedit'),
 
     path('accountledger', views.accountledger.as_view(), name='accountledger'),
+    
+    path('invoice', views.invoice.as_view(), name='invoice'),
 
 
 

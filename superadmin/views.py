@@ -16,6 +16,7 @@ from datetime import datetime
 # def custom_404_view(request, exception):
 #     return render(request, '404.html', status=404)
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max
 
 
 # Create your views here.
@@ -297,10 +298,26 @@ class offlinebookingscreate(LoginRequiredMixin, View):
             
             messages.info(request, 'Successfully Updated')
         except:
+            
             now = datetime.now()
-            year_month_format = f"{now.year % 100:02d}{now.month:02d}"
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"INV{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = Bookings.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+        
+        
+            # now = datetime.now()
+            # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
             data = Bookings()
-            data.unique_id = f'INV{str(year_month_format)}{random.randint(111,9999)}'
+            data.unique_id = f"{prefix}{next_seq}"
             messages.info(request, 'Successfully Added')
 
 
@@ -393,6 +410,14 @@ class accountledger(LoginRequiredMixin, View):
         return renderhelper(request, 'ledger', 'ledger-view', context)
 
 
+class invoice(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = Countries.objects.get(id=id)
+        except:
+            context['data'] = None
+        return renderhelper(request, 'invoice', 'invoice', context)
 
 
 # Banner module start

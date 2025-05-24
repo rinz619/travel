@@ -28,7 +28,8 @@
         {% if datas %}
         {% for i in datas %}
         <tr>
-            <td>{{forloop.counter0|add:datas.start_index}}</td> 
+            <td>{{i.unique_id}}</td> 
+            {% comment %} <td>{{forloop.counter0|add:datas.start_index}}</td>  {% endcomment %}
             
             <td>{{i.passengername}}</td>
             <td>{{i.servicetype}}</td>
