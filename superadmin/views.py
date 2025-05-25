@@ -395,7 +395,7 @@ class cashrecieptlist(LoginRequiredMixin, View):
             if status:
                 conditions &= Q(is_active=status)
             if search:
-                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
+                conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
             data_list = CashReceipts.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
@@ -406,7 +406,7 @@ class cashrecieptlist(LoginRequiredMixin, View):
             except EmptyPage:
                 datas = paginator.page(paginator.num_pages)
             context['datas'] = datas
-            template = loader.get_template('superadmin/bookings/bookings-table.html')
+            template = loader.get_template('superadmin/cash/cash-table.html')
             html_content = template.render(context, request)
             return JsonResponse({'status': True, 'template': html_content})
 
@@ -579,6 +579,101 @@ class receipt(LoginRequiredMixin, View):
         except:
             context['data'] = None
         return renderhelper(request, 'invoice', 'receipt', context)
+
+
+
+
+# Bookings module start
+
+class refundlist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = Refunds.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = Refunds.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                Refunds.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                Refunds.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
+            data_list = Refunds.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/refund/refund-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'refund', 'refund-view', context)
+
+
+class refund(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] =data= Bookings.objects.get(unique_id=id)            
+        except:
+            context['data'] = Refunds.objects.get(id=int(id))   
+            
+        return renderhelper(request, 'refund', 'refund-create', context)
+    def post(self, request, id=None):
+        try:
+            data = Refunds.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = Refunds()
+            data.booking_unique_id = id
+            data.unique_id = id
+            messages.info(request, 'Successfully Added')
+
+        
+        
+        data.netamount = request.POST.get('netamount')
+        data.grossamount = request.POST.get('grossamount')
+        data.markup = request.POST.get('markup')
+        data.remarks = request.POST.get('remarks')
+        data.save()
+        return redirect('superadmin:refundlist')
 
 
 

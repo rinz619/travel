@@ -18,7 +18,7 @@
             <th>Transaction Date</th>
             <th>Transaction Type</th>
             <th>PNR</th>
-            <th>Sector</th>
+            {% comment %} <th>Sector</th> {% endcomment %}
             <th>description</th>
             <th>debit</th>
             <th>credit</th>
@@ -33,9 +33,8 @@
                 <td><a target="_blank" href="{% url 'superadmin:invoice' i.unique_id %}"><b>{{i.unique_id}}</b></a></td>
                 <td>{{i.date}}</td>
                 <td>{{i.transactiontype}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{i.pnr}}</td>
+                <td>{{i.description}}</td>
                 <td>{% if i.debit %}{{i.debit}}{% else %} - {% endif %}</td>
                 <td>{% if i.credit %}{{i.credit}}{% else %} - {% endif %}</td>
                 <td>{% if i.balance %}{{i.balance}}{% else %}0.00{% endif %}</td>

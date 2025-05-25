@@ -10,7 +10,7 @@
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 503px;
-    height: 53px;
+    height: 49px;
     margin-bottom: 20px;
 }
 
@@ -18,11 +18,12 @@
     border: none;
     padding: 10px 20px;
     background: #e5e5e5;
-    border-radius: 15px;
+    border-radius: 10px;
     margin: 10px;
     width: 150px;
     font-size: 16px;
     outline: none;
+    height:35px;
 }
 
 .reset-icon {
@@ -48,7 +49,6 @@
     font-size: 18px;
     border-radius: 0 15px 15px 0;
     cursor: pointer;
-    height: 100%;
     width: 135px;
 }
 </style>
@@ -78,10 +78,10 @@
                                     <div class="card-body">
                                         <form>
                                             <div class="search-container">
-                                                <input type="text" class="search-input" placeholder="From" id="from">
+                                                <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
                                                 <input type="text" class="search-input" placeholder="To" id="to">
-                                                <div class="reset-icon" onclick="document.getElementById('from').value=''; document.getElementById('to').value='';">&#x21bb;</div>
-                                                <button type="submit" class="search-button">Search</button>
+                                                <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
+                                                <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>
                                             </div>
                                         </form>	
                                         <div class="table-responsive">

@@ -33,6 +33,11 @@ urlpatterns = [
     
     path('invoice/<str:id>', views.invoice.as_view(), name='invoice'),
     path('receipt/<str:id>', views.receipt.as_view(), name='receipt'),
+    
+    path('refund/<str:id>', views.refund.as_view(), name='refund'),
+    path('refundlist', views.refundlist.as_view(), name='refundlist'),
+    path('refundedit/<str:id>', views.refund.as_view(), name='refundedit'),
+    
 
 
 

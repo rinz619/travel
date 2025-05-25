@@ -24,6 +24,7 @@
             <th>Date</th>
             <th>invoice</th>
             <th>Action</th>
+            <th>Refund</th>
         </tr>
     </thead>
     <tbody>
@@ -40,7 +41,7 @@
             <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
             <td>{{i.agent.name}}</td>
             <td>{{i.remarks}}</td>
-            <td>{{i.created_at.date}}</td>
+            <td>{{i.created_at.date|date:"d/m/Y"}}</td>
             <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.unique_id %}">View</a></td>
             
            
@@ -52,6 +53,7 @@
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
                </td>
+               <td><a class="btn btn-primary btn-sm" href="{% url 'superadmin:refund' i.unique_id %}">Refund</a></td>
             </tr>
             {% endfor %}
             {% else %}
