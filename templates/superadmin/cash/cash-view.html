@@ -1,0 +1,107 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+<style>
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 503px;
+    height: 53px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    border: none;
+    padding: 10px 20px;
+    background: #e5e5e5;
+    border-radius: 15px;
+    margin: 10px;
+    width: 150px;
+    font-size: 16px;
+    outline: none;
+}
+
+.reset-icon {
+    background-color: #f6b73c;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.search-button {
+    background-color: #c62828;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    font-size: 18px;
+    border-radius: 0 15px 15px 0;
+    cursor: pointer;
+    height: 100%;
+    width: 135px;
+}
+</style>
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Cash Receipt</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:cashrecieptcreate' %}"><i class="side-menu__icon fe fe-plus mx-1"></i>Add New</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                        <div class="row">
+                             <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">List Of All Cash Receipts</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="search-container">
+                                                <input type="text" class="search-input" placeholder="From" id="from">
+                                                <input type="text" class="search-input" placeholder="To" id="to">
+                                                <div class="reset-icon" onclick="document.getElementById('from').value=''; document.getElementById('to').value='';">&#x21bb;</div>
+                                                <button type="submit" class="search-button">Search</button>
+                                            </div>
+                                        </form>	
+                                        <div class="table-responsive">
+											
+                                            {% include 'superadmin/cash/cash-table.html' %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW CLOSED -->
+					</div>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            <!--app-content close-->
+	
+
+
+
+    {% include 'superadmin/layouts/footer.html' %}
+  
+   

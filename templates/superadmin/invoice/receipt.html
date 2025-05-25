@@ -101,7 +101,7 @@
         text-align: center;
         border: 1px solid #000;
         padding: 10px;
-        width: 250px;
+        width: 375px;
         margin-top: 50px;
     }
     .red-bar {
@@ -155,45 +155,33 @@
         </div>
     </div>
 
-    <h2>TAX INVOICE</h2>
+    <h2>CASH RECEIPT</h2>
 
     <div class="invoice-to">
         <strong>Invoiced to :</strong><br>
-        <strong>{{data.passengername}}</strong><br>
-        ABCD STREET, DUBAI, UAE
+        <strong>{{data.receivedfrom}}</strong><br>
+        Phone : {{data.phone}}
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Description</th>
-                <th>QTY</th>
-                <th>Price</th>
-                <th>VAT %</th>
-                <th>VAT Amount</th>
+                <th colspan="5">Description</th>
                 <th>Total</th>
             </tr>
         </thead>
         <tbody style="height:300px">
             <tr>
-                <td >{{data.servicetype}}</td>
-                <td>1</td>
-                <td>AED {{data.grossamount}}</td>
-                <td>0%</td>
-                <td>0</td>
-                <td>AED {{data.grossamount}}</td>
+                <td colspan="5" >{{data.description}}</td>
+                <td>AED {{data.amount}}</td>
             </tr>
         </tbody>
         <tfoot style="align:right">
             <tr>
                 <td colspan="3" rowspan="3"> <p>[ {{num_in_words}} ]</p></td>
-                <td colspan="2">Untaxed Amount :</td>
-                <td>AED {{data.grossamount}}</td>
+              
             </tr>
-            <tr>
-                <td colspan="2">VAT :</td>
-                <td>AED 0.00</td>
-            </tr>
+           
             <tr>
                 <td style="background-color:#aa0000;color:#fff" colspan="3">Total : AED {{data.grossamount}}</td>
                

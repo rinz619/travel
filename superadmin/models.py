@@ -77,6 +77,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     unique_id = models.TextField(null=True,unique=True)
+    agenttype = models.TextField(null=True)
     name = models.TextField(null=True)
     contactperson = models.TextField(null=True)
     phone = models.TextField(null=True)
@@ -148,6 +149,7 @@ class Bookings(models.Model):
     departuredate = models.DateField(null=True, blank=True)
     airline = models.TextField(null=True, blank=True)
     pnr = models.TextField(null=True, blank=True)
+    passportnumber = models.TextField(null=True, blank=True)
     ticketnumber = models.TextField(null=True, blank=True)
     passengername = models.TextField(null=True, blank=True)
     servicedescription = models.TextField(null=True, blank=True)
@@ -155,6 +157,20 @@ class Bookings(models.Model):
     grossamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     markup = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+
+class CashReceipts(models.Model):
+    agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    unique_id = models.TextField(null=True, blank=True)
+    paymenttype = models.TextField(null=True, blank=True)
+    receivedfrom = models.TextField(null=True, blank=True)
+    phone = models.TextField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

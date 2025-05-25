@@ -57,6 +57,11 @@
 													</select>
 
                                                 </div>
+                                                    <div class="form-group col-lg-6" id="passport_div" style="display:none" >
+                                                    <label for="exampleInputEmail1" class="form-label">Passport No</label>
+                                                    <input type="text" name="passportnumber"  id="passportno" class="form-control" placeholder="Passport Number" value="{{data.passportno}}" >
+
+                                                    </div>
                                                 <div class="row" {% if data.servicetype == 'AIR TICKETS' %}  {% else %}style="display: none;" {% endif %} id="airticket_div">
                                                     <div class="form-group col-lg-6">
                                                         <label for="exampleInputEmail1" class="form-label">From Airport</label>
@@ -128,15 +133,16 @@
 
                                                 </div>
                                                 
-                                                <div class="form-group col-lg-4">
-                                                    <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
-                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" >
-
-                                                </div>
+                                               
                                                 
                                                 <div class="form-group col-lg-4">
                                                     <label for="exampleInputEmail1" class="form-label">Markup</label>
                                                     <input type="number" name="markup" required id="markup" class="form-control" placeholder="Gross Amount" value="{{data.markup}}" onkeyup="calculationsgross()" >
+
+                                                </div>
+                                                 <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
+                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" >
 
                                                 </div>
                                                 
@@ -207,20 +213,34 @@
                 function airticket(val){
                     if (val === "AIR TICKETS") {
                         document.getElementById("airticket_div").style.display = "";
-                    } else {
+                        document.getElementById("passport_div").style.display = "none";
+
+                        document.getElementById("passportno").required=false;
+                    }else if(val == "UAE VISA 30 DAYS" || val == "UAE VISA 60 DAYS" || val == "UAE TRANSIT VISA" || val == "GLOBAL VISA" || val == "VISA CHANGE BY BUS" || val == "VISA CHANGE BY FLIGHT"){
+                        document.getElementById("passport_div").style.display = "";
+                        document.getElementById("passportno").required=true;
+                    }
+                     else {
+                        document.getElementById("passportno").required=false;
+
+                        document.getElementById("passport_div").style.display = "none";
+
                         document.getElementById("airticket_div").style.display = "none";
                     }
 
                     const airticketDiv = document.getElementById("airticket_div");
                     const inputs = airticketDiv.querySelectorAll("input, select, textarea");
+                    
 
                    const div = document.getElementById('airticket_div');
 
     if (val === 'AIR TICKETS') {
+        inputs.forEach(el => el.required = true);
         div.style.display = 'flex'; // or 'block' if it's not using bootstrap grid
         // Reinitialize select2 for any new selects inside the div
         $(div).find('select').select2();
     } else {
+        inputs.forEach(el => el.required = false);
         div.style.display = 'none';
     }
 

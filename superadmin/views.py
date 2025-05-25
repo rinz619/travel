@@ -205,6 +205,7 @@ class agentscreate(LoginRequiredMixin, View):
         if attachment:
             data.attachement = attachment
         data.user_type = 3
+        data.agenttype = request.POST.get('agenttype')
         data.address = request.POST.get('address')
         data.name = request.POST.get('name')
         data.contactperson = request.POST.get('contactperson')
@@ -220,7 +221,8 @@ class agentscreate(LoginRequiredMixin, View):
 
 
 
-# Agents module start
+# Bookings module start
+
 class offlinebookingslist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
@@ -337,6 +339,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
             data.departuredate = None
         data.airline = request.POST.get('airline')
         data.pnr = request.POST.get('pnr')
+        data.passportnumber = request.POST.get('passportnumber')
         data.ticketnumber = request.POST.get('ticketnumber')
         data.passengername = request.POST.get('passengername')
         data.servicedescription = request.POST.get('servicedescription')
@@ -352,6 +355,132 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         account.debit = request.POST.get('grossamount')
         account.save()
         return redirect('superadmin:offlinebookingslist')
+
+    # Agents module end
+
+
+# Bookings module start
+
+class cashrecieptlist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = CashReceipts.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = CashReceipts.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                CashReceipts.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                CashReceipts.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
+            data_list = CashReceipts.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/bookings/bookings-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'cash', 'cash-view', context)
+
+class cashrecieptcreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = CashReceipts.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+        context['airports'] = Airports.objects.all().order_by('city_airport')
+        context['airlines'] = Airlines.objects.all().order_by('name')
+        return renderhelper(request, 'cash', 'cash-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = CashReceipts.objects.get(id=id)
+            account = AccountLedgers.objects.get(unique_id=data.unique_id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            
+            now = datetime.now()
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"REC{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = CashReceipts.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+        
+        
+            # now = datetime.now()
+            # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
+            account = AccountLedgers()
+            data = CashReceipts()
+            data.unique_id = f"{prefix}{next_seq}"
+            account.unique_id = f"{prefix}{next_seq}"
+
+            messages.info(request, 'Successfully Added')
+
+
+        data.agent_id = request.POST.get('agent')
+        data.paymenttype = request.POST.get('paymenttype')
+        data.receivedfrom = request.POST.get('receivedfrom')
+        data.phone = request.POST.get('phone')
+        data.amount = request.POST.get('amount')
+        data.description = request.POST.get('description')
+        
+        data.save()
+        
+        account.agent_id = request.POST.get('agent')
+        account.transactiontype = 'Cash'
+        account.date = datetime.now().date()
+        account.credit = request.POST.get('amount')
+        account.save()
+        return redirect('superadmin:cashrecieptlist')
 
     # Agents module end
 
@@ -439,6 +568,17 @@ class invoice(LoginRequiredMixin, View):
         except:
             context['data'] = None
         return renderhelper(request, 'invoice', 'invoice', context)
+
+class receipt(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] =data= CashReceipts.objects.get(unique_id=id)
+            num = data.amount
+            context['num_in_words'] = num2words(num, to='cardinal', lang='en').title() + ' AED Only '
+        except:
+            context['data'] = None
+        return renderhelper(request, 'invoice', 'receipt', context)
 
 
 

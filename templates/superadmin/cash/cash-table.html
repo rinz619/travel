@@ -14,15 +14,14 @@
     <thead>
         <tr>
             <th>Sl No</th>
-            <th>Passenger</th>
-            <th>Service type</th>
-            <th>Details</th>
-            <th>Service description</th>
+            <th>Received From</th>
+            <th>Payment type</th>
+            <th>Phone</th>
             <th>Amount</th>
-            <th>Agent</th>
-            <th>Remarks</th>
+            <th>Agency</th>
+            <th>Description</th>
             <th>Date</th>
-            <th>invoice</th>
+            <th>Receipt</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -32,22 +31,20 @@
         <tr>
             {% comment %} <td>{{i.unique_id}}</td>  {% endcomment %}
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            
-            <td>{{i.passengername}}</td>
-            <td>{{i.servicetype}}</td>
-            <td>{% if i.fromairport %}From : <b>{{i.fromairport}}</b></br>To : <b>{{i.toairport}}</b></br>Date : {% if i.departuredate %}<b>{{i.departuredate}}</b>{% endif %}</br>Airline : <b>{{i.airline}}</b></br>PNR : <b>{{i.pnr}}</b></br>Ticket : <b>{{i.ticketnumber}}</b>{% endif %}</td>
-            <td>{{i.servicedescription}}</td>
-            <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
+            <td>{{i.receivedfrom}}</td>
+            <td>{{i.paymenttype}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{i.amount}}</td>
+            <td>{{i.description}}</td>
             <td>{{i.agent.name}}</td>
-            <td>{{i.remarks}}</td>
             <td>{{i.created_at.date}}</td>
-            <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.unique_id %}">View</a></td>
+            <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:receipt' i.unique_id %}">View</a></td>
             
            
 
               
                <td>
-                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:offlinebookingsedit' i.id %}"><i
+                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:cashrecieptedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>

@@ -22,12 +22,17 @@ urlpatterns = [
     path('offlinebookingslist', views.offlinebookingslist.as_view(), name='offlinebookingslist'),
     path('offlinebookingscreate', views.offlinebookingscreate.as_view(), name='offlinebookingscreate'),
     path('offlinebookingsedit/<int:id>', views.offlinebookingscreate.as_view(), name='offlinebookingsedit'),
+    
+    path('cashrecieptlist', views.cashrecieptlist.as_view(), name='cashrecieptlist'),
+    path('cashrecieptcreate', views.cashrecieptcreate.as_view(), name='cashrecieptcreate'),
+    path('cashrecieptedit/<int:id>', views.cashrecieptcreate.as_view(), name='cashrecieptedit'),
 
     path('accountledger', views.accountledger.as_view(), name='accountledger'),
     path('download-excel/', views.download_excel, name='download_excel'),
     # path('download-pdf/', views.download_pdf, name='download_pdf'),
     
     path('invoice/<str:id>', views.invoice.as_view(), name='invoice'),
+    path('receipt/<str:id>', views.receipt.as_view(), name='receipt'),
 
 
 
