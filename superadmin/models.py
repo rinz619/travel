@@ -223,114 +223,18 @@ class Refunds(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-
-class Banner(models.Model):
-    image = models.ImageField(upload_to='banner', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-
-class Partners(models.Model):
-    image = models.ImageField(upload_to='partners', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-
-class Countries(models.Model):
-    image = models.ImageField(upload_to='country', null=True, blank=True)
-    flag = models.ImageField(upload_to='country', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    subtitle = models.TextField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    why = models.TextField(null=True, blank=True)
-    eligblity = ArrayField(models.TextField(), blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    slug = AutoSlugField(populate_from='title', null=True, blank=True, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug or self.title != self.slug:
-            self.slug = AutoSlugField(populate_from='title', unique=True).slugify(self.title)
-
-        super(Countries, self).save(*args, **kwargs)
-
-class Faqs(models.Model):
-    country = models.ForeignKey(Countries,on_delete=models.CASCADE, null=True, blank=True)
-    title = models.TextField(null=True, blank=True)
-    subtitle = models.TextField(null=True, blank=True)   
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-class Universities(models.Model):
-    country = models.ForeignKey(Countries,on_delete=models.CASCADE, null=True, blank=True)
-    image = models.ImageField(upload_to='university', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    duration = models.IntegerField(default=0,null=True, blank=True)
-    ranking = models.IntegerField(default=0,null=True, blank=True)
-    indian = models.IntegerField(default=0,null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    slug = AutoSlugField(populate_from='title', null=True, blank=True, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug or self.title != self.slug:
-            self.slug = AutoSlugField(populate_from='title', unique=True).slugify(self.title)
-
-        super(Universities, self).save(*args, **kwargs)
-
-
-class Services(models.Model):
-    image = models.ImageField(upload_to='service', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class Testimonials(models.Model):
-    image = models.ImageField(upload_to='testimonials', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    link = models.TextField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class Events(models.Model):
-    image = models.ImageField(upload_to='events', null=True, blank=True)
-    sequence = models.IntegerField(default=1)
-    title = models.TextField(null=True, blank=True)
-    start = models.DateTimeField(null=True, blank=True)
-    end = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class Enquiries(models.Model):
-    university = models.TextField(null=True, blank=True)
+ 
+class Staffs(models.Model):
+    unique_id = models.TextField(null=True, blank=True)
     name = models.TextField(null=True, blank=True)
     email = models.TextField(null=True, blank=True)
     phone = models.TextField(null=True, blank=True)
-    message = models.TextField(null=True, blank=True)
+    passportno = models.TextField(null=True, blank=True)
+    emergency = models.TextField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='staff', blank=True, null=True)
+
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+ 

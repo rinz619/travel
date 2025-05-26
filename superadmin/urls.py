@@ -38,6 +38,10 @@ urlpatterns = [
     path('refundlist', views.refundlist.as_view(), name='refundlist'),
     path('refundedit/<str:id>', views.refund.as_view(), name='refundedit'),
     
+    path('stafflist', views.stafflist.as_view(), name='stafflist'),
+    path('staffcreate', views.staffcreate.as_view(), name='staffcreate'),
+    path('staffedit/<int:id>', views.staffcreate.as_view(), name='staffedit'),
+    
 
 
 

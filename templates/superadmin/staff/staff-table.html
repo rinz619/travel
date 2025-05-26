@@ -10,18 +10,21 @@
     {% endfor %}
 </div>
 {% endif %}
+
+
 <table class="table border-top table-bordered mb-0 table-hover">
     <thead class="custom-header">
         <tr>
             <th>Sl No</th>
-            <th>Received From</th>
-            <th>Payment type</th>
+            <!-- <th>sequence</th> -->
+            <th>Image</th>
+            <th>staff Name</th>
             <th>Phone</th>
-            <th>Amount</th>
-            <th>Agency</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Receipt</th>
+            <th>Email</th>
+            <th>passport number</th>
+            <th>emergency contact</th>
+            <th>Address</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -29,22 +32,34 @@
         {% if datas %}
         {% for i in datas %}
         <tr>
-            {% comment %} <td>{{i.unique_id}}</td>  {% endcomment %}
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            <td>{{i.receivedfrom}}</td>
-            <td>{{i.paymenttype}}</td>
-            <td>{{i.phone}}</td>
-            <td>{{i.amount}}</td>
-            <td>{{i.description}}</td>
-            <td>{{i.agent.name}}</td>
-            <td>{{i.created_at.date|date:"d/m/Y"}}</td>
-            <td><a target="_blank" class="btn btn-success btn-sm" href="{% url 'superadmin:receipt' i.unique_id %}">View</a></td>
-            
+            <!-- <td></td> -->
+            <td>{% if i.image %}
+                <ul id="lightgallery-{{ forloop.counter }}" style="display: flex;">
+                <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
+                <a href="javascript:void(0)">
+                <img class="img-responsive br-5" src="{{i.image.url}}" alt="Thumb-1">
+                </a>
+                </li>
+                
+            </ul>
+                {% endif %}</td>
+                <td>{{i.name}}</td>
+                <td>{{i.phone}}</td>
+                <td>{{i.email}}</td>
+                <td>{{i.passportno}}</td>
+            <td>{{i.emergency}}</td>
+            <td>{{i.address}}</td>
            
-
+                <td>
+                    <div class="material-switch">
+                             <input id="someSwitchOptionSuccess{{i.id}}" name="someSwitchOption001" type="checkbox" {% if i.is_active %}checked onclick="categorystatus({{i.id}},2)"{% else %}onclick="categorystatus({{i.id}},1)" {% endif %}  />
+                             <label for="someSwitchOptionSuccess{{i.id}}" class="label-success"></label>
+                         </div>
+               </td>
               
                <td>
-                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:cashrecieptedit' i.id %}"><i
+                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:staffedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>

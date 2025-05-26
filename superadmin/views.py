@@ -739,3 +739,102 @@ class fileuploads(LoginRequiredMixin, View):
 #     if pisa_status.err:
 #         return HttpResponse("Error generating PDF", status=500)
 #     return response
+
+
+
+
+
+# Agents module start
+class stafflist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = Staffs.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = Staffs.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                Staffs.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                Staffs.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(emergency__icontains=search) | Q(passportno__icontains=search)| Q(address__icontains=search)
+            data_list = Staffs.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/staff/staff-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'staff', 'staff-view', context)
+
+class staffcreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = Staffs.objects.get(id=id)
+        except:
+            context['data'] = None
+        return renderhelper(request, 'staff', 'staff-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = Staffs.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = Staffs()
+            data.unique_id = 'ST-'+str(random.randint(11111,99999))
+            messages.info(request, 'Successfully Added')
+
+        uploaded_file = request.FILES.get('imagefile')
+        if uploaded_file:
+            data.image = uploaded_file
+
+        data.address = request.POST.get('address')
+        data.name = request.POST.get('name')
+        data.phone = request.POST.get('phone')
+        data.email = request.POST.get('email')
+        data.passportno = request.POST.get('passportno')
+        data.emergency = request.POST.get('emergency')
+        data.save()
+        return redirect('superadmin:stafflist')
+
+    # Agents module end
