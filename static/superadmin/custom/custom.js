@@ -45,6 +45,7 @@ function restrictAlphabets(e) {
   
     var fromdate = $("#fromdate").val();
     var todate = $("#todate").val();
+    
   
     var url = $("#url").val();
     $.ajax({

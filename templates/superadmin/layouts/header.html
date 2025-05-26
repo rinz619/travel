@@ -75,12 +75,12 @@
         <div class="sticky">
           <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
           <div class="app-sidebar">
-            <div class="side-header" style="background-color:#a21010;">
+            <div class="side-header" style="background-color:#ffffff;height: 66px;">
               <a class="header-brand1" href="{% url 'superadmin:dashboard' %}">
                 <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img light-logo" alt="logo">
-                <img style="width:100px;height:60px;" src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img light-logo1" alt="logo">
+                <img style="width:60px;height:60px;margin-left: 65px;" src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img light-logo1" alt="logo">
               </a>
               <!-- LOGO -->
             </div>
@@ -113,7 +113,7 @@
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-calendar"></i>  <!-- Changed -->
     <span class="side-menu__label">Bookings</span>
-    <i class="angle fe fe-chevron-right"></i>
+    <i style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
     <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
@@ -125,7 +125,7 @@
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-credit-card"></i>  <!-- Changed -->
     <span class="side-menu__label">Accounts</span>
-    <i class="angle fe fe-chevron-right"></i>
+    <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
     <li><a href="{% url 'superadmin:cashrecieptlist' %}" class="slide-item">Cash Receipt</a></li>
@@ -138,7 +138,7 @@
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-bar-chart-2"></i>  <!-- Changed -->
     <span class="side-menu__label">DSR</span>
-    <i class="angle fe fe-chevron-right"></i>
+    <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
     <li><a href="" class="slide-item">Sales Report</a></li>
@@ -150,7 +150,7 @@
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-message-square"></i>  <!-- Changed -->
     <span class="side-menu__label">CRM</span>
-    <i class="angle fe fe-chevron-right"></i>
+    <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
     <li><a href="" class="slide-item">Leads</a></li>
@@ -162,7 +162,7 @@
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-briefcase"></i>  <!-- Changed -->
     <span class="side-menu__label">HR</span>
-    <i class="angle fe fe-chevron-right"></i>
+    <i style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
     <li><a href="" class="slide-item">Attendance</a></li>
@@ -203,3 +203,64 @@
           </div>
           <!--/APP-SIDEBAR-->
         </div>
+
+
+        <style>
+    thead.custom-header th {
+        background-color: #a21010 !important;
+        color: #ffffff !important;
+    }
+</style>
+
+<style>
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 503px;
+    height: 49px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    border: none;
+    padding: 10px 20px;
+    background: #e5e5e5;
+    border-radius: 10px;
+    margin: 10px;
+    width: 150px;
+    font-size: 16px;
+    outline: none;
+    height:35px;
+}
+
+.reset-icon {
+    background-color: #f6b73c;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.search-button {
+    background-color: #c62828;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    font-size: 18px;
+    border-radius: 0 15px 15px 0;
+    cursor: pointer;
+    width: 135px;
+}
+</style>
