@@ -41,6 +41,10 @@ urlpatterns = [
     path('stafflist', views.stafflist.as_view(), name='stafflist'),
     path('staffcreate', views.staffcreate.as_view(), name='staffcreate'),
     path('staffedit/<int:id>', views.staffcreate.as_view(), name='staffedit'),
+        
+    path('walletslist', views.walletslist.as_view(), name='walletslist'),
+    path('walletscreate', views.walletscreate.as_view(), name='walletscreate'),
+    path('walletsedit/<int:id>', views.walletscreate.as_view(), name='walletsedit'),
     
 
 

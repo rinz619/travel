@@ -237,4 +237,18 @@ class Staffs(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+  
+  
+class WalletUPdates(models.Model):
+    agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+
+    transactiontype = models.TextField(null=True, blank=True)
+    referencenumber = models.TextField(null=True, blank=True)
+    bankdetails = models.TextField(null=True, blank=True)
+    transactiondate = models.DateField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    attachment = models.FileField(upload_to='wallet',null=True, blank=True)
+    is_verify = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
  

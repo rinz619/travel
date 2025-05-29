@@ -1,0 +1,56 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Wallet Updates</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:walletscreate' %}"><i class="side-menu__icon fe fe-plus mx-1"></i>Add New</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                        <div class="row">
+                             <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">List Of All Wallet Updates</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="search-container">
+                                                <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
+                                                <input type="text" class="search-input" placeholder="To" id="to">
+                                                <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
+                                                <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>
+                                            </div>
+                                        </form>	
+                                        <div class="table-responsive">
+											
+                                            {% include 'superadmin/wallet/wallet-table.html' %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW CLOSED -->
+					</div>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            <!--app-content close-->
+	
+
+
+
+    {% include 'superadmin/layouts/footer.html' %}
+  
+   

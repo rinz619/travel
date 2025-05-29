@@ -110,8 +110,6 @@ class profile(LoginRequiredMixin,View):
 class dashboard(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
-        context['country'] = Countries.objects.all().count()
-        context['university'] = Universities.objects.all().count()
         return renderhelper(request, 'home', 'index', context)
     
 
@@ -744,7 +742,7 @@ class fileuploads(LoginRequiredMixin, View):
 
 
 
-# Agents module start
+# Staff module start
 class stafflist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
@@ -835,6 +833,108 @@ class staffcreate(LoginRequiredMixin, View):
         data.passportno = request.POST.get('passportno')
         data.emergency = request.POST.get('emergency')
         data.save()
+        return redirect('superadmin:stafflist')
+
+    # Agents module end
+
+
+
+
+# Staff module start
+class walletslist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = WalletUPdates.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = WalletUPdates.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                WalletUPdates.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                WalletUPdates.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
+            data_list = WalletUPdates.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/wallet/wallet-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'wallet', 'wallet-view', context)
+
+class walletscreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = WalletUPdates.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+
+        return renderhelper(request, 'wallet', 'wallet-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = WalletUPdates.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = WalletUPdates()
+            data.unique_id = 'ST-'+str(random.randint(11111,99999))
+            messages.info(request, 'Successfully Added')
+
+        attachment = request.FILES.get('attachment')
+        if attachment:
+            data.attachment = attachment
+
+        data.agent_id = request.POST.get('agent')
+        data.transactiontype = request.POST.get('transactiontype')
+        data.transactiondate = request.POST.get('transactiondate')
+        data.amount = request.POST.get('amount')
+        data.referencenumber = request.POST.get('referencenumber')
+        data.bankdetails = request.POST.get('bankdetails')
+        data.save()
+        
+        
         return redirect('superadmin:stafflist')
 
     # Agents module end
