@@ -318,6 +318,10 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         
             # now = datetime.now()
             # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
+            agent = request.POST.get('agent')
+            balance = AccountLedgers.objects.filter(agent=agent).order_by('-id').first().balance
+            if not balance:
+                balance = 0
             account = AccountLedgers()
             data = Bookings()
             data.unique_id = f"{prefix}{next_seq}"
@@ -351,6 +355,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         account.transactiontype = 'Offline Booking'
         account.date = datetime.now().date()
         account.debit = request.POST.get('grossamount')
+        account.balance = float(balance) - float(request.POST.get('grossamount'))
         account.save()
         return redirect('superadmin:offlinebookingslist')
 
@@ -865,7 +870,20 @@ class walletslist(LoginRequiredMixin, View):
                 messages.info(request, 'Successfully Updated')
             elif type == '4':
                 id = request.GET.get('id')
-                WalletUPdates.objects.filter(id=id).update(is_verify=True)
+                wallet = WalletUPdates.objects.get(id=id)
+                wallet.is_verify=True
+                wallet.save()
+                
+                balance = AccountLedgers.objects.filter(agent=wallet.agent.id).order_by('-id').first().balance
+                if not balance:
+                    balance = 0
+                    
+                acc = AccountLedgers()
+                acc.agent = wallet.agent
+                acc.unique_id = 'INV6669'
+                acc.credit = wallet.amount
+                acc.balance = balance + wallet.amount
+                acc.save()
                 messages.info(request, 'Successfully Verified')
             elif type == '2':
                 id = request.GET.get('id')

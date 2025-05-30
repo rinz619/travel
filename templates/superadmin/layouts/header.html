@@ -55,13 +55,15 @@
                   <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <div class="drop-heading">
                       <div class="text-center">
-                        <h5 class="text-dark mb-0 fs-14 fw-semibold">{{request.user.name}}</h5>
+                        <h5 class="text-dark mb-0 fs-14 fw-semibold">{% if request.user.user_type == 1 %}Travel Buzz{% else %}{{request.user.name}}{% endif %}</h5>
                         <small class="text-muted">{% if request.user.user_type == 1 %}Superadmin{% elif request.user.user_type == 2 %}Sub admin{% elif request.user.user_type == 3 %}Agent{% endif %}</small>
                       </div>
                     </div>
                     <div class="dropdown-divider m-0"></div>
+                    {% if request.user.user_type == 1 %}
                     <a class="dropdown-item" href="{% url 'superadmin:profile' %}">
                       <i class="dropdown-icon fe fe-user"></i> Profile </a>
+                      {% endif %}
                     <a class="dropdown-item" href="{% url 'superadmin:Logout' %}">
                       <i class="dropdown-icon fe fe-alert-circle"></i> Sign out </a>
                   </div>
