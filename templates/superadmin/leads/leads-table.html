@@ -14,13 +14,13 @@
     <thead class="custom-header">
         <tr>
             <th>Sl No</th>
-            <th>Agent</th>
-            <th>Amount</th>
-            <th>Transaction type</th>
-            <th>Transaction date</th>
-            <th>Reference number</th>
-            <th>slip</th>
-            <th>Action</th>
+            <th>date</th>
+            <th>lead Sourse</th>
+            <th>staff name</th>
+            <th>description</th>
+            <th>Client</th>
+            <th>status</th>
+            <th>remark</th>
         </tr>
     </thead>
     <tbody>
@@ -29,13 +29,19 @@
         <tr>
             {% comment %} <td>{{i.unique_id}}</td>  {% endcomment %}
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            <td>{{i.agent.name}}</td>
-            <td>{{i.amount}}</td>
-            <td>{{i.transactiontype}}</td>
-            <td>{{i.transactiondate|date:"d/m/Y"}}</td>
-            <td>{{i.referencenumber}}</td>
-            <td>{% if i.attachment %}<a class="btn btn-primary btn-sm" target="_blank" href="{{i.attachment.url}}">view</a>{% endif %}</td>
-            <td>{% if i.is_verify == False %}<a class="btn btn-success btn-sm"  onclick="verify_modal({{i.id}})" >Verify</a>{% endif %}</td>
+            <td>{{i.created_at.date|date:"d/m/Y"}}</td>
+            <td>{{i.leadsource}}</td>
+            <td>{{i.staff.name}}</td>
+            <td>{{i.description}}</td>
+            <td>Name : {{i.clientname}}<br>Mobile : {{i.phone}}</td>
+            <td>
+                <select class="form-control">
+                    <option value="Followup">Followup</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Lost">Lost</option>
+                </select>
+            </td>
+            <td></td>
             </tr>
             {% endfor %}
             {% else %}

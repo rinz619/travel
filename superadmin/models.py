@@ -251,4 +251,18 @@ class WalletUPdates(models.Model):
     is_verify = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+   
+class Leads(models.Model):
+    staff = models.ForeignKey(Staffs,on_delete=models.SET_NULL, null=True, blank=True)
+
+    leadsource = models.TextField(null=True, blank=True)
+    clientname = models.TextField(null=True, blank=True)
+    phone = models.TextField(null=True, blank=True)
+    enquiry = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    status = models.TextField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
  

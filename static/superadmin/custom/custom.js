@@ -10,6 +10,11 @@ function restrictAlphabets(e) {
     $("#hid").val(id);
     $("#modaldemo5").modal("show");
   }
+    
+  function verify_modal(id) {
+    $("#hid").val(id);
+    $("#modaldemo5-verify").modal("show");
+  }
   
   function filtercategory(data) {
     var page = "1";
@@ -103,6 +108,32 @@ function restrictAlphabets(e) {
       url: url,
       type: "GET",
       data: { page: page, status: status, id: id, type: 2, search: search },
+  
+      beforeSend: function () {
+        $("#loaderid").show();
+      },
+      success: function (data) {
+        $("#loaderid").hide();
+        $("#modaldemo5").modal("hide");
+  
+        $(".table-responsive").html(data.template);
+      },
+    });
+  }
+  
+
+
+  function verifywallet() {
+    page = $("#page").val();
+    id = $("#hid").val();
+  
+    var search = $("#searchkey").val();
+    var status = $("#status").val();
+    var url = $("#url").val();
+    $.ajax({
+      url: url,
+      type: "GET",
+      data: { page: page, status: status, id: id, type: 4, search: search },
   
       beforeSend: function () {
         $("#loaderid").show();
