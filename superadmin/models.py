@@ -88,6 +88,7 @@ class User(AbstractBaseUser):
     attachement = models.FileField(upload_to='user', blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True,unique=True)
     password =  models.CharField(max_length=255, blank=True,null=True)
+    wallet =  models.DecimalField(max_digits=10,decimal_places=2, blank=True,null=True)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
@@ -149,7 +150,8 @@ class Previllages(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
 class Bookings(models.Model):
-    agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True,related_name="created")
+    agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True,related_name="agent")
     unique_id = models.TextField(null=True, blank=True)
     servicetype = models.TextField(null=True, blank=True)
     fromairport = models.TextField(null=True, blank=True)

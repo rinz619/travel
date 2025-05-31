@@ -89,13 +89,13 @@
                                                     <label for="exampleInputEmail1" class="form-label">Access Option</label>
                                                         <select class="form-control select2" data-placeholder="Choose Option"  name="options" required multiple >
                                                             <option value="">Select</option>
-                                                            <option value="Agents" {% if 'Agents' in pre_data %}selected{% endif %}>Agents</option>
-                                                            <option value="Subadmins">Subadmins</option>
-                                                            <option value="Bookings" {% if 'Bookings' in pre_data %}selected{% endif %}>Bookings</option>
-                                                            <option value="Accounts">Accounts</option>
-                                                            <option value="DSR">DSR</option>
-                                                            <option value="CRM">CRM</option>
-                                                            <option value="HR">HR</option>
+                                                            <option value="Agents" {% for p in pre_data %} {% if 'Agents' == p.option %}selected{% endif %}{% endfor %}>Agents</option>
+                                                            <option value="Subadmins" {% for p in pre_data %} {% if 'Subadmins' == p.option %}selected{% endif %}{% endfor %}>Subadmins</option>
+                                                            <option value="Bookings" {% for p in pre_data %} {% if 'Bookings' == p.option %}selected{% endif %}{% endfor %}>Bookings</option>
+                                                            <option value="Accounts" {% for p in pre_data %} {% if 'Accounts' == p.option %}selected{% endif %}{% endfor %}>Accounts</option>
+                                                            <option value="DSR" {% for p in pre_data %} {% if 'DSR' == p.option %}selected{% endif %}{% endfor %}>DSR</option>
+                                                            <option value="CRM" {% for p in pre_data %} {% if 'CRM' == p.option %}selected{% endif %}{% endfor %}>CRM</option>
+                                                            <option value="HR" {% for p in pre_data %} {% if 'HR' == p.option %}selected{% endif %}{% endfor %}>HR</option>
                                                             
                                                         </select>
                                                 </div>
@@ -103,8 +103,8 @@
                                                     <label for="exampleInputEmail1" class="form-label">Previllage</label>
                                                         <select class="form-control select2" data-placeholder="Choose Previllage"  name="previllage" required>
                                                             <option value="">Select</option>
-                                                            <option value="Read">Read</option>
-                                                            <option value="Write">Write</option>
+                                                            <option value="Read"  {% for p in pre_data %} {% if 'Read' == p.acsess %}selected{% endif %}{% endfor %}>Read</option>
+                                                            <option value="Write"  {% for p in pre_data %} {% if 'Write' == p.acsess %}selected{% endif %}{% endfor %}>Write</option>
                                                             
                                                         </select>
                                                 </div>

@@ -240,10 +240,11 @@ class offlinebookingslist(LoginRequiredMixin, View):
         data = Bookings.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Bookings')
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
-            status = request.GET.get('status')
+            agent = request.GET.get('status')
             search = request.GET.get('search')
             type = request.GET.get('type')
             if type == '1':
@@ -265,8 +266,8 @@ class offlinebookingslist(LoginRequiredMixin, View):
                 id = request.GET.get('id')
                 Bookings.objects.filter(id=id).delete()
                 messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
+            if agent:
+                conditions &= Q(agent=agent)
             if search:
                 conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
             data_list = Bookings.objects.filter(conditions).order_by('-id')
@@ -310,6 +311,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
     def post(self, request, id=None):
         try:
             data = Bookings.objects.get(id=id)
+            data.createdby = request.user
             account = AccountLedgers.objects.get(unique_id=data.unique_id)
             messages.info(request, 'Successfully Updated')
         except:
@@ -338,6 +340,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
             account = AccountLedgers()
             data = Bookings()
             data.unique_id = f"{prefix}{next_seq}"
+            data.createdby = request.user
             account.unique_id = f"{prefix}{next_seq}"
 
             messages.info(request, 'Successfully Added')
@@ -890,6 +893,14 @@ class walletslist(LoginRequiredMixin, View):
                 wallet.is_verify=True
                 wallet.save()
                 
+                user = User.objects.get(id=wallet.agent.id)
+                wallet_balance = user.wallet
+                if wallet_balance:
+                    user.wallet = wallet_balance + wallet.amount
+                else:
+                    user.wallet =   wallet.amount
+
+                user.save()
                 balance = AccountLedgers.objects.filter(agent=wallet.agent.id).order_by('-id').first().balance
                 if not balance:
                     balance = 0
@@ -968,7 +979,7 @@ class walletscreate(LoginRequiredMixin, View):
         data.save()
         
         
-        return redirect('superadmin:stafflist')
+        return redirect('superadmin:walletslist')
 
     # Agents module end
 
@@ -1144,7 +1155,7 @@ class subadmincreate(LoginRequiredMixin, View):
         context = {}
         try:
             context['data'] = User.objects.get(id=id)
-            context['pre_data'] = Previllages.objects.filter(user=id).values('option')
+            context['pre_data'] = Previllages.objects.filter(user=id)
         except:
             context['data'] = None
             context['pre_data'] = None

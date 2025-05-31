@@ -21,6 +21,7 @@
             <th>Amount</th>
             <th>Agent</th>
             <th>Remarks</th>
+            <th>created by</th>
             <th>Date</th>
             <th>invoice</th>
             {% if previllage %}
@@ -43,6 +44,7 @@
             <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
             <td>{{i.agent.name}}</td>
             <td>{{i.remarks}}</td>
+            <td>{{i.createdby.name}}</td>
             <td>{{i.created_at.date|date:"d/m/Y"}}</td>
             <td><a class="btn btn-success btn-sm" href="{% url 'superadmin:invoice' i.unique_id %}">View</a></td>
             

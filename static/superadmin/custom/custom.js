@@ -140,7 +140,7 @@ function restrictAlphabets(e) {
       },
       success: function (data) {
         $("#loaderid").hide();
-        $("#modaldemo5").modal("hide");
+        $("#modaldemo5-verify").modal("hide");
   
         $(".table-responsive").html(data.template);
       },
