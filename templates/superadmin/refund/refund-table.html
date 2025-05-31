@@ -18,7 +18,9 @@
             <th>Amount</th>
             <th>Remarks</th>
             <th>date</th>
+            {% if previllage %}
             <th>action</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -30,12 +32,14 @@
                 <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
                 <td>{{i.remarks}}</td>
                 <td>{{i.created_at.date|date:"d/m/Y"}}</td>
+                {% if previllage %}
                  <td>
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:refundedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
                </td>
+               {% endif %}
             
             {% endfor %}
             {% else %}

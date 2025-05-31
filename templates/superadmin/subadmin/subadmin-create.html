@@ -9,9 +9,9 @@
 
                         <!-- PAGE-HEADER -->
                         <div class="page-header">
-                            <h1 class="page-title">Agents</h1>
+                            <h1 class="page-title">Subadmin</h1>
                             <div>
-                                <a class="btn btn-primary" href="{% url 'superadmin:agentslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
+                                <a class="btn btn-primary" href="{% url 'superadmin:subadminslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
                             </div>
                         </div>
                         <!-- PAGE-HEADER END -->
@@ -23,7 +23,7 @@
                             <div class="col-md-4 col-xl-4 col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">Add New Agents</h4>
+                                        <h4 class="card-title">Add New Subadmin</h4>
                                     </div>
                                     <div class="card-body">
                                             <div class="row">
@@ -49,27 +49,17 @@
                                         
                                             <div class="row">
 
-                                                <div class="form-group col-lg-6">
-                                                    <label for="exampleInputEmail1" class="form-label">Agency Type</label>
-                                                        <select class="form-control select2" data-placeholder="Choose Agency Type"  name="agenttype" required>
-                                                            <option value="">Select</option>
-                                                            <option value="type 1">type 1</option>
-                                                            <option value="type 2">type 2</option>
-                                                            <option value="type 3">type 3</option>
-                                                            <option value="type 4">type 4</option>
-                                                            
-                                                        </select>
-                                                </div>
+                                              
                          
                                                  <div class="form-group col-lg-6">
-                                                    <label for="exampleInputEmail1" class="form-label">Agency Name</label>
-                                                    <input type="text" name="name" required id="" class="form-control" placeholder="Agency Name " value="{{data.name}}" >
+                                                    <label for="exampleInputEmail1" class="form-label">Name</label>
+                                                    <input type="text" name="name" required id="" class="form-control" placeholder="Name " value="{{data.name}}" >
 
-                                                </div>
-                         
+                                                </div>  
+
                                                 <div class="form-group col-lg-6">
-                                                    <label for="exampleInputEmail1" class="form-label">Contact Person Name</label>
-                                                    <input type="text" name="contactperson" required id="" class="form-control" placeholder="Contact Person Name " value="{{data.contactperson}}" >
+                                                    <label for="exampleInputEmail1" class="form-label">Phone</label>
+                                                    <input type="text" maxlength="10" name="phone" required id="" class="form-control" placeholder="Phone" value="{{data.phone}}" onkeypress="return restrictAlphabets(event)" >
 
                                                 </div>
                          
@@ -78,17 +68,7 @@
                                                     <input type="text" name="email" required id="" class="form-control" placeholder="Email" value="{{data.email}}" >
 
                                                 </div>
-                                                
-                                                <div class="form-group col-lg-6">
-                                                    <label for="exampleInputEmail1" class="form-label">Phone</label>
-                                                    <input type="text" maxlength="10" name="phone" required id="" class="form-control" placeholder="Phone" value="{{data.phone}}" onkeypress="return restrictAlphabets(event)" >
-
-                                                </div>
-                                                 <div class="form-group col-lg-6">
-                                                    <label for="exampleInputEmail1" class="form-label">TRN Number</label>
-                                                    <input type="text" maxlength="10" name="trn" required id="" class="form-control" placeholder="Tax Registration Number" value="{{data.trn}}" onkeypress="return restrictAlphabets(event)" >
-
-                                                </div>
+                                              
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Password</label>
                                                     <input type="text" name="password" required id="" class="form-control" placeholder="Password" value="{{data.password_text}}" >
@@ -99,11 +79,36 @@
                                                     <input type="file" name="attachment" {% if not data %} required{% endif %} id="" class="form-control" placeholder="" value="{{data.attachement}}" >
 
                                                 </div>
+
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Address</label>
                                                     <textarea  name="address" required id="" class="form-control" placeholder="Address" >{{data.address}}</textarea>
 
                                                 </div>
+                                                 <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Access Option</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Option"  name="options" required multiple >
+                                                            <option value="">Select</option>
+                                                            <option value="Agents" {% if 'Agents' in pre_data %}selected{% endif %}>Agents</option>
+                                                            <option value="Subadmins">Subadmins</option>
+                                                            <option value="Bookings" {% if 'Bookings' in pre_data %}selected{% endif %}>Bookings</option>
+                                                            <option value="Accounts">Accounts</option>
+                                                            <option value="DSR">DSR</option>
+                                                            <option value="CRM">CRM</option>
+                                                            <option value="HR">HR</option>
+                                                            
+                                                        </select>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Previllage</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Previllage"  name="previllage" required>
+                                                            <option value="">Select</option>
+                                                            <option value="Read">Read</option>
+                                                            <option value="Write">Write</option>
+                                                            
+                                                        </select>
+                                                </div>
+                         
                                                
 												
                    

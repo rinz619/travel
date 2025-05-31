@@ -23,8 +23,10 @@
             <th>Remarks</th>
             <th>Date</th>
             <th>invoice</th>
+            {% if previllage %}
             <th>Action</th>
             <th>Refund</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -46,7 +48,7 @@
             
            
 
-              
+              {% if previllage %}
                <td>
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:offlinebookingsedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
@@ -55,6 +57,7 @@
                </td>
                <td><a class="btn btn-primary btn-sm" href="{% url 'superadmin:refund' i.unique_id %}">Refund</a></td>
             </tr>
+            {% endif %}
             {% endfor %}
             {% else %}
             <tr>

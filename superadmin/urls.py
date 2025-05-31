@@ -52,6 +52,12 @@ urlpatterns = [
     path('leadsedit/<int:id>', views.leadscreate.as_view(), name='leadsedit'),
     
 
+        
+    path('subadminslist', views.subadminslist.as_view(), name='subadminslist'),
+    path('subadmincreate', views.subadmincreate.as_view(), name='subadmincreate'),
+    path('subadminedit/<int:id>', views.subadmincreate.as_view(), name='subadminedit'),
+    
+
 
 
     

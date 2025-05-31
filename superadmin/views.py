@@ -21,6 +21,18 @@ from num2words import num2words
 import openpyxl
 
 
+
+def check_previllage(request,menu):
+    try:
+        previllage = Previllages.objects.get(user=request.user.id, option=menu)
+        prev = (previllage.acsess)
+        if prev == 'Read':
+            return False
+        else:
+            return True
+    except:
+        return True
+    
 # Create your views here.
 class index(View):
     def get(self, request):
@@ -52,14 +64,14 @@ class index(View):
             if user.user_type == 1:
                 login(request, user)
                 return redirect('superadmin:dashboard')
-            elif user.user_type == 3 and user.unique_id == clientid:
+            elif user.user_type != 1 and user.unique_id == clientid:
                 login(request, user)
                 return redirect('superadmin:dashboard')
             else:
                 context['username'] = username
                 context['password'] = password
                 context['clientid'] = clientid
-                messages.info(request, 'Invalid Username or Password')
+                messages.info(request, 'Invalid Credentials')
                 return renderhelper(request, 'login', 'login', context)
             
         else:
@@ -227,6 +239,7 @@ class offlinebookingslist(LoginRequiredMixin, View):
         conditions = Q()
         data = Bookings.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Bookings')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -370,6 +383,7 @@ class cashrecieptlist(LoginRequiredMixin, View):
         conditions = Q()
         data = CashReceipts.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Accounts')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -594,6 +608,7 @@ class refundlist(LoginRequiredMixin, View):
         conditions = Q()
         data = Refunds.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Bookings')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -852,6 +867,7 @@ class walletslist(LoginRequiredMixin, View):
         conditions = Q()
         data = WalletUPdates.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Accounts')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -964,6 +980,7 @@ class leadslist(LoginRequiredMixin, View):
         conditions = Q()
         data = Leads.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -1018,6 +1035,8 @@ class leadslist(LoginRequiredMixin, View):
 
         return renderhelper(request, 'leads', 'leads-view', context)
 
+
+
 class leadscreate(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
@@ -1052,5 +1071,125 @@ class leadscreate(LoginRequiredMixin, View):
         
         
         return redirect('superadmin:leadslist')
+
+    # Agents module end
+
+
+# Staff module start
+class subadminslist(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = User.objects.filter(user_type=2).order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = User.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                User.objects.filter(id=id).update(is_verify=True)
+                messages.info(request, 'Successfully Verified')
+            elif type == '2':
+                id = request.GET.get('id')
+                User.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            conditions &= Q(user_type=2)
+            if search:
+                conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
+            data_list = User.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/subadmin/subadmin-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'subadmin', 'subadmin-view', context)
+
+
+
+class subadmincreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = User.objects.get(id=id)
+            context['pre_data'] = Previllages.objects.filter(user=id).values('option')
+        except:
+            context['data'] = None
+            context['pre_data'] = None
+        context['staffs'] = Staffs.objects.filter(is_active=True).order_by('name')
+
+        return renderhelper(request, 'subadmin', 'subadmin-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = User.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = User()
+            
+            data.unique_id = 'SA-'+str(random.randint(11111,99999))
+            messages.info(request, 'Successfully Added')
+
+        uploaded_file = request.FILES.get('imagefile')
+        attachment = request.FILES.get('attachment')
+        if uploaded_file:
+            data.image = uploaded_file
+        if attachment:
+            data.attachement = attachment
+        data.user_type = 2
+        data.address = request.POST.get('address')
+        data.name = request.POST.get('name')
+        data.phone = request.POST.get('phone')
+        data.email = request.POST.get('email')
+        data.password_text = request.POST.get('password')
+        data.set_password(request.POST.get('password'))
+        data.save()
+        
+        prev= request.POST.getlist('options')
+        acc = request.POST.get('previllage')
+        Previllages.objects.filter(user=data.id).delete()
+       
+        for i in prev:
+            sub = Previllages()
+            sub.user = data
+            sub.option = i
+            sub.acsess = acc
+            sub.save()
+        
+        
+        
+        return redirect('superadmin:subadminslist')
 
     # Agents module end

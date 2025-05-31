@@ -10,22 +10,20 @@
     {% endfor %}
 </div>
 {% endif %}
-
+{% load custom_tags %}
 
 <table class="table border-top table-bordered mb-0 table-hover">
     <thead class="custom-header">
         <tr>
             <th>Sl No</th>
             <!-- <th>sequence</th> -->
-            <th>Thumbnail</th>
-            <th>Agent ID</th>
-            <th>Agency Name</th>
-            <th>Contact Person</th>
-            <th>Agent Type</th>
-            <th>TRN number</th>
+            <th>Image</th>
+            <th>Admin ID</th>
+            <th>Name</th>
             <th>phone</th>
             <th>Credentials</th>
             <th>Address</th>
+            <th>Previllage</th>
             <th>Attachement</th>
             <th>Status</th>
             <th>Action</th>
@@ -49,12 +47,10 @@
                 {% endif %}</td>
                 <td><b>{{i.unique_id}}</b></td>
                 <td>{{i.name}}</td>
-                <td>{{i.contactperson}}</td>
-                <td>{{i.agenttype}}</td>
-                <td>{{i.trn}}</td>
             <td>{{i.phone}}</td>
             <td>username : <b>{{i.email}}</b></br>Password : <b>{{i.password_text}}</b></td>
-            <td><b>{{i.address}}</b></td>
+            <td>{{i.address}}</td>
+            <td>{% check_prev i.id as prev %}<ul>{% for p in prev %}<li>{{p.option}} ({{p.acsess}})</li>{% endfor %}</ul></td>
             <td align="center">{% if i.attachement %}<a target="_blank" href="{{i.attachement.url}}" class="btn btn-primary btn-sm">View</a> {% endif %}</td>
            
                 <td>
@@ -65,7 +61,7 @@
                </td>
               
                <td>
-                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:agentsedit' i.id %}"><i
+                   <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:subadminedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>

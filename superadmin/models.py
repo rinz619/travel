@@ -140,6 +140,14 @@ class User(AbstractBaseUser):
 
 
 
+class Previllages(models.Model):
+    user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    option = models.TextField(null=True, blank=True)
+    acsess = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 class Bookings(models.Model):
     agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     unique_id = models.TextField(null=True, blank=True)

@@ -20,7 +20,9 @@
             <th>Transaction date</th>
             <th>Reference number</th>
             <th>slip</th>
+             {% if previllage %}
             <th>Action</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -35,7 +37,9 @@
             <td>{{i.transactiondate|date:"d/m/Y"}}</td>
             <td>{{i.referencenumber}}</td>
             <td>{% if i.attachment %}<a class="btn btn-primary btn-sm" target="_blank" href="{{i.attachment.url}}">view</a>{% endif %}</td>
+             {% if previllage %}
             <td>{% if i.is_verify == False %}<a class="btn btn-success btn-sm"  onclick="verify_modal({{i.id}})" >Verify</a>{% endif %}</td>
+            {% endif %}
             </tr>
             {% endfor %}
             {% else %}
