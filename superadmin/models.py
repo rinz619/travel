@@ -168,6 +168,7 @@ class Bookings(models.Model):
     markup = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -182,6 +183,7 @@ class CashReceipts(models.Model):
     amount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -231,6 +233,7 @@ class Refunds(models.Model):
     remarks = models.TextField(null=True, blank=True)
     
     is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
  
@@ -259,6 +262,7 @@ class WalletUPdates(models.Model):
     amount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     attachment = models.FileField(upload_to='wallet',null=True, blank=True)
     is_verify = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
    

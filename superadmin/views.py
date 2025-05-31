@@ -237,7 +237,7 @@ class offlinebookingslist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         conditions = Q()
-        data = Bookings.objects.all().order_by('-id')
+        data = Bookings.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Bookings')
         context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
@@ -264,12 +264,13 @@ class offlinebookingslist(LoginRequiredMixin, View):
                 messages.info(request, 'Successfully Updated')
             elif type == '2':
                 id = request.GET.get('id')
-                Bookings.objects.filter(id=id).delete()
+                Bookings.objects.filter(id=id).update(is_delete=True)
                 messages.info(request, 'Successfully Deleted')
             if agent:
                 conditions &= Q(agent=agent)
             if search:
                 conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
+            conditions &= Q(is_delete=False)
             data_list = Bookings.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
@@ -318,7 +319,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
             
             now = datetime.now()
             year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
-            prefix = f"INV{year_month}"
+            prefix = f"TBTINV{year_month}"
 
             # Filter and find max matching unique_id starting with this prefix
             latest = Bookings.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
@@ -368,6 +369,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         data.save()
         
         account.agent_id = request.POST.get('agent')
+        account.pnr = request.POST.get('pnr')
         account.transactiontype = 'Offline Booking'
         account.date = datetime.now().date()
         account.debit = request.POST.get('grossamount')
