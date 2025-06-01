@@ -1,0 +1,72 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Sales</h1>
+                            <div>
+                                {% if previllage %}
+                                    <a class="btn btn-primary" href="{% url 'superadmin:salesreportcreate' %}"><i class="side-menu__icon fe fe-plus mx-1"></i>Add New</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                        <div class="row">
+                             <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">List Of All Sales</h3>
+                                    </div>
+                                    <div class="card-body">
+                                       
+
+                                            <form>
+                                            <div class="search-container">
+                                                <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
+                                                <select class="form-control select2" data-placeholder="Choose Agency"  id="status" >
+                                                    <option value="">Select</option>
+                                                    {% for i in agents %}
+                                                        <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <input type="date" class="search-input" placeholder="Keyword Search" id="fromdate">
+                                                <input type="date" class="search-input" placeholder="Keyword Search" id="todate">
+                                                
+                                                <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
+                                                <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>
+                                            </div>
+                                        </form>	
+                                          <div class="mb-3">
+    <a href="{% url 'superadmin:download_excel' %}" class="btn btn-success text-end">Download Excel</a>
+    {% comment %} <a href="{% url 'superadmin:download_pdf' %}" class="btn btn-danger">Download PDF</a> {% endcomment %}
+</div>
+
+                                        <div class="table-responsive">
+											
+                                            {% include 'superadmin/bookings/bookings-table.html' %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW CLOSED -->
+					</div>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            <!--app-content close-->
+	
+
+
+
+    {% include 'superadmin/layouts/footer.html' %}
+  
+   

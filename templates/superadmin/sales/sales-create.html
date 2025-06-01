@@ -1,0 +1,240 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Sales</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:offlinebookingslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                         <form method="post" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                        <div class="row">
+                            
+						<div class="col-md-8 col-xl-12 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        
+                                            <div class="row">
+
+                         
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Service Type</label>
+                                                     <select class="form-control select2" data-placeholder="Choose Service Type" required name="servicetype" onchange="airticket(this.value)">
+                                                        <option value="">Select</option>
+                                                        <option value="AIR TICKETS" {% if data.servicetype == 'AIR TICKETS' %}selected{% endif %}>AIR TICKETS</option>
+                                                        <option value="UAE VISA 30 DAYS" {% if data.servicetype == 'UAE VISA 30 DAYS' %}selected{% endif %}>UAE VISA 30 DAYS</option>
+                                                        <option value="UAE VISA 60 DAYS" {% if data.servicetype == 'UAE VISA 60 DAYS' %}selected{% endif %}>UAE VISA 60 DAYS</option>
+                                                        <option value="UAE TRANSIT VISA" {% if data.servicetype == 'UAE TRANSIT VISA' %}selected{% endif %}>UAE TRANSIT VISA</option>
+                                                        <option value="GLOBAL VISA" {% if data.servicetype == 'GLOBAL VISA' %}selected{% endif %}>GLOBAL VISA</option>
+                                                        <option value="HOLIDAY PACKAGE" {% if data.servicetype == 'HOLIDAY PACKAGE' %}selected{% endif %}>HOLIDAY PACKAGE</option>
+                                                        <option value="TRANSPORTATION" {% if data.servicetype == 'TRANSPORTATION' %}selected{% endif %}>TRANSPORTATION</option>
+                                                        <option value="HOTEL BOOKING" {% if data.servicetype == 'HOTEL BOOKING' %}selected{% endif %}>HOTEL BOOKING</option>
+                                                        <option value="VISA CHANGE BY BUS" {% if data.servicetype == 'VISA CHANGE BY BUS' %}selected{% endif %}>VISA CHANGE BY BUS</option>
+                                                        <option value="VISA CHANGE BY FLIGHT" {% if data.servicetype == 'VISA CHANGE BY FLIGHT' %}selected{% endif %}>VISA CHANGE BY FLIGHT</option>
+
+
+													</select>
+
+                                                </div>
+                                                    <div class="form-group col-lg-6" id="passport_div" style="display:none" >
+                                                    <label for="exampleInputEmail1" class="form-label">Passport No</label>
+                                                    <input type="text" name="passportnumber"  id="passportno" class="form-control" placeholder="Passport Number" value="{{data.passportno}}" >
+
+                                                    </div>
+                                                <div class="row" {% if data.servicetype == 'AIR TICKETS' %}  {% else %}style="display: none;" {% endif %} id="airticket_div">
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">From Airport</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Airport"  name="fromairport">
+                                                            <option value="">Select</option>
+                                                            {% for i in airports %}
+                                                                <option value="{{i.city_airport}}" {% if data.fromairport == i.city_airport %}selected {% endif %}>{{i.city_airport}} ( {{i.country}} )</option>
+
+                                                            {% endfor %}
+                                                           
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">To Airport</label>
+                                                        <select class="form-control select2" data-placeholder="Choose Airport"  name="toairport">
+                                                            <option value="">Select</option>
+                                                             {% for i in airports %}
+                                                                <option value="{{i.city_airport}}" {% if data.toairport == i.city_airport %}selected {% endif %}>{{i.city_airport}} ( {{i.country}} )</option>
+
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Departure Date</label>
+                                                    <input type="date" name="departuredate"  id="" class="form-control" placeholder="Departure Date" value="{{data.departuredate|date:'Y-m-d'}}" >
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Airline</label>
+                                                    <select class="form-control select2" data-placeholder="Choose Airline"  name="airline">
+                                                            <option value="">Select</option>
+                                                             {% for i in airlines %}
+                                                                <option value="{{i.name}}" {% if data.airline == i.name %}selected {% endif %}>{{i.name}} ( {{i.iata}} )</option>
+
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    {% comment %} <input type="text" name="airline"  id="" class="form-control" placeholder="Airline" value="{{data.airline}}" > {% endcomment %}
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">PNR</label>
+                                                        <input type="text" name="pnr"  id="" class="form-control" placeholder="PNR Number" value="{{data.pnr}}" >
+
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label for="exampleInputEmail1" class="form-label">Ticket Number</label>
+                                                        <input type="text" name="ticketnumber"  id="" class="form-control" placeholder="Ticket Number" value="{{data.ticketnumber}}" >
+
+                                                    </div>
+                                                </div>
+                         
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Passenger Name</label>
+                                                    <input type="text" name="passengername" required id="" class="form-control" placeholder="Passenger Name" value="{{data.passengername}}" >
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Service Description</label>
+                                                    <textarea  name="servicedescription" required id="" class="form-control" placeholder="Service Description" >{{data.servicedescription}}</textarea>
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Net Amount</label>
+                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.netamount}}" onkeyup="calculations()" >
+
+                                                </div>
+                                                
+                                               
+                                                
+                                                <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Markup</label>
+                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Gross Amount" value="{{data.markup}}" onkeyup="calculationsgross()" >
+
+                                                </div>
+                                                 <div class="form-group col-lg-4">
+                                                    <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
+                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" >
+
+                                                </div>
+                                                
+                                                
+                                                <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Remarks</label>
+                                                    <textarea  name="remarks" required id="" class="form-control" placeholder="Remarks" >{{data.remarks}}</textarea>
+
+                                                </div>
+                                               
+												
+                   
+												
+											<div class="form-group col-lg-12 col-12">
+                                                <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+                                                <a href="" class="btn btn-default mt-4 mb-0"  >Reset</a>
+											</div>
+											
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+
+                    </div>
+                </form>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            </div>
+            <!--app-content close-->
+			<script>
+                function calculations(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    var markup = document.getElementById("markup").value;
+                    if (grossamount != "" && netamount != ""){
+                        markup = parseFloat(grossamount) - parseFloat(netamount)
+                        document.getElementById("markup").value = markup;
+                    }
+                    if (netamount != "" && markup != ""){
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    }
+
+                }
+                function calculationsgross(){
+                    var netamount = document.getElementById("netamount").value;
+                    var markup = document.getElementById("markup").value;
+
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    
+
+                }
+                function calculationsmarkup(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    markup = parseFloat(grossamount) - parseFloat(netamount)
+                    document.getElementById("markup").value = markup;
+                    
+
+                }
+
+
+                function airticket(val){
+                    if (val === "AIR TICKETS") {
+                        document.getElementById("airticket_div").style.display = "";
+                        document.getElementById("passport_div").style.display = "none";
+
+                        document.getElementById("passportno").required=false;
+                    }else if(val == "UAE VISA 30 DAYS" || val == "UAE VISA 60 DAYS" || val == "UAE TRANSIT VISA" || val == "GLOBAL VISA" || val == "VISA CHANGE BY BUS" || val == "VISA CHANGE BY FLIGHT"){
+                        document.getElementById("passport_div").style.display = "";
+                        document.getElementById("passportno").required=true;
+                    }
+                     else {
+                        document.getElementById("passportno").required=false;
+
+                        document.getElementById("passport_div").style.display = "none";
+
+                        document.getElementById("airticket_div").style.display = "none";
+                    }
+
+                    const airticketDiv = document.getElementById("airticket_div");
+                    const inputs = airticketDiv.querySelectorAll("input, select, textarea");
+                    
+
+                   const div = document.getElementById('airticket_div');
+
+    if (val === 'AIR TICKETS') {
+        inputs.forEach(el => el.required = true);
+        div.style.display = 'flex'; // or 'block' if it's not using bootstrap grid
+        // Reinitialize select2 for any new selects inside the div
+        $(div).find('select').select2();
+    } else {
+        inputs.forEach(el => el.required = false);
+        div.style.display = 'none';
+    }
+
+
+                }
+            </script>
+            {% include 'superadmin/layouts/footer.html' %}

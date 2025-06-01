@@ -84,9 +84,9 @@
           <div class="app-sidebar">
             <div class="side-header" style="background-color:#ffffff;height: 66px;">
               <a class="header-brand1" href="{% url 'superadmin:dashboard' %}">
-                <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img desktop-logo" alt="logo">
-                <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img toggle-logo" alt="logo">
-                <img src="{% static 'superadmin/assets/images_ex/Logo.svg' %}" class="header-brand-img light-logo" alt="logo">
+                <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img desktop-logo" alt="logo">
+                <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img toggle-logo" alt="logo">
+                <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img light-logo" alt="logo">
                 <img style="width:60px;height:60px;margin-left: 65px;" src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img light-logo1" alt="logo">
               </a>
               <!-- LOGO -->
@@ -165,7 +165,9 @@
     <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
-    <li><a href="" class="slide-item">Sales Report</a></li>
+    <li><a href="{% url 'superadmin:salesreport' %}" class="slide-item">Sales Report</a></li>
+        <li><a href="{% url 'superadmin:cashreciept' %}" class="slide-item">Cash Receipt</a></li>
+
   </ul>
 </li>
 {% endif %}

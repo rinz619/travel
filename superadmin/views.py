@@ -655,7 +655,7 @@ class refundlist(LoginRequiredMixin, View):
                 acc.unique_id = wallet.unique_id
                 acc.transactiontype = 'CREDIT NOTE'
                 acc.pnr = wallet.booking.pnr
-                acc.date = wallet.created_at.date()
+                acc.date = datetime.now().date()
                 acc.credit = wallet.refundamount
                 acc.balance = balance + wallet.refundamount
                 acc.save()
@@ -1276,3 +1276,279 @@ class subadmincreate(LoginRequiredMixin, View):
         return redirect('superadmin:subadminslist')
 
     # Agents module end
+
+
+
+
+
+# Bookings module start
+
+class salesreport(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = SalesLedger.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            fromdate = request.GET.get('fromdate')
+            todate = request.GET.get('todate')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = SalesLedger.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                SalesLedger.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                SalesLedger.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if fromdate:
+                conditions &= Q(date__gte=fromdate)
+            if todate:
+                conditions &= Q(date__lte=todate)
+                
+            if request.user.user_type == 3:
+                conditions &= Q(agent=request.user.id)
+                    
+                
+            data_list = SalesLedger.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/ledger/ledger-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'sales', 'ledger-view', context)
+
+class salesreportcreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = Sales.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+        context['airports'] = Airports.objects.all().order_by('city_airport')
+        context['airlines'] = Airlines.objects.all().order_by('name')
+        return renderhelper(request, 'sales', 'sales-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = Sales.objects.get(id=id)
+            data.createdby = request.user
+            account = SalesLedger.objects.get(unique_id=data.unique_id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            
+            now = datetime.now()
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"TBTINV{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = Sales.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+
+  
+            account = SalesLedger()
+            data = Sales()
+            data.unique_id = f"{prefix}{next_seq}"
+            data.createdby = request.user
+            account.unique_id = f"{prefix}{next_seq}"
+
+            messages.info(request, 'Successfully Added')
+
+
+        data.servicetype = request.POST.get('servicetype')
+        data.fromairport = request.POST.get('fromairport')
+        data.toairport = request.POST.get('toairport')
+        departuredate = request.POST.get('departuredate')
+        if departuredate:
+            data.departuredate = departuredate
+        else:
+            data.departuredate = None
+        data.airline = request.POST.get('airline')
+        data.pnr = request.POST.get('pnr')
+        data.passportnumber = request.POST.get('passportnumber')
+        data.ticketnumber = request.POST.get('ticketnumber')
+        data.passengername = request.POST.get('passengername')
+        data.servicedescription = request.POST.get('servicedescription')
+        data.netamount = request.POST.get('netamount')
+        data.grossamount = request.POST.get('grossamount')
+        data.markup = request.POST.get('markup')
+        data.remarks = request.POST.get('remarks')
+        data.save()
+        
+        account.pnr = request.POST.get('pnr')
+        account.transactiontype = 'Offline Booking'
+        account.date = datetime.now().date()
+        account.debit = request.POST.get('grossamount')
+        account.save()
+        return redirect('superadmin:salesreport')
+
+    # Agents module end
+
+
+
+
+# Bookings module start
+
+class cashreciept(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+        data = SalesCashReceipts.objects.filter(is_delete=False).order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Accounts')
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = SalesCashReceipts.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                seq = request.GET.get('seq')
+                SalesCashReceipts.objects.filter(id=id).update(sequence=seq)
+                messages.info(request, 'Successfully Updated')
+            elif type == '2':
+                id = request.GET.get('id')
+                SalesCashReceipts.objects.filter(id=id).update(is_delete=True)
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
+            
+            conditions &= Q(is_delete=False)
+            data_list = SalesCashReceipts.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/cash/cash-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'salescash', 'cash-view', context)
+
+class salescashrecieptcreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = SalesCashReceipts.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['airports'] = Airports.objects.all().order_by('city_airport')
+        context['airlines'] = Airlines.objects.all().order_by('name')
+        return renderhelper(request, 'salescash', 'cash-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = SalesCashReceipts.objects.get(id=id)
+            account = SalesLedger.objects.get(unique_id=data.unique_id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            
+            now = datetime.now()
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"REC{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = SalesCashReceipts.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+        
+        
+            # now = datetime.now()
+            # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
+            account = SalesLedger()
+            data = SalesCashReceipts()
+            data.unique_id = f"{prefix}{next_seq}"
+            account.unique_id = f"{prefix}{next_seq}"
+
+            messages.info(request, 'Successfully Added')
+
+
+
+        data.paymenttype = request.POST.get('paymenttype')
+        data.receivedfrom = request.POST.get('receivedfrom')
+        data.phone = request.POST.get('phone')
+        data.amount = request.POST.get('amount')
+        data.description = request.POST.get('description')
+        
+        data.save()
+        
+        account.transactiontype = 'Cash'
+        account.date = datetime.now().date()
+        account.credit = request.POST.get('amount')
+        account.save()
+        return redirect('superadmin:cashrecieptlist')
+
+    # Agents module end
+
+

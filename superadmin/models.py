@@ -290,3 +290,59 @@ class LeadsDetails(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
  
+ 
+class Sales(models.Model):
+    createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True,related_name="created_sales")
+    unique_id = models.TextField(null=True, blank=True)
+    servicetype = models.TextField(null=True, blank=True)
+    fromairport = models.TextField(null=True, blank=True)
+    toairport = models.TextField(null=True, blank=True)
+    departuredate = models.DateField(null=True, blank=True)
+    airline = models.TextField(null=True, blank=True)
+    pnr = models.TextField(null=True, blank=True)
+    passportnumber = models.TextField(null=True, blank=True)
+    ticketnumber = models.TextField(null=True, blank=True)
+    passengername = models.TextField(null=True, blank=True)
+    servicedescription = models.TextField(null=True, blank=True)
+    netamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    grossamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    markup = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+
+
+class SalesLedger(models.Model):
+    unique_id = models.TextField(null=True, blank=True)
+    transactiontype = models.TextField(null=True, blank=True)
+    pnr = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    debit = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    credit = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    balance = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    
+
+
+class SalesCashReceipts(models.Model):
+    createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
+    unique_id = models.TextField(null=True, blank=True)
+    paymenttype = models.TextField(null=True, blank=True)
+    receivedfrom = models.TextField(null=True, blank=True)
+    phone = models.TextField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+

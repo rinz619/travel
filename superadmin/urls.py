@@ -58,6 +58,15 @@ urlpatterns = [
     path('subadmincreate', views.subadmincreate.as_view(), name='subadmincreate'),
     path('subadminedit/<int:id>', views.subadmincreate.as_view(), name='subadminedit'),
     
+    
+    
+    path('salesreport', views.salesreport.as_view(), name='salesreport'),
+    path('salesreportcreate', views.salesreportcreate.as_view(), name='salesreportcreate'),
+    path('salesreportedit/<int:id>', views.salesreportcreate.as_view(), name='salesreportedit'),
+    
+    path('cashreciept', views.cashreciept.as_view(), name='cashreciept'),
+    path('salsecashrecieptcreate', views.salescashrecieptcreate.as_view(), name='salsecashrecieptcreate'),
+    path('salscashrecieptedit/<int:id>', views.cashrecieptcreate.as_view(), name='salscashrecieptedit'),
 
 
 
