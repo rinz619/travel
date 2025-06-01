@@ -20,6 +20,7 @@
             <th>date</th>
             {% if previllage %}
             <th>action</th>
+            <th>verify</th>
             {% endif %}
         </tr>
     </thead>
@@ -29,7 +30,7 @@
         <tr>
             <td>{{forloop.counter0|add:datas.start_index}}</td>            
                 <td><a target="_blank" href="{% url 'superadmin:invoice' i.unique_id %}"><b>{{i.unique_id}}</b></a></td>
-                <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></td>
+                <td>Net : <b>{{i.netamount}}</b></br>Markup : <b>{{i.markup}}</b></br>Gross : <b>{{i.grossamount}}</b></br>Refund : <b>{{i.refundamount}}</b></td>
                 <td>{{i.remarks}}</td>
                 <td>{{i.created_at.date|date:"d/m/Y"}}</td>
                 {% if previllage %}
@@ -39,7 +40,8 @@
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
                </td>
-               {% endif %}
+
+               <td>{% if i.is_verify == False %}<a class="btn btn-success btn-sm"  onclick="verify_modal({{i.id}})" >Verify</a>{% endif %}</td>{% endif %}
             
             {% endfor %}
             {% else %}

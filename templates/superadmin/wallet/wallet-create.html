@@ -26,7 +26,7 @@
                                     <div class="card-body">
                                         
                                             <div class="row">
-
+                                                {% if request.user.user_type != 3 %}
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Agency Name</label>
                                                      <select class="form-control select2" data-placeholder="Choose Agency" required name="agent">
@@ -37,6 +37,7 @@
 													</select>
 
                                                 </div>
+                                                {% endif %}
                          
                                                 <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Transaction Type</label>

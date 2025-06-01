@@ -386,7 +386,7 @@ class cashrecieptlist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         conditions = Q()
-        data = CashReceipts.objects.all().order_by('-id')
+        data = CashReceipts.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Accounts')
         if is_ajax(request):
@@ -412,12 +412,14 @@ class cashrecieptlist(LoginRequiredMixin, View):
                 messages.info(request, 'Successfully Updated')
             elif type == '2':
                 id = request.GET.get('id')
-                CashReceipts.objects.filter(id=id).delete()
+                CashReceipts.objects.filter(id=id).update(is_delete=True)
                 messages.info(request, 'Successfully Deleted')
             if status:
                 conditions &= Q(is_active=status)
             if search:
                 conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
+            
+            conditions &= Q(is_delete=False)
             data_list = CashReceipts.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
@@ -611,7 +613,7 @@ class refundlist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         conditions = Q()
-        data = Refunds.objects.all().order_by('-id')
+        data = Refunds.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Bookings')
         if is_ajax(request):
@@ -632,17 +634,42 @@ class refundlist(LoginRequiredMixin, View):
                 messages.info(request, 'Successfully Updated')
             elif type == '4':
                 id = request.GET.get('id')
-                seq = request.GET.get('seq')
-                Refunds.objects.filter(id=id).update(sequence=seq)
-                messages.info(request, 'Successfully Updated')
+                wallet = Refunds.objects.get(id=id)
+                wallet.is_verify=True
+                wallet.save()
+                print('wallet===',wallet.booking)
+                user = User.objects.get(id=wallet.booking.agent.id)
+                wallet_balance = user.wallet
+                if wallet_balance:
+                    user.wallet = wallet_balance + wallet.refundamount
+                else:
+                    user.wallet =   wallet.refundamount
+
+                user.save()
+                balance = AccountLedgers.objects.filter(agent=wallet.booking.agent.id).order_by('-id').first().balance
+                if not balance:
+                    balance = 0
+                    
+                acc = AccountLedgers()
+                acc.agent = wallet.booking.agent
+                acc.unique_id = wallet.unique_id
+                acc.transactiontype = 'CREDIT NOTE'
+                acc.pnr = wallet.booking.pnr
+                acc.date = wallet.created_at.date()
+                acc.credit = wallet.refundamount
+                acc.balance = balance + wallet.refundamount
+                acc.save()
+                messages.info(request, 'Successfully Verified')
+                
             elif type == '2':
                 id = request.GET.get('id')
-                Refunds.objects.filter(id=id).delete()
+                Refunds.objects.filter(id=id).update(is_delete=True)
                 messages.info(request, 'Successfully Deleted')
             if status:
                 conditions &= Q(is_active=status)
             if search:
                 conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
+            conditions &= Q(is_delete=False)
             data_list = Refunds.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
@@ -684,9 +711,24 @@ class refund(LoginRequiredMixin, View):
             data = Refunds.objects.get(id=id)
             messages.info(request, 'Successfully Updated')
         except:
+            
+            now = datetime.now()
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"TBTCN{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = Refunds.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+                
             data = Refunds()
-            data.booking_unique_id = id
-            data.unique_id = id
+            data.booking = Bookings.objects.get(unique_id=id)  
+            data.unique_id =  f"{prefix}{next_seq}"
             messages.info(request, 'Successfully Added')
 
         
@@ -695,6 +737,7 @@ class refund(LoginRequiredMixin, View):
         data.grossamount = request.POST.get('grossamount')
         data.markup = request.POST.get('markup')
         data.remarks = request.POST.get('remarks')
+        data.refundamount = request.POST.get('refundamount')
         data.save()
         return redirect('superadmin:refundlist')
 
@@ -870,7 +913,10 @@ class walletslist(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}
         conditions = Q()
-        data = WalletUPdates.objects.all().order_by('-id')
+        if request.user.user_type == 3:
+            data = WalletUPdates.objects.filter(agent=request.user.id).order_by('-id')
+        else:
+            data = WalletUPdates.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Accounts')
         if is_ajax(request):
@@ -922,6 +968,8 @@ class walletslist(LoginRequiredMixin, View):
                 conditions &= Q(is_active=status)
             if search:
                 conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
+            if request.user.user_type == 3:
+                conditions &= Q(agent=request.user.id)            
             data_list = WalletUPdates.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
 
@@ -971,8 +1019,10 @@ class walletscreate(LoginRequiredMixin, View):
         attachment = request.FILES.get('attachment')
         if attachment:
             data.attachment = attachment
-
-        data.agent_id = request.POST.get('agent')
+        if request.user.user_type == 3:
+            data.agent = request.user
+        else:    
+            data.agent_id = request.POST.get('agent')
         data.transactiontype = request.POST.get('transactiontype')
         data.transactiondate = request.POST.get('transactiondate')
         data.amount = request.POST.get('amount')

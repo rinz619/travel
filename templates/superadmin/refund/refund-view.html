@@ -64,7 +64,25 @@
             <!--app-content close-->
 	
 
-
+   <div class="modal  fade" id="modaldemo5-verify" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered text-center" role="document">
+            <div class="modal-content ">
+                
+                <div class="modal-body">
+                    <button aria-label="Close" class="btn-close position-absolute" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <i class="icon icon-check fs-70 text-success lh-1 my-5 d-inline-block"></i>
+                    <h4 class="text-success">Are You Sure Do You Want To Verify This amount ?</h4>
+                    <input type="hidden" id="hid">
+                    <button class="btn btn-success" onclick="verifywallet()">Yes</button>
+                    <button aria-label="Close" class="btn btn-danger pd-x-25" data-bs-dismiss="modal">Cancel</button>
+                </div>
+                <div class="modal-footer">
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>	
 
     {% include 'superadmin/layouts/footer.html' %}
   

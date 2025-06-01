@@ -27,22 +27,28 @@
                                         
                                             <div class="row">
 
-                                                <div class="form-group col-lg-4">
+                                                <div class="form-group col-lg-3">
                                                     <label for="exampleInputEmail1" class="form-label">Net Amount</label>
-                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.netamount}}" onkeyup="calculations()" >
+                                                    <input type="number" name="netamount" required id="netamount" class="form-control" placeholder="Net Amount" value="{{data.netamount}}" onkeyup="calculations()" readonly >
 
                                                 </div>
                                                 
                                                
                                                 
-                                                <div class="form-group col-lg-4">
+                                                <div class="form-group col-lg-3">
                                                     <label for="exampleInputEmail1" class="form-label">Markup</label>
-                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Markup" value="{{data.markup}}" onkeyup="calculationsgross()" >
+                                                    <input type="number" name="markup" required id="markup" class="form-control" placeholder="Markup" value="{{data.markup}}" onkeyup="calculationsgross()" readonly>
 
                                                 </div>
-                                                 <div class="form-group col-lg-4">
+                                                 <div class="form-group col-lg-3">
                                                     <label for="exampleInputEmail1" class="form-label">Gross Amount</label>
-                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" >
+                                                    <input type="number" name="grossamount" required id="grossamount" class="form-control" placeholder="Gross Amount" value="{{data.grossamount}}" onkeyup="calculationsmarkup()" readonly >
+
+                                                </div>
+                                                
+                                                 <div class="form-group col-lg-3">
+                                                    <label for="exampleInputEmail1" class="form-label">Refund Amount</label>
+                                                    <input type="number" name="refundamount" required id="refundamount" class="form-control" placeholder="Refund Amount" >
 
                                                 </div>
                                                 
