@@ -41,7 +41,7 @@
                     <option value="Lost">Lost</option>
                 </select>
             </td>
-            <td><a href="" class="btn btn-primary btn-sm">View</a></td>
+            <td><a href="{% url 'superadmin:leaddetail' i.id %}" class="btn btn-primary btn-sm">View</a></td>
             </tr>
             {% endfor %}
             {% else %}

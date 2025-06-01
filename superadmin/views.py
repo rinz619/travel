@@ -1100,6 +1100,26 @@ class leadslist(LoginRequiredMixin, View):
 
 
 
+class leaddetail(LoginRequiredMixin, View):
+    def post(self, request, id=None):
+        
+        data = LeadsDetails()
+        data.lead_id = id
+        data.status = request.POST.get('status')
+        data.remarks = request.POST.get('remarks')
+        data.save()
+        
+        return redirect('superadmin:leaddetail',id=id)
+    def get(self, request, id=None):
+        context = {}
+        try:
+            context['data'] = Leads.objects.get(id=id)
+        except:
+            context['data'] = None
+        context['remarks'] = LeadsDetails.objects.filter(lead=id).order_by('id')
+
+        return renderhelper(request, 'leads', 'lead-detail', context)
+
 class leadscreate(LoginRequiredMixin, View):
     def get(self, request, id=None):
         context = {}

@@ -50,6 +50,7 @@ urlpatterns = [
     path('leadslist', views.leadslist.as_view(), name='leadslist'),
     path('leadscreate', views.leadscreate.as_view(), name='leadscreate'),
     path('leadsedit/<int:id>', views.leadscreate.as_view(), name='leadsedit'),
+    path('leaddetail/<int:id>', views.leaddetail.as_view(), name='leaddetail'),
     
 
         

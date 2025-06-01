@@ -281,4 +281,12 @@ class Leads(models.Model):
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    
+class LeadsDetails(models.Model):
+    lead = models.ForeignKey(Leads,on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.TextField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
  

@@ -1,0 +1,175 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Leads Detail</h1>
+                            <div>
+                                <a class="btn btn-primary" href="{% url 'superadmin:leadslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                         <form method="post" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                        <div class="row">
+                            
+						<div class="col-md-6 col-xl-6 col-6">
+
+                                     <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="form-group col-lg-12">
+                                                    <label for="exampleInputEmail1" class="form-label">Status</label>
+                                                     <select class="form-control select2" data-placeholder="Choose Enquiry" required name="status">
+                                                        <option value="">Select</option>
+                                                        <option value="Open">Open</option>
+                                                        <option value="Followup">Followup</option>
+                                                        <option value="Closed">Closed</option>
+                                                        <option value="Lost">Lost</option>
+
+													</select>
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-12">
+                                                    <label for="exampleInputEmail1" class="form-label">Remark</label>
+                                                     <textarea  class="form-control" rows="8" required name="remarks"></textarea>
+
+                                                </div>
+                                            <div class="form-group col-lg-12 col-12">
+                                                <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+                                                <a href="" class="btn btn-default mt-4 mb-0"  >Reset</a>
+											</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col-md-6 col-xl-6 col-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        
+                                            <div class="row">
+                                                {% if remarks %}
+                                                    {% for i in remarks %}
+                                                <div class="form-group col-lg-12">
+<label class="form-label w-100 d-flex justify-content-between">
+    <span>{{ i.status }}</span>
+    <span>{{ i.created_at.date|date:'d/m/Y' }}</span>
+</label>
+                                                     <p >{{i.remarks}}</p>
+
+                                                </div>
+                                                {% endfor %}
+                                                {% else %}
+                                                <div class="form-group col-lg-12 text-center">
+                                                     <p >No Data</p>
+
+                                                </div>
+                                                {% endif %}
+                         
+                                                
+
+                                      
+
+                                                   
+                                                    
+												
+											
+											
+                                    </div>
+                                </div>
+
+                                
+                           
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+
+                    </div>
+                </form>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            </div>
+            <!--app-content close-->
+			<script>
+                function calculations(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    var markup = document.getElementById("markup").value;
+                    if (grossamount != "" && netamount != ""){
+                        markup = parseFloat(grossamount) - parseFloat(netamount)
+                        document.getElementById("markup").value = markup;
+                    }
+                    if (netamount != "" && markup != ""){
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    }
+
+                }
+                function calculationsgross(){
+                    var netamount = document.getElementById("netamount").value;
+                    var markup = document.getElementById("markup").value;
+
+                    grossamount = parseFloat(netamount) + parseFloat(markup)
+                    document.getElementById("grossamount").value = grossamount;
+                    
+
+                }
+                function calculationsmarkup(){
+                    var netamount = document.getElementById("netamount").value;
+                    var grossamount = document.getElementById("grossamount").value;
+                    markup = parseFloat(grossamount) - parseFloat(netamount)
+                    document.getElementById("markup").value = markup;
+                    
+
+                }
+
+
+                function airticket(val){
+                    if (val === "AIR TICKETS") {
+                        document.getElementById("airticket_div").style.display = "";
+                        document.getElementById("passport_div").style.display = "none";
+
+                        document.getElementById("passportno").required=false;
+                    }else if(val == "UAE VISA 30 DAYS" || val == "UAE VISA 60 DAYS" || val == "UAE TRANSIT VISA" || val == "GLOBAL VISA" || val == "VISA CHANGE BY BUS" || val == "VISA CHANGE BY FLIGHT"){
+                        document.getElementById("passport_div").style.display = "";
+                        document.getElementById("passportno").required=true;
+                    }
+                     else {
+                        document.getElementById("passportno").required=false;
+
+                        document.getElementById("passport_div").style.display = "none";
+
+                        document.getElementById("airticket_div").style.display = "none";
+                    }
+
+                    const airticketDiv = document.getElementById("airticket_div");
+                    const inputs = airticketDiv.querySelectorAll("input, select, textarea");
+                    
+
+                   const div = document.getElementById('airticket_div');
+
+    if (val === 'AIR TICKETS') {
+        inputs.forEach(el => el.required = true);
+        div.style.display = 'flex'; // or 'block' if it's not using bootstrap grid
+        // Reinitialize select2 for any new selects inside the div
+        $(div).find('select').select2();
+    } else {
+        inputs.forEach(el => el.required = false);
+        div.style.display = 'none';
+    }
+
+
+                }
+            </script>
+            {% include 'superadmin/layouts/footer.html' %}
