@@ -20,3 +20,12 @@ def check_previllage(request,menu):
         else:
             return False
     
+
+@register.simple_tag()
+def get_followup_status(id):
+    lead = LeadsDetails.objects.filter(lead=id).order_by('-id').first()
+    if lead:
+        return lead.status
+    else:
+        return 'Open'
+    
