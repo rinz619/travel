@@ -1260,16 +1260,31 @@ class subadmincreate(LoginRequiredMixin, View):
         data.set_password(request.POST.get('password'))
         data.save()
         
-        prev= request.POST.getlist('options')
-        acc = request.POST.get('previllage')
-        Previllages.objects.filter(user=data.id).delete()
+        agent_read= request.POST.get('agent_read')
+        agent_write= request.POST.get('agent_write')
+        agent_delete= request.POST.get('agent_delete')
+        
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Agent'
+        if agent_read:
+            sub.read = True
+        if agent_write:
+            sub.write = True
+        if agent_delete:
+            sub.delete = True
+        sub.save()
+            
+        # prev= request.POST.getlist('options')
+        # acc = request.POST.get('previllage')
+        # Previllages.objects.filter(user=data.id).delete()
        
-        for i in prev:
-            sub = Previllages()
-            sub.user = data
-            sub.option = i
-            sub.acsess = acc
-            sub.save()
+        # for i in prev:
+        #     sub = Previllages()
+        #     sub.user = data
+        #     sub.option = i
+        #     sub.acsess = acc
+        #     sub.save()
         
         
         
@@ -1432,6 +1447,7 @@ class cashreciept(LoginRequiredMixin, View):
         context = {}
         conditions = Q()
         data = SalesCashReceipts.objects.filter(is_delete=False).order_by('-id')
+        
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Accounts')
         if is_ajax(request):
@@ -1500,6 +1516,12 @@ class salescashrecieptcreate(LoginRequiredMixin, View):
             context['data'] = None
         context['airports'] = Airports.objects.all().order_by('city_airport')
         context['airlines'] = Airlines.objects.all().order_by('name')
+        allcash = SalesCashReceipts.objects.filter(is_delete=False)
+        ids = []
+        for i in allcash:
+            ids.append(i.sale.id)
+        context['sales'] = Sales.objects.filter(is_delete=False).order_by('unique_id').exclude(id__in=ids)
+        
         return renderhelper(request, 'salescash', 'cash-create', context)
 
     def post(self, request, id=None):
@@ -1535,6 +1557,7 @@ class salescashrecieptcreate(LoginRequiredMixin, View):
 
 
 
+        data.sale_id = request.POST.get('salesinvoice')
         data.paymenttype = request.POST.get('paymenttype')
         data.receivedfrom = request.POST.get('receivedfrom')
         data.phone = request.POST.get('phone')
@@ -1547,7 +1570,7 @@ class salescashrecieptcreate(LoginRequiredMixin, View):
         account.date = datetime.now().date()
         account.credit = request.POST.get('amount')
         account.save()
-        return redirect('superadmin:cashrecieptlist')
+        return redirect('superadmin:cashreciept')
 
     # Agents module end
 

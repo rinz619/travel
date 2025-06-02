@@ -144,8 +144,9 @@ class User(AbstractBaseUser):
 class Previllages(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     option = models.TextField(null=True, blank=True)
-    acsess = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    read = models.BooleanField(default=False)
+    write = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -334,6 +335,7 @@ class SalesLedger(models.Model):
 
 
 class SalesCashReceipts(models.Model):
+    sale = models.ForeignKey(Sales,on_delete=models.SET_NULL, null=True, blank=True)
     createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     unique_id = models.TextField(null=True, blank=True)
     paymenttype = models.TextField(null=True, blank=True)

@@ -30,6 +30,19 @@
                                                
                          
                                                 <div class="form-group col-lg-6">
+                                                    <label for="exampleInputEmail1" class="form-label">Sales Invoice</label>
+                                                     <select class="form-control select2" data-placeholder="Choose Sales Invoice" required name="salesinvoice">
+                                                        <option value="">Select</option>
+                                                        {% for i in sales %}
+                                                        <option value="{{i.id}}">{{i.unique_id}}</option>
+                                                        {% endfor %}
+                                              
+
+													</select>
+
+                                                </div>
+                         
+                                                <div class="form-group col-lg-6">
                                                     <label for="exampleInputEmail1" class="form-label">Payment Type</label>
                                                      <select class="form-control select2" data-placeholder="Choose Payment Type" required name="paymenttype">
                                                         <option value="">Select</option>
