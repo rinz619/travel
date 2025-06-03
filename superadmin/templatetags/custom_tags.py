@@ -14,11 +14,11 @@ def check_previllage(request,menu):
     if request.user.user_type == 1:
         return True
     else:
-        ismenu = Previllages.objects.filter(user=request.user.id,option=menu)
+        ismenu = Previllages.objects.filter(user=request.user.id,option=menu).first()
         if ismenu:
-            return True
+            return ismenu
         else:
-            return False
+            return None
     
 
 @register.simple_tag()

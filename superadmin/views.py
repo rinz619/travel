@@ -24,12 +24,11 @@ import openpyxl
 
 def check_previllage(request,menu):
     try:
-        previllage = Previllages.objects.get(user=request.user.id, option=menu)
-        prev = (previllage.acsess)
-        if prev == 'Read':
-            return False
+        ismenu = Previllages.objects.filter(user=request.user.id,option=menu).first()
+        if ismenu:
+            return ismenu
         else:
-            return True
+            return None
     except:
         return True
     
@@ -239,7 +238,7 @@ class offlinebookingslist(LoginRequiredMixin, View):
         conditions = Q()
         data = Bookings.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
-        context['previllage'] = check_previllage(request, 'Bookings')
+        context['previllage'] = check_previllage(request, 'Offline Bookings')
         context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
         if is_ajax(request):
             page = request.GET.get('page', 1)
@@ -1260,9 +1259,11 @@ class subadmincreate(LoginRequiredMixin, View):
         data.set_password(request.POST.get('password'))
         data.save()
         
-        agent_read= request.POST.get('agent_read')
-        agent_write= request.POST.get('agent_write')
-        agent_delete= request.POST.get('agent_delete')
+        Previllages.objects.filter(user=data.id).delete()
+        # Agents
+        agent_read = request.POST.get('agent_read')
+        agent_write = request.POST.get('agent_write')
+        agent_delete = request.POST.get('agent_delete')
         
         sub = Previllages()
         sub.user = data
@@ -1274,19 +1275,167 @@ class subadmincreate(LoginRequiredMixin, View):
         if agent_delete:
             sub.delete = True
         sub.save()
-            
-        # prev= request.POST.getlist('options')
-        # acc = request.POST.get('previllage')
-        # Previllages.objects.filter(user=data.id).delete()
-       
-        # for i in prev:
-        #     sub = Previllages()
-        #     sub.user = data
-        #     sub.option = i
-        #     sub.acsess = acc
-        #     sub.save()
-        
-        
+
+        # Subadmin
+        subadmin_read = request.POST.get('subadmin_read')
+        subadmin_write = request.POST.get('subadmin_write')
+        subadmin_delete = request.POST.get('subadmin_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Subadmin'
+        if subadmin_read:
+            sub.read = True
+        if subadmin_write:
+            sub.write = True
+        if subadmin_delete:
+            sub.delete = True
+        sub.save()
+
+        # Offline Bookings
+        booking_read = request.POST.get('booking_read')
+        booking_write = request.POST.get('booking_write')
+        booking_delete = request.POST.get('booking_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Offline Bookings'
+        if booking_read:
+            sub.read = True
+        if booking_write:
+            sub.write = True
+        if booking_delete:
+            sub.delete = True
+        sub.save()
+
+        # Refunds
+        refunds_read = request.POST.get('refunds_read')
+        refunds_write = request.POST.get('refunds_write')
+        refunds_delete = request.POST.get('refunds_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Refunds'
+        if refunds_read:
+            sub.read = True
+        if refunds_write:
+            sub.write = True
+        if refunds_delete:
+            sub.delete = True
+        sub.save()
+
+        # Cash Receipt
+        cash_read = request.POST.get('cash_read')
+        cash_write = request.POST.get('cash_write')
+        cash_delete = request.POST.get('cash_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Cash Receipt'
+        if cash_read:
+            sub.read = True
+        if cash_write:
+            sub.write = True
+        if cash_delete:
+            sub.delete = True
+        sub.save()
+
+        # Account Ledger
+        ledger_read = request.POST.get('ledger_read')
+        ledger_write = request.POST.get('ledger_write')
+        ledger_delete = request.POST.get('ledger_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Account Ledger'
+        if ledger_read:
+            sub.read = True
+        if ledger_write:
+            sub.write = True
+        if ledger_delete:
+            sub.delete = True
+        sub.save()
+
+        # Update Wallet
+        wallet_read = request.POST.get('wallet_read')
+        wallet_write = request.POST.get('wallet_write')
+        wallet_delete = request.POST.get('wallet_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Update Wallet'
+        if wallet_read:
+            sub.read = True
+        if wallet_write:
+            sub.write = True
+        if wallet_delete:
+            sub.delete = True
+        sub.save()
+
+        # Sales Report
+        sales_read = request.POST.get('sales_read')
+        sales_write = request.POST.get('sales_write')
+        sales_delete = request.POST.get('sales_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Sales Report'
+        if sales_read:
+            sub.read = True
+        if sales_write:
+            sub.write = True
+        if sales_delete:
+            sub.delete = True
+        sub.save()
+
+        # Leads
+        leads_read = request.POST.get('leads_read')
+        leads_write = request.POST.get('leads_write')
+        leads_delete = request.POST.get('leads_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Leads'
+        if leads_read:
+            sub.read = True
+        if leads_write:
+            sub.write = True
+        if leads_delete:
+            sub.delete = True
+        sub.save()
+
+        # Attendance Report
+        attendance_read = request.POST.get('attendance_read')
+        attendance_write = request.POST.get('attendance_write')
+        attendance_delete = request.POST.get('attendance_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Attendance report'
+        if attendance_read:
+            sub.read = True
+        if attendance_write:
+            sub.write = True
+        if attendance_delete:
+            sub.delete = True
+        sub.save()
+
+        # Staff
+        staff_read = request.POST.get('staff_read')
+        staff_write = request.POST.get('staff_write')
+        staff_delete = request.POST.get('staff_delete')
+
+        sub = Previllages()
+        sub.user = data
+        sub.option = 'Staff'
+        if staff_read:
+            sub.read = True
+        if staff_write:
+            sub.write = True
+        if staff_delete:
+            sub.delete = True
+        sub.save()
+
         
         return redirect('superadmin:subadminslist')
 

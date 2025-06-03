@@ -95,65 +95,74 @@
                                                             <th>Delete</th>
                                                         </tr>
                                                         <tr align="center">
-                                                            <td>Agents</td>
-                                                            <td><input type="checkbox" name="agent_read" ></td>
-                                                            <td><input type="checkbox" name="agent_write" value="1" ></td>
-                                                            <td><input type="checkbox" name="agent_delete" value="1" ></td>
-                                                        </tr>
-                                                        <tr align="center">
-                                                            <td>Subadmin</td>
-                                                            <td><input type="checkbox" name="subadmin_read" value="1" ></td>
-                                                            <td><input type="checkbox" name="subadmin_write" value="1"  ></td>
-                                                            <td><input type="checkbox" name="subadmin_delete" value="1"  ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Offline Bookings</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Refunds</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Cash Receipt</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Account Ledger</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Update Wallet</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr><tr align="center">
-                                                            <td>Sales Report</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr>
-                                                        <tr align="center">
-                                                            <td>Leads</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr>
-                                                        <tr align="center">
-                                                            <td>Attendance report</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr>
-                                                        <tr align="center">
-                                                            <td>staff</td>
-                                                            <td><input type="checkbox"  ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                            <td><input type="checkbox" ></td>
-                                                        </tr>
+    <tr align="center">
+    <td>Agents</td>
+    <td><input type="checkbox" name="agent_read" {% for i in pre_data %}{% if i.option == 'Agents' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="agent_write" {% for i in pre_data %}{% if i.option == 'Agents' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="agent_delete" {% for i in pre_data %}{% if i.option == 'Agents' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Subadmin</td>
+    <td><input type="checkbox" name="subadmin_read" {% for i in pre_data %}{% if i.option == 'Subadmin' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="subadmin_write" {% for i in pre_data %}{% if i.option == 'Subadmin' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="subadmin_delete" {% for i in pre_data %}{% if i.option == 'Subadmin' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Offline Bookings</td>
+    <td><input type="checkbox" name="booking_read" {% for i in pre_data %}{% if i.option == 'Offline Bookings' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="booking_write" {% for i in pre_data %}{% if i.option == 'Offline Bookings' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="booking_delete" {% for i in pre_data %}{% if i.option == 'Offline Bookings' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Refunds</td>
+    <td><input type="checkbox" name="refunds_read" {% for i in pre_data %}{% if i.option == 'Refunds' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="refunds_write" {% for i in pre_data %}{% if i.option == 'Refunds' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="refunds_delete" {% for i in pre_data %}{% if i.option == 'Refunds' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Cash Receipt</td>
+    <td><input type="checkbox" name="cash_read" {% for i in pre_data %}{% if i.option == 'Cash Receipt' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="cash_write" {% for i in pre_data %}{% if i.option == 'Cash Receipt' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="cash_delete" {% for i in pre_data %}{% if i.option == 'Cash Receipt' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Account Ledger</td>
+    <td><input type="checkbox" name="ledger_read" {% for i in pre_data %}{% if i.option == 'Account Ledger' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="ledger_write" {% for i in pre_data %}{% if i.option == 'Account Ledger' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="ledger_delete" {% for i in pre_data %}{% if i.option == 'Account Ledger' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Update Wallet</td>
+    <td><input type="checkbox" name="wallet_read" {% for i in pre_data %}{% if i.option == 'Update Wallet' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="wallet_write" {% for i in pre_data %}{% if i.option == 'Update Wallet' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="wallet_delete" {% for i in pre_data %}{% if i.option == 'Update Wallet' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Sales Report</td>
+    <td><input type="checkbox" name="sales_read" {% for i in pre_data %}{% if i.option == 'Sales Report' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="sales_write" {% for i in pre_data %}{% if i.option == 'Sales Report' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="sales_delete" {% for i in pre_data %}{% if i.option == 'Sales Report' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Leads</td>
+    <td><input type="checkbox" name="leads_read" {% for i in pre_data %}{% if i.option == 'Leads' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="leads_write" {% for i in pre_data %}{% if i.option == 'Leads' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="leads_delete" {% for i in pre_data %}{% if i.option == 'Leads' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Attendance report</td>
+    <td><input type="checkbox" name="attendance_read" {% for i in pre_data %}{% if i.option == 'Attendance report' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="attendance_write" {% for i in pre_data %}{% if i.option == 'Attendance report' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="attendance_delete" {% for i in pre_data %}{% if i.option == 'Attendance report' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+<tr align="center">
+    <td>Staff</td>
+    <td><input type="checkbox" name="staff_read" {% for i in pre_data %}{% if i.option == 'Staff' and i.read %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="staff_write" {% for i in pre_data %}{% if i.option == 'Staff' and i.write %}checked{% endif %}{% endfor %}></td>
+    <td><input type="checkbox" name="staff_delete" {% for i in pre_data %}{% if i.option == 'Staff' and i.delete %}checked{% endif %}{% endfor %}></td>
+</tr>
+
+
                                                     </table>
                                                 </div>
                          

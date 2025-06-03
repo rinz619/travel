@@ -127,8 +127,7 @@
   </a>
 </li>
 {% endif %}
-{% check_previllage request 'Bookings' as previllage %}
-{% if previllage %}
+
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-calendar"></i>  <!-- Changed -->
@@ -136,11 +135,16 @@
     <i style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
-    <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
+    {% check_previllage request 'Offline Bookings' as previllage %}
+      {% if previllage.read %}
+        <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
+      {% endif %}
+       {% check_previllage request 'Refunds' as previllage %}
+      {% if previllage.read %}
     <li><a href="{% url 'superadmin:refundlist' %}" class="slide-item">Refunds</a></li>
+    {% endif %}
   </ul>
 </li>
-{% endif %}
 {% check_previllage request 'Accounts' as previllage %}
 {% if previllage %}
 <li class="slide">
@@ -150,9 +154,19 @@
     <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
+       {% check_previllage request 'Cash Receipt' as previllage %}
+      {% if previllage.read %}
     <li><a href="{% url 'superadmin:cashrecieptlist' %}" class="slide-item">Cash Receipt</a></li>
+    {% endif %}
+       {% check_previllage request 'Account Ledger' as previllage %}
+      {% if previllage.read %}
     <li><a href="{% url 'superadmin:accountledger' %}" class="slide-item">Account Ledger</a></li>
+    {% endif %}
+       {% check_previllage request 'Update Wallet' as previllage %}
+      {% if previllage.read %}
     <li><a href="{% url 'superadmin:walletslist' %}" class="slide-item">Update Wallet</a></li>
+    {% endif %}
+ 
   </ul>
 </li>
 {% endif %}
