@@ -23,14 +23,17 @@ import openpyxl
 
 
 def check_previllage(request,menu):
-    try:
+    if request.user.user_type == 1:
+        return True
+    else:
+    
         ismenu = Previllages.objects.filter(user=request.user.id,option=menu).first()
         if ismenu:
             return ismenu
         else:
             return None
-    except:
-        return True
+    
+        
     
 # Create your views here.
 class index(View):
@@ -1724,3 +1727,128 @@ class salescashrecieptcreate(LoginRequiredMixin, View):
     # Agents module end
 
 
+
+
+
+# myapp/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+# Import landscape for page orientation and inch for defining precise widths
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+# Import Paragraph for text wrapping and Spacer for adding vertical space
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch # Import inch for unit measurements
+from io import BytesIO
+
+
+def download_entries_pdf(request):
+    buffer = BytesIO()
+    # Set page size to landscape letter for more horizontal space
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    # Title
+    title_text = "Booking Entries Report"
+    # Use a heading style for the title
+    elements.append(Paragraph(title_text, styles['h1']))
+    # Add a spacer for better visual separation instead of <br/>
+    elements.append(Spacer(1, 0.2 * inch))
+
+    # Fetch data from your model
+    # Ensure 'Bookings' model and its fields (passengername, created_at, servicedescription) exist
+    entries = Bookings.objects.all().order_by('id')
+
+    # Define a style for paragraph content within table cells.
+    # This is crucial for text wrapping and setting a smaller font size.
+    cell_paragraph_style = styles['Normal']
+    cell_paragraph_style.fontSize = 7 # Smaller font size for cell content
+    cell_paragraph_style.leading = 9 # Adjust leading (line spacing) for smaller font
+
+    # Prepare data for the table
+    # Update these headers to reflect your actual 10 columns accurately
+    data = [
+        [
+            'Passenger Name', 'Booking ID', 'Created At', 'Service Description',
+            'Contact Email', 'Service Type', 'Booking Status', 'Amount',
+            'Payment Status', 'Notes'
+        ]
+    ]
+
+    for entry in entries:
+        # Each item in the inner list corresponds to a column.
+        # Wrap text in Paragraph objects to enable automatic line breaks within cells.
+        # Replace placeholder data with your actual 'entry' object's attributes for all 10 columns.
+        data.append([
+            Paragraph(str(entry.passengername), cell_paragraph_style),
+            Paragraph(str(entry.id), cell_paragraph_style), # Example: using entry.id as a column
+            Paragraph(entry.created_at.strftime('%Y-%m-%d %H:%M'), cell_paragraph_style),
+            Paragraph(entry.servicedescription if entry.servicedescription else 'N/A', cell_paragraph_style),
+            # --- Placeholder for your additional 6 columns ---
+            Paragraph('email@example.com', cell_paragraph_style), # Replace with actual email field
+            Paragraph('Service Type A', cell_paragraph_style),     # Replace with actual service type field
+            Paragraph('Confirmed', cell_paragraph_style),         # Replace with actual status field
+            Paragraph('$100.00', cell_paragraph_style),           # Replace with actual amount field
+            Paragraph('Paid', cell_paragraph_style),              # Replace with actual payment status field
+            Paragraph('Any additional notes here. This is a longer text to demonstrate wrapping within the cell.', cell_paragraph_style) # Replace with actual notes field
+        ])
+
+    # Define column widths for 10 columns.
+    # Total usable width for landscape letter is approx 10 inches (11 inches page width - 0.5 inch left margin - 0.5 inch right margin).
+    # Adjust these widths based on the content of each column.
+    # Using 'None' for some columns allows ReportLab to auto-calculate their width based on content,
+    # but for 10 columns, a more explicit distribution is often better.
+    # Example distribution (totaling approx 10 inches):
+    col_widths = [
+        1.2 * inch, # Passenger Name
+        0.8 * inch, # Booking ID
+        1.3 * inch, # Created At
+        1.8 * inch, # Service Description (can be longer)
+        1.2 * inch, # Contact Email
+        1.0 * inch, # Service Type
+        1.0 * inch, # Booking Status
+        0.8 * inch, # Amount
+        1.0 * inch, # Payment Status
+        1.5 * inch  # Notes (can be very long, will wrap)
+    ]
+
+    # Create the table
+    # `repeatRows=1` ensures the header row repeats on each new page
+    table = Table(data, colWidths=col_widths, repeatRows=1)
+
+    # Apply table style
+    table.setStyle(TableStyle([
+        # Header row style
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4A4A4A')), # Darker grey for header
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'), # Center align header text
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 8), # Slightly larger font for header
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8), # Reduced padding for header
+
+        # Body rows style
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white), # White background for body rows
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'), # Left align body text
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 4), # Reduced padding for body cells
+        ('TOPPADDING', (0, 1), (-1, -1), 4),
+
+        # Grid lines
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey), # Lighter grid lines
+        ('BOX', (0, 0), (-1, -1), 1, colors.black), # Outer box border
+    ]))
+
+    elements.append(table)
+
+    # Build the PDF document
+    doc.build(elements)
+
+    buffer.seek(0)
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
+    return response

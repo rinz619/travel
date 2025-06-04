@@ -25,10 +25,10 @@
             <th>created by</th>
             <th>Date</th>
             {% comment %} <th>invoice</th> {% endcomment %}
-            {% if previllage.write or previllage.delete %}
+            {% if previllage.write or previllage.delete or previllage == True %}
             <th>Action</th>
              {% endif %}
-              {% if previllage.write %}
+              {% if previllage.write or previllage == True %}
             <th>Refund</th>
             {% endif %}
         </tr>
@@ -53,18 +53,18 @@
             
            
 
-              {% if previllage.write or previllage.delete %}
+              {% if previllage.write or previllage.delete or previllage == True %}
                <td>
-                 {% if previllage.write %}
+                 {% if previllage.write or previllage == True %}
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:offlinebookingsedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
                            {% endif %}
-                 {% if previllage.delete %}
+                 {% if previllage.delete or previllage == True %}
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
                            {% endif %}
                </td>
-                {% if previllage.write %}
+                {% if previllage.write or previllage == True %}
                <td><a class="btn btn-primary btn-sm" href="{% url 'superadmin:refund' i.unique_id %}">Refund</a></td>
                {% endif %}
             </tr>

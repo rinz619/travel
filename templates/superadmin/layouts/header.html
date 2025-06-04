@@ -136,11 +136,11 @@
   </a>
   <ul class="slide-menu">
     {% check_previllage request 'Offline Bookings' as previllage %}
-      {% if previllage.read %}
+      {% if previllage.read or previllage == True %}
         <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
       {% endif %}
        {% check_previllage request 'Refunds' as previllage %}
-      {% if previllage.read %}
+      {% if previllage.read or previllage == True %}
     <li><a href="{% url 'superadmin:refundlist' %}" class="slide-item">Refunds</a></li>
     {% endif %}
   </ul>
@@ -264,28 +264,21 @@
 
 <style>
 .search-container {
-    display: flex;
-    align-items: center;
     border: 1px solid #ccc;
     border-radius: 15px;
-    overflow: hidden;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 503px;
-    height: 49px;
-    margin-bottom: 20px;
+    padding: 10px;
 }
 
-.search-input {
-    border: none;
-    padding: 10px 20px;
+.search-input,
+select.form-control {
     background: #e5e5e5;
+    border: none;
     border-radius: 10px;
-    margin: 10px;
-    width: 150px;
-    font-size: 16px;
-    outline: none;
-    height:35px;
+    padding: 6px 12px;
+    font-size: 14px;
+    height: 35px;
 }
 
 .reset-icon {
@@ -297,9 +290,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
     font-size: 16px;
-    margin: 0 10px;
     cursor: pointer;
 }
 
@@ -307,10 +298,14 @@
     background-color: #c62828;
     color: white;
     border: none;
-    padding: 14px 25px;
-    font-size: 18px;
-    border-radius: 0 15px 15px 0;
-    cursor: pointer;
-    width: 135px;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 14px;
+    height: 35px;
 }
+
+form, .d-inline-flex {
+    vertical-align: top;
+}
+
 </style>

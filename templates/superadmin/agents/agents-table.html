@@ -27,8 +27,12 @@
             <th>Credentials</th>
             <th>Address</th>
             <th>Attachement</th>
+            {% if previllage.write %}
             <th>Status</th>
+            {% endif %}
+            {% if previllage.write or previllage.delete %}
             <th>Action</th>
+             {% endif %}
         </tr>
     </thead>
     <tbody>
