@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wrong WiFi Connection</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #a21010;
+  }
+  .error-container {
+    background: #ffe6e6;
+    border: 2px solid #a21010;
+    padding: 30px 40px;
+    border-radius: 10px;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(162, 16, 16, 0.2);
+    animation: fadeIn 0.7s ease forwards;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+  p {
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+  }
+  button {
+    background-color: #a21010;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #810c0c;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-15px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
+</head>
+<body>
+  <div class="error-container">
+    <h1>Connection Error</h1>
+    <p>It looks like you're connected to the wrong WiFi network.<br>Please connect to the authorized staff WiFi to proceed.</p>
+    <button onclick="location.reload()">Try Again</button>
+  </div>
+</body>
+</html>

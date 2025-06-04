@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('travel-superadmin/', include('superadmin.urls')),
+    path('staff/', include('staff.urls')),
 ]
 
 

@@ -1861,3 +1861,4 @@ def download_entries_pdf(request):
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
     return response
+
