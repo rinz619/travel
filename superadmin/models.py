@@ -246,15 +246,25 @@ class Staffs(models.Model):
     email = models.TextField(null=True, blank=True)
     phone = models.TextField(null=True, blank=True)
     passportno = models.TextField(null=True, blank=True)
+    password = models.TextField(null=True, blank=True)
     emergency = models.TextField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to='staff', blank=True, null=True)
+    attachement = models.FileField(upload_to='staff', blank=True, null=True)
+
 
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
   
   
+class StaffLogins(models.Model):
+    staff = models.ForeignKey(Staffs,on_delete=models.SET_NULL, null=True, blank=True)
+    intime = models.TextField(null=True, blank=True)
+    outtime = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  
+
 class WalletUPdates(models.Model):
     agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
 

@@ -1,0 +1,179 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Split Profile Card with Picture</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card-container {
+      display: flex;
+      width: 900px;
+      height: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-left {
+      flex: 1;
+      background-color: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 3px solid #fff;
+    }
+
+    .card-center {
+      flex: 2;
+      padding: 30px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .detail-row {
+      margin-bottom: 12px;
+    }
+
+    .detail-row strong {
+      display: inline-block;
+      width: 100px;
+      color: #444;
+    }
+
+    .card-right {
+      width: 150px;
+      background-color: #b22222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card-right button {
+      background-color: white;
+      color: #b22222;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 0;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      width: 100px;
+    }
+
+    .card-right button:hover {
+      background-color: #e0e0e0;
+    }
+
+
+    .profile-placeholder {
+      width: 200px;
+      height: 200px;
+      background-color: #ccc;
+      border-radius: 20px;
+      position: relative;
+    }
+
+    .profile-placeholder::before,
+    .profile-placeholder::after {
+      content: "";
+      position: absolute;
+      background-color: #bbb;
+    }
+
+    .profile-placeholder::before {
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    .profile-placeholder::after {
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 80px;
+      border-radius: 50% 50% 0 0;
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .card-right {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+
+      .card-right button {
+        width: auto;
+        margin: 10px;
+      }
+
+      .card-center {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container">
+    <div class="card-left">
+      {% if user.image %}
+      <img class="profile-image" src="{{user.image.url}}" alt="Profile Picture">
+      {% else %}
+      <div class="profile-placeholder"></div>
+      {% endif %}
+    </div>
+    <div class="card-center">
+      <div class="detail-row"><strong>Name:</strong> {{user.name}}</div>
+      <div class="detail-row"><strong>Email:</strong> {{user.email}}</div>
+      <div class="detail-row"><strong>Phone:</strong> {{user.phone}}</div>
+      <div class="detail-row"><strong>Emergency Contact:</strong> {{user.emergency}}</div>
+      <div class="detail-row"><strong>Passport:</strong> {{user.passportno}}</div>
+      <div class="detail-row"><strong>Address:</strong> {{user.address}}</div>
+    </div>
+    <div class="card-right">
+      <button onclick="login({{user.id}})">Login</button>
+      <button>Absent</button>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="{% static 'staff/custom/custom.js' %}"></script>

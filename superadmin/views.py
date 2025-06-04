@@ -904,12 +904,17 @@ class staffcreate(LoginRequiredMixin, View):
         if uploaded_file:
             data.image = uploaded_file
 
+        attachement = request.FILES.get('attachement')
+        if attachement:
+            data.attachement = attachement
+
         data.address = request.POST.get('address')
         data.name = request.POST.get('name')
         data.phone = request.POST.get('phone')
         data.email = request.POST.get('email')
         data.passportno = request.POST.get('passportno')
         data.emergency = request.POST.get('emergency')
+        data.password = request.POST.get('password')
         data.save()
         return redirect('superadmin:stafflist')
 

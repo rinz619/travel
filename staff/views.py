@@ -40,6 +40,7 @@ def show_wifi_ip(request):
 
 
 class index(View):
+    
     def get(self, request):
         context = {}
         ip = get_wifi_ip()
@@ -47,3 +48,39 @@ class index(View):
             return renderhelper(request, 'login', 'login', context)
         else:
             return renderhelper(request, 'login', 'error', context)
+        
+    def post(self, request):
+        context = {}
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        try:
+            user = Staffs.objects.get(unique_id=username,password=password)
+            if user:
+                request.session['userid'] = user.id
+        except:
+            context['username'] = username
+            context['password'] = password
+            messages.info(request, 'Invalid Username or Password')
+            return renderhelper(request, 'login', 'login', context)
+        return redirect('staff:home')
+        
+    
+class home(View):
+    def get(self, request):
+        context = {}
+        if 'userid' in request.session:
+            user = Staffs.objects.get(id=request.session['userid'])
+            context['user'] = user
+        else:
+            return redirect('staff:login')
+        return renderhelper(request, 'home', 'index', context)
+    
+def add_to_login(request):
+    userid = request.GET.get('id')
+    if userid == request.session['userid']:
+        print(userid)
+        user = Staffs.objects.get(id=userid)
+        return JsonResponse({'status':True})
+    else:
+        return JsonResponse({'status':True})

@@ -9,4 +9,6 @@ app_name = 'staff'
 
 urlpatterns = [
     path('',views.index.as_view(),name='login'),
+    path('home',views.home.as_view(),name='home'),
+    path('add_to_login',views.add_to_login,name='add_to_login'),
 ]

@@ -16,14 +16,15 @@
     <thead class="custom-header">
         <tr>
             <th>Sl No</th>
-            <!-- <th>sequence</th> -->
             <th>Image</th>
+            <th>Staff ID</th>
             <th>staff Name</th>
             <th>Phone</th>
             <th>Email</th>
             <th>passport number</th>
             <th>emergency contact</th>
             <th>Address</th>
+            <th>password</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -33,7 +34,7 @@
         {% for i in datas %}
         <tr>
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
-            <!-- <td></td> -->
+            
             <td>{% if i.image %}
                 <ul id="lightgallery-{{ forloop.counter }}" style="display: flex;">
                 <li class="img-td m-2" data-responsive="{{i.image.url}}" data-src="{{i.image.url}}" >
@@ -44,12 +45,14 @@
                 
             </ul>
                 {% endif %}</td>
+                <td><b>{{i.unique_id}}</b></td>
                 <td>{{i.name}}</td>
                 <td>{{i.phone}}</td>
                 <td>{{i.email}}</td>
                 <td>{{i.passportno}}</td>
-            <td>{{i.emergency}}</td>
-            <td>{{i.address}}</td>
+                <td>{{i.emergency}}</td>
+                <td>{{i.address}}</td>
+                <td>{{i.password}}</td>
            
                 <td>
                     <div class="material-switch">
