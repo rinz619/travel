@@ -248,6 +248,8 @@ class offlinebookingslist(LoginRequiredMixin, View):
             context['page'] = page
             agent = request.GET.get('status')
             search = request.GET.get('search')
+            fromdate = request.GET.get('fromdate')
+            todate = request.GET.get('todate')
             type = request.GET.get('type')
             if type == '1':
                 id = request.GET.get('id')
@@ -270,6 +272,10 @@ class offlinebookingslist(LoginRequiredMixin, View):
                 messages.info(request, 'Successfully Deleted')
             if agent:
                 conditions &= Q(agent=agent)
+            if fromdate:
+                conditions &= Q(created_at__date__gte=fromdate)
+            if todate:
+                conditions &= Q(created_at__date__lte=todate)
             if search:
                 conditions &= Q(name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(contactperson__icontains=search) | Q(trn__icontains=search)| Q(address__icontains=search)
             conditions &= Q(is_delete=False)

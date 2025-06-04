@@ -24,12 +24,14 @@ function restrictAlphabets(e) {
   
     var search = $("#searchkey").val();
     var status = $("#status").val();
+    var fromdate = $("#fromdate").val();
+    var todate = $("#todate").val();
   
     var url = $("#url").val();
     $.ajax({
       url: url,
       type: "GET",
-      data: { page: page, status: status, search: search },
+      data: { page: page, status: status, search: search ,fromdate:fromdate,todate:todate},
   
       beforeSend: function () {
           $("#loaderid").show();
