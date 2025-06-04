@@ -28,13 +28,25 @@
                                     </div>
                                     <div class="card-body">
                                         <form>
-                                            <div class="search-container">
-                                                <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
-                                                <input type="text" class="search-input" placeholder="To" id="to">
-                                                <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
-                                                <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>
-                                            </div>
-                                        </form>	
+    <div class="search-container d-inline-flex align-items-center gap-2">
+
+        <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
+
+        <select class="form-control select2" id="status">
+            <option value="">Choose Agency</option>
+            {% for i in agents %}
+                <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="date" class="search-input" id="fromdate">
+        <input type="date" class="search-input" id="todate">
+
+        <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
+        <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>
+
+    </div>
+</form>
                                         <div class="table-responsive">
 											
                                             {% include 'superadmin/wallet/wallet-table.html' %}

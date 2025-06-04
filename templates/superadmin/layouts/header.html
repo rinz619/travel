@@ -136,17 +136,16 @@
   </a>
   <ul class="slide-menu">
     {% check_previllage request 'Offline Bookings' as previllage %}
-      {% if previllage.read or previllage == True %}
+      {% if previllage %}
         <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
       {% endif %}
        {% check_previllage request 'Refunds' as previllage %}
-      {% if previllage.read or previllage == True %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:refundlist' %}" class="slide-item">Refunds</a></li>
     {% endif %}
   </ul>
 </li>
-{% check_previllage request 'Accounts' as previllage %}
-{% if previllage %}
+
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-credit-card"></i>  <!-- Changed -->
@@ -155,23 +154,21 @@
   </a>
   <ul class="slide-menu">
        {% check_previllage request 'Cash Receipt' as previllage %}
-      {% if previllage.read %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:cashrecieptlist' %}" class="slide-item">Cash Receipt</a></li>
     {% endif %}
        {% check_previllage request 'Account Ledger' as previllage %}
-      {% if previllage.read %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:accountledger' %}" class="slide-item">Account Ledger</a></li>
     {% endif %}
        {% check_previllage request 'Update Wallet' as previllage %}
-      {% if previllage.read %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:walletslist' %}" class="slide-item">Update Wallet</a></li>
     {% endif %}
  
   </ul>
 </li>
-{% endif %}
-{% check_previllage request 'DSR' as previllage %}
-{% if previllage %}
+
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-bar-chart-2"></i>  <!-- Changed -->
@@ -179,14 +176,18 @@
     <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
+    {% check_previllage request 'Sales Report' as previllage %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:salesreport' %}" class="slide-item">Sales Report</a></li>
+    {% endif %}
+    {% check_previllage request 'Cash Receipt' as previllage %}
+      {% if previllage %}
         <li><a href="{% url 'superadmin:cashreciept' %}" class="slide-item">Cash Receipt</a></li>
+        {% endif %}
 
   </ul>
 </li>
-{% endif %}
-{% check_previllage request 'CRM' as previllage %}
-{% if previllage %}
+
 
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
@@ -195,12 +196,14 @@
     <i  style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
+    {% check_previllage request 'Leads' as previllage %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:leadslist' %}" class="slide-item">Leads</a></li>
+    {% endif %}
+
   </ul>
 </li>
-{% endif %}
-{% check_previllage request 'HR' as previllage %}
-{% if previllage %}
+
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-briefcase"></i>  <!-- Changed -->
@@ -208,12 +211,18 @@
     <i style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
   </a>
   <ul class="slide-menu">
-    <li><a href="" class="slide-item">Attendance</a></li>
+
+    {% check_previllage request 'Attendance report' as previllage %}
+      {% if previllage %}
     <li><a href="" class="slide-item">Attendance Report</a></li>
+    {% endif %}
+    {% check_previllage request 'Staff' as previllage %}
+      {% if previllage %}
     <li><a href="{% url 'superadmin:stafflist' %}" class="slide-item">Staff Management</a></li>
+    {% endif %}
+
   </ul>
 </li>
-{% endif %}
 
 
                 
@@ -306,6 +315,18 @@ select.form-control {
 
 form, .d-inline-flex {
     vertical-align: top;
+}
+
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ms-auto {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
 }
 
 </style>

@@ -136,6 +136,7 @@ class agentslist(LoginRequiredMixin, View):
         conditions = Q()
         data = User.objects.filter(user_type=3).order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Agents')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -396,7 +397,7 @@ class cashrecieptlist(LoginRequiredMixin, View):
         conditions = Q()
         data = CashReceipts.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
-        context['previllage'] = check_previllage(request, 'Accounts')
+        context['previllage'] = check_previllage(request, 'Cash Receipt')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -623,7 +624,7 @@ class refundlist(LoginRequiredMixin, View):
         conditions = Q()
         data = Refunds.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
-        context['previllage'] = check_previllage(request, 'Bookings')
+        context['previllage'] = check_previllage(request, 'Refunds')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -825,6 +826,7 @@ class stafflist(LoginRequiredMixin, View):
         conditions = Q()
         data = Staffs.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Staff')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -926,7 +928,7 @@ class walletslist(LoginRequiredMixin, View):
         else:
             data = WalletUPdates.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
-        context['previllage'] = check_previllage(request, 'Accounts')
+        context['previllage'] = check_previllage(request, 'Update Wallet')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -1173,6 +1175,7 @@ class subadminslist(LoginRequiredMixin, View):
         conditions = Q()
         data = User.objects.filter(user_type=2).order_by('-id')
         context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Subadmin')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
@@ -1276,7 +1279,7 @@ class subadmincreate(LoginRequiredMixin, View):
         
         sub = Previllages()
         sub.user = data
-        sub.option = 'Agent'
+        sub.option = 'Agents'
         if agent_read:
             sub.read = True
         if agent_write:

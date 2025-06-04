@@ -27,10 +27,10 @@
             <th>Credentials</th>
             <th>Address</th>
             <th>Attachement</th>
-            {% if previllage.write %}
+            {% if previllage.write or previllage == True %}
             <th>Status</th>
             {% endif %}
-            {% if previllage.write or previllage.delete %}
+            {% if previllage.write or previllage.delete or previllage == True %}
             <th>Action</th>
              {% endif %}
         </tr>
@@ -60,21 +60,27 @@
             <td>username : <b>{{i.email}}</b></br>Password : <b>{{i.password_text}}</b></td>
             <td><b>{{i.address}}</b></td>
             <td align="center">{% if i.attachement %}<a target="_blank" href="{{i.attachement.url}}" class="btn btn-primary btn-sm">View</a> {% endif %}</td>
-           
+           {% if previllage.write or  previllage == True %}
                 <td>
                     <div class="material-switch">
                              <input id="someSwitchOptionSuccess{{i.id}}" name="someSwitchOption001" type="checkbox" {% if i.is_active %}checked onclick="categorystatus({{i.id}},2)"{% else %}onclick="categorystatus({{i.id}},1)" {% endif %}  />
                              <label for="someSwitchOptionSuccess{{i.id}}" class="label-success"></label>
                          </div>
                </td>
-              
+              {% endif %}
+              {% if previllage.write or previllage.delete or previllage == True %}
                <td>
+                {% if previllage.write or  previllage == True %}
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:agentsedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
+                    {% endif %}
+                           {% if  previllage.delete or previllage == True %}
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
+                           {% endif %}
                </td>
             </tr>
+            {% endif %}
             {% endfor %}
             {% else %}
             <tr>

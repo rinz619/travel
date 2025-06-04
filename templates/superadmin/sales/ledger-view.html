@@ -24,17 +24,21 @@
                                         <h3 class="card-title">List Of All Account Ledgers</h3>
                                     </div>
                                     <div class="card-body">
-                                        <form>
-                                            <div class="search-container">
-                                                <input type="date" class="search-input" placeholder="Keyword Search" id="fromdate">
-                                                <input type="date" class="search-input" placeholder="Keyword Search" id="todate">
-                                                
-                                                
-                                                <!-- <input type="text" class="search-input" placeholder="To" id="to"> -->
-                                                <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
-                                                <button type="button" onclick="filterledger(1)" id="import_submit" class="search-button">Search</button>
-                                            </div>
-                                        </form>	
+                                                              <form>
+    <div class="search-container d-inline-flex align-items-center gap-2">
+
+        
+
+        <input type="date" class="search-input" id="fromdate">
+        <input type="date" class="search-input" id="todate">
+
+        <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
+        <button type="button" onclick="filterledger(1)" id="import_submit" class="search-button">Search</button>
+
+    </div>
+</form>
+
+                                        
                                             <div class="mb-3">
     <a href="{% url 'superadmin:download_excel' %}" class="btn btn-success text-end">Download Excel</a>
     {% comment %} <a href="{% url 'superadmin:download_pdf' %}" class="btn btn-danger">Download PDF</a> {% endcomment %}

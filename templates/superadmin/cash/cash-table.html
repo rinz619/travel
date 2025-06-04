@@ -14,6 +14,7 @@
     <thead class="custom-header">
         <tr>
             <th>Sl No</th>
+            <th>Receipt</th>
             <th>Received From</th>
             <th>Payment type</th>
             <th>Phone</th>
@@ -21,8 +22,9 @@
             <th>Agency</th>
             <th>Description</th>
             <th>Date</th>
-            <th>Receipt</th>
+             {% if previllage.write or previllage.delete or previllage == True %}
             <th>Action</th>
+             {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -31,6 +33,7 @@
         <tr>
             {% comment %} <td>{{i.unique_id}}</td>  {% endcomment %}
             <td>{{forloop.counter0|add:datas.start_index}}</td> 
+            <td><a target="_blank" href="{% url 'superadmin:receipt' i.unique_id %}"><b>{{i.unique_id}}</b></a></td>
             <td>{{i.receivedfrom}}</td>
             <td>{{i.paymenttype}}</td>
             <td>{{i.phone}}</td>
@@ -38,18 +41,22 @@
             <td>{{i.description}}</td>
             <td>{{i.agent.name}}</td>
             <td>{{i.created_at.date|date:"d/m/Y"}}</td>
-            <td><a target="_blank" class="btn btn-success btn-sm" href="{% url 'superadmin:receipt' i.unique_id %}">View</a></td>
             
            
-
+            {% if previllage.write or previllage.delete or previllage == True %}
               
                <td>
+                {% if previllage.write  or previllage == True %}
                    <a class="btn btn-info btn-sm mb-1" href="{% url 'superadmin:cashrecieptedit' i.id %}"><i
                            class="side-menu__icon fe fe-edit"></i></a>
+                           {% endif %}
+                           {% if previllage.delete or previllage == True %}
                    <a class="btn btn-danger btn-sm mb-1" href="#"><i
                            class="side-menu__icon fe fe-trash" onclick="delete_modal({{i.id}})"></i></a>
+                           {% endif %}
                </td>
             </tr>
+            {% endif %}
             {% endfor %}
             {% else %}
             <tr>
