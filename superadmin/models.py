@@ -260,6 +260,17 @@ class Staffs(models.Model):
   
 class StaffLogins(models.Model):
     staff = models.ForeignKey(Staffs,on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    intime = models.TextField(null=True, blank=True)
+    outtime = models.TextField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
+    approvedby = models.TextField(null=True, blank=True)
+    is_absent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)   
+    
+class StaffTimings(models.Model):
+    staff = models.ForeignKey(StaffLogins,on_delete=models.SET_NULL, null=True, blank=True)
     intime = models.TextField(null=True, blank=True)
     outtime = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

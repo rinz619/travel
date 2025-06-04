@@ -1867,3 +1867,91 @@ def download_entries_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
     return response
 
+
+
+
+# Staff module start
+class attendancereport(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        conditions = Q()
+
+        data = StaffLogins.objects.all().order_by('-id')
+        context['range'] = range(1,len(data)+1)
+        context['previllage'] = check_previllage(request, 'Update Wallet')
+        if is_ajax(request):
+            page = request.GET.get('page', 1)
+            context['page'] = page
+            status = request.GET.get('status')
+            search = request.GET.get('search')
+            type = request.GET.get('type')
+            if type == '1':
+                id = request.GET.get('id')
+                vl = request.GET.get('vl')
+                cat = StaffLogins.objects.get(id=id)
+                if vl == '2':
+                    cat.is_active = False
+                else:
+                    cat.is_active = True
+                cat.save()
+                messages.info(request, 'Successfully Updated')
+            elif type == '4':
+                id = request.GET.get('id')
+                wallet = StaffLogins.objects.get(id=id)
+                wallet.is_verify=True
+                wallet.save()
+                
+                user = User.objects.get(id=wallet.agent.id)
+                wallet_balance = user.wallet
+                if wallet_balance:
+                    user.wallet = wallet_balance + wallet.amount
+                else:
+                    user.wallet =   wallet.amount
+
+                user.save()
+                balance = AccountLedgers.objects.filter(agent=wallet.agent.id).order_by('-id').first().balance
+                if not balance:
+                    balance = 0
+                    
+                acc = AccountLedgers()
+                acc.agent = wallet.agent
+                acc.unique_id = 'INV6669'
+                acc.credit = wallet.amount
+                acc.balance = balance + wallet.amount
+                acc.save()
+                messages.info(request, 'Successfully Verified')
+            elif type == '2':
+                id = request.GET.get('id')
+                StaffLogins.objects.filter(id=id).delete()
+                messages.info(request, 'Successfully Deleted')
+            if status:
+                conditions &= Q(is_active=status)
+            if search:
+                conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
+            if request.user.user_type == 3:
+                conditions &= Q(agent=request.user.id)            
+            data_list = StaffLogins.objects.filter(conditions).order_by('-id')
+            paginator = Paginator(data_list, 20)
+
+            try:
+                datas = paginator.page(page)
+            except PageNotAnInteger:
+                datas = paginator.page(1)
+            except EmptyPage:
+                datas = paginator.page(paginator.num_pages)
+            context['datas'] = datas
+            template = loader.get_template('superadmin/staff/attendance-table.html')
+            html_content = template.render(context, request)
+            return JsonResponse({'status': True, 'template': html_content})
+
+       
+        p = Paginator(data, 20)
+        page_num = request.GET.get('page', 1)
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context['datas'] = page
+        context['page'] = page_num
+
+        return renderhelper(request, 'staff', 'attendance-view', context)

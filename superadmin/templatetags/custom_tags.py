@@ -29,3 +29,14 @@ def get_followup_status(id):
     else:
         return 'Open'
     
+
+@register.simple_tag()
+def attendance(id):
+    print(id)
+    lead = StaffTimings.objects.filter(staff=id).order_by('id')
+    print(lead)
+    if lead:
+        return lead
+    else:
+        pass
+    

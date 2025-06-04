@@ -44,7 +44,7 @@ class index(View):
     def get(self, request):
         context = {}
         ip = get_wifi_ip()
-        if ip == '192.168.1.35':
+        if ip == '192.168.18.85':
             return renderhelper(request, 'login', 'login', context)
         else:
             return renderhelper(request, 'login', 'error', context)
@@ -72,15 +72,61 @@ class home(View):
         if 'userid' in request.session:
             user = Staffs.objects.get(id=request.session['userid'])
             context['user'] = user
+            last_login = StaffLogins.objects.filter(staff=user.id,is_absent=False,date=datetime.today()).order_by('id').last()
+            context['last_login'] = None
+            if last_login:
+                lastlogin = StaffTimings.objects.filter(staff=last_login.id,outtime=None).order_by('id').last()
+                context['last_login'] = None
+                if lastlogin:
+                    context['last_login'] = lastlogin
+            isabsent = StaffLogins.objects.filter(staff=user.id,is_absent=True,date=datetime.now().date()).last()
+            context['is_absent'] = False
+            if isabsent:
+                context['is_absent'] = True
+            
         else:
             return redirect('staff:login')
-        return renderhelper(request, 'home', 'index', context)
+        return renderhelper(request, 'home', 'index', context)        
+    
+
     
 def add_to_login(request):
     userid = request.GET.get('id')
-    if userid == request.session['userid']:
-        print(userid)
-        user = Staffs.objects.get(id=userid)
+
+    if int(userid) == int(request.session['userid']):
+        current_time_str = datetime.now().strftime("%I:%M %p")
+        try:
+            data = StaffLogins.objects.get(staff=userid,date=datetime.today())
+        except:    
+            data = StaffLogins(staff_id=userid,date=datetime.today())
+            data.save()
+            
+        StaffTimings(staff=data,intime=current_time_str).save()
+            
         return JsonResponse({'status':True})
     else:
+        return JsonResponse({'status':False})
+    
+    
+def add_to_logout(request):
+    id = request.GET.get('id')
+    staff = StaffTimings.objects.get(id=id)
+    if int(staff.staff.staff.id) == int(request.session['userid']):
+        current_time_str = datetime.now().strftime("%I:%M %p")
+        staff.outtime = current_time_str
+        staff.save()
         return JsonResponse({'status':True})
+    else:
+        return JsonResponse({'status':False})
+    
+    
+class applyleave(View):
+    def post(self, request):
+        context = {}
+        
+        approvedby = request.POST.get('approved')
+        remarks = request.POST.get('reason')
+        
+        StaffLogins(staff_id=request.session['userid'],remarks=remarks,is_absent=True,approvedby=approvedby).save()
+        
+        return redirect('staff:home')
