@@ -398,11 +398,15 @@ class cashrecieptlist(LoginRequiredMixin, View):
         data = CashReceipts.objects.filter(is_delete=False).order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Cash Receipt')
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
+
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
-            status = request.GET.get('status')
+            agent = request.GET.get('status')
             search = request.GET.get('search')
+            fromdate = request.GET.get('fromdate')
+            todate = request.GET.get('todate')
             type = request.GET.get('type')
             if type == '1':
                 id = request.GET.get('id')
@@ -423,8 +427,12 @@ class cashrecieptlist(LoginRequiredMixin, View):
                 id = request.GET.get('id')
                 CashReceipts.objects.filter(id=id).update(is_delete=True)
                 messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
+            if agent:
+                conditions &= Q(agent=agent)
+            if fromdate:
+                conditions &= Q(created_at__date__gte=fromdate)
+            if todate:
+                conditions &= Q(created_at__date__lte=todate)
             if search:
                 conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
             
@@ -677,7 +685,7 @@ class refundlist(LoginRequiredMixin, View):
             if status:
                 conditions &= Q(is_active=status)
             if search:
-                conditions &= Q(receivedfrom__icontains=search) | Q(paymenttype__icontains=search) | Q(phone__icontains=search) | Q(unique_id__icontains=search)| Q(agent__name__icontains=search) 
+                conditions &= Q(unique_id__icontains=search) | Q(refundamount__icontains=search) 
             conditions &= Q(is_delete=False)
             data_list = Refunds.objects.filter(conditions).order_by('-id')
             paginator = Paginator(data_list, 20)
@@ -934,11 +942,14 @@ class walletslist(LoginRequiredMixin, View):
             data = WalletUPdates.objects.all().order_by('-id')
         context['range'] = range(1,len(data)+1)
         context['previllage'] = check_previllage(request, 'Update Wallet')
+        context['agents'] = User.objects.filter(user_type=3,is_active=True).order_by('name')
         if is_ajax(request):
             page = request.GET.get('page', 1)
             context['page'] = page
-            status = request.GET.get('status')
+            agent = request.GET.get('status')
             search = request.GET.get('search')
+            fromdate = request.GET.get('fromdate')
+            todate = request.GET.get('todate')
             type = request.GET.get('type')
             if type == '1':
                 id = request.GET.get('id')
@@ -979,8 +990,12 @@ class walletslist(LoginRequiredMixin, View):
                 id = request.GET.get('id')
                 WalletUPdates.objects.filter(id=id).delete()
                 messages.info(request, 'Successfully Deleted')
-            if status:
-                conditions &= Q(is_active=status)
+            if agent:
+                conditions &= Q(agent=agent)
+            if fromdate:
+                conditions &= Q(created_at__date__gte=fromdate)
+            if todate:
+                conditions &= Q(created_at__date__lte=todate)
             if search:
                 conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
             if request.user.user_type == 3:

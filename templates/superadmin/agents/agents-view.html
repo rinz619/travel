@@ -31,14 +31,13 @@
         <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
 
         <select class="form-control select2" id="status">
-            <option value="">Choose Agency</option>
-            {% for i in agents %}
-                <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
-            {% endfor %}
+            <option value="">Select</option>
+            <option value="True">Active</option>
+            <option value="False">Inactive</option>
         </select>
 
-        <input type="date" class="search-input" id="fromdate">
-        <input type="date" class="search-input" id="todate">
+        <!-- <input type="date" class="search-input" id="fromdate">
+        <input type="date" class="search-input" id="todate"> -->
 
         <div class="reset-icon" onclick="window.location.reload()">&#x21bb;</div>
         <button type="button" onclick="filtercategory(1)" id="import_submit" class="search-button">Search</button>

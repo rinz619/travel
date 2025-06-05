@@ -29,12 +29,7 @@
 
         <input type="text" class="search-input" placeholder="Keyword Search" id="searchkey">
 
-        <select class="form-control select2" id="status">
-            <option value="">Choose Agency</option>
-            {% for i in agents %}
-                <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
-            {% endfor %}
-        </select>
+        
 
         <input type="date" class="search-input" id="fromdate">
         <input type="date" class="search-input" id="todate">
