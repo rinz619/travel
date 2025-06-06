@@ -993,9 +993,9 @@ class walletslist(LoginRequiredMixin, View):
             if agent:
                 conditions &= Q(agent=agent)
             if fromdate:
-                conditions &= Q(created_at__date__gte=fromdate)
+                conditions &= Q(transactiondate__gte=fromdate)
             if todate:
-                conditions &= Q(created_at__date__lte=todate)
+                conditions &= Q(transactiondate__lte=todate)
             if search:
                 conditions &= Q(agent__name__icontains=search) | Q(transactiontype__icontains=search) | Q(referencenumber__icontains=search) | Q(transactiondate__icontains=search)| Q(amount__icontains=search) 
             if request.user.user_type == 3:

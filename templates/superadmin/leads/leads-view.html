@@ -32,9 +32,18 @@
 
         <select class="form-control select2" id="status">
             <option value="">Choose Agency</option>
-            {% for i in agents %}
-                <option value="{{i.id}}" {% if data.agent.id == i.id %}selected{% endif %}>{{i.name}}</option>
-            {% endfor %}
+            <option value="AIR TICKETS" >AIR TICKETS</option>
+            <option value="UAE VISA 30 DAYS" >UAE VISA 30 DAYS</option>
+            <option value="UAE VISA 60 DAYS" >UAE VISA 60 DAYS</option>
+            <option value="UAE TRANSIT VISA" >UAE TRANSIT VISA</option>
+            <option value="GLOBAL VISA">GLOBAL VISA</option>
+            <option value="HOLIDAY PACKAGE" {% if data.servicetype == 'HOLIDAY PACKAGE' %}selected{% endif %}>HOLIDAY PACKAGE</option>
+            <option value="TRANSPORTATION" {% if data.servicetype == 'TRANSPORTATION' %}selected{% endif %}>TRANSPORTATION</option>
+            <option value="HOTEL BOOKING" {% if data.servicetype == 'HOTEL BOOKING' %}selected{% endif %}>HOTEL BOOKING</option>
+            <option value="VISA CHANGE BY BUS" {% if data.servicetype == 'VISA CHANGE BY BUS' %}selected{% endif %}>VISA CHANGE BY BUS</option>
+            <option value="VISA CHANGE BY FLIGHT" {% if data.servicetype == 'VISA CHANGE BY FLIGHT' %}selected{% endif %}>VISA CHANGE BY FLIGHT</option>
+            <option value="ATTRACTIONS AND ACTIVITIES" {% if data.servicetype == 'ATTRACTIONS AND ACTIVITIES' %}selected{% endif %}>ATTRACTIONS AND ACTIVITIES</option>
+
         </select>
 
         <input type="date" class="search-input" id="fromdate">
