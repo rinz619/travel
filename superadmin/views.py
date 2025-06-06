@@ -377,11 +377,15 @@ class offlinebookingscreate(LoginRequiredMixin, View):
         data.remarks = request.POST.get('remarks')
         data.save()
         
+        
+        
+        led_descr = f'Name : {data.passengername}, Service : {data.servicetype}, Description : {data.servicedescription}'
         account.agent_id = request.POST.get('agent')
         account.pnr = request.POST.get('pnr')
         account.transactiontype = 'Offline Booking'
         account.date = datetime.now().date()
         account.debit = request.POST.get('grossamount')
+        account.description = led_descr
         account.balance = float(balance) - float(request.POST.get('grossamount'))
         account.save()
         return redirect('superadmin:offlinebookingslist')

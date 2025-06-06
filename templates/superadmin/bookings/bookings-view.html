@@ -11,7 +11,7 @@
                         <div class="page-header">
                             <h1 class="page-title">Offline Bookings</h1>
                             <div>
-                                {% if previllage.write %}
+                                {% if previllage.write or previllage == True %}
                                     <a class="btn btn-primary" href="{% url 'superadmin:offlinebookingscreate' %}"><i class="side-menu__icon fe fe-plus mx-1"></i>Add New</a>
                                 {% endif %}
                             </div>
