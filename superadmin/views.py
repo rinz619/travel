@@ -488,7 +488,7 @@ class cashrecieptcreate(LoginRequiredMixin, View):
             
             now = datetime.now()
             year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
-            prefix = f"REC{year_month}"
+            prefix = f"TBTREC{year_month}"
 
             # Filter and find max matching unique_id starting with this prefix
             latest = CashReceipts.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
@@ -519,11 +519,12 @@ class cashrecieptcreate(LoginRequiredMixin, View):
         data.description = request.POST.get('description')
         
         data.save()
-        
+        description = f'Payment Type : {data.paymenttype},recieved From : {data.receivedfrom}, Description : {data.description}'
         account.agent_id = request.POST.get('agent')
-        account.transactiontype = 'Cash'
+        account.transactiontype = request.POST.get('paymenttype')
         account.date = datetime.now().date()
         account.credit = request.POST.get('amount')
+        account.description = description
         account.save()
         return redirect('superadmin:cashrecieptlist')
 
@@ -670,7 +671,9 @@ class refundlist(LoginRequiredMixin, View):
                 balance = AccountLedgers.objects.filter(agent=wallet.booking.agent.id).order_by('-id').first().balance
                 if not balance:
                     balance = 0
-                    
+                 
+                 
+                led_descr = f'Name : {wallet.booking.passengername}, Service : {wallet.booking.servicetype}, Description : {wallet.booking.servicedescription}'   
                 acc = AccountLedgers()
                 acc.agent = wallet.booking.agent
                 acc.unique_id = wallet.unique_id
@@ -679,6 +682,7 @@ class refundlist(LoginRequiredMixin, View):
                 acc.date = datetime.now().date()
                 acc.credit = wallet.refundamount
                 acc.balance = balance + wallet.refundamount
+                acc.description = led_descr
                 acc.save()
                 messages.info(request, 'Successfully Verified')
                 
@@ -985,7 +989,7 @@ class walletslist(LoginRequiredMixin, View):
                     
                 acc = AccountLedgers()
                 acc.agent = wallet.agent
-                acc.unique_id = 'INV6669'
+                acc.unique_id = wallet.unique_id
                 acc.credit = wallet.amount
                 acc.balance = balance + wallet.amount
                 acc.save()
@@ -1047,7 +1051,7 @@ class walletscreate(LoginRequiredMixin, View):
             messages.info(request, 'Successfully Updated')
         except:
             data = WalletUPdates()
-            data.unique_id = 'ST-'+str(random.randint(11111,99999))
+            data.unique_id = 'TBTTR-'+str(random.randint(11111,99999))
             messages.info(request, 'Successfully Added')
 
         attachment = request.FILES.get('attachment')

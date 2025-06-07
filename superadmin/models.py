@@ -233,7 +233,8 @@ class Refunds(models.Model):
     markup = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     refundamount = models.DecimalField(max_digits=10,decimal_places=2,null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
-    
+    unique_id = models.TextField(null=True, blank=True)
+
     is_active = models.BooleanField(default=True)
     is_verify = models.BooleanField(default=False)
     is_delete = models.BooleanField(default=False)
@@ -278,7 +279,8 @@ class StaffTimings(models.Model):
 
 class WalletUPdates(models.Model):
     agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
-
+    createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True,related_name="created_sales")
+ 
     transactiontype = models.TextField(null=True, blank=True)
     referencenumber = models.TextField(null=True, blank=True)
     bankdetails = models.TextField(null=True, blank=True)
