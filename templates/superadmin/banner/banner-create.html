@@ -1,0 +1,103 @@
+{% include 'superadmin/layouts/header.html' %}
+ 
+  <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title">Login Images</h1>
+                            <div>
+                                {% comment %} <a class="btn btn-primary" href="{% url 'superadmin:agentslist' %}"><i class="side-menu__icon fe fe-eye mx-1"></i>View All</a> {% endcomment %}
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                         <!-- ROW OPEN -->
+                         <form method="post" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12 col-xl-12 col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Add New Login Images</h4>
+                                    </div>
+                                    <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0">
+                                                    <input
+                                                type="file"
+                                                class="dropify"
+                                                data-bs-height="180"
+                                               
+                                                name="imagefile"
+                                                accept=".jpg,.png,.jpeg"
+                                                {% comment %} data-default-file="{{data.banenrimage.url}}" {% endcomment %}
+                                              />
+                                                </div>
+                                                <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0"></div>
+                                                <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0"></div>
+
+                                                 <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0">
+                                                    <input
+                                                type="file"
+                                                class="dropify"
+                                                data-bs-height="180"
+                                               
+                                                name="imagefile1"
+                                                accept=".jpg,.png,.jpeg"
+                                                {% comment %} data-default-file="{{data.slider1.url}}" {% endcomment %}
+                                              />
+                                                </div>
+                                                 <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0">
+                                                    <input
+                                                type="file"
+                                                class="dropify"
+                                                data-bs-height="180"
+                                               
+                                                name="imagefile2"
+                                                accept=".jpg,.png,.jpeg"
+                                                {% comment %} data-default-file="{{data.slider2.url}}" {% endcomment %}
+                                              />
+                                                </div>
+                                                 <div class="col-lg-4 col-sm-12 mb-4 mb-lg-0">
+                                                    <input
+                                                type="file"
+                                                class="dropify"
+                                                data-bs-height="180"
+                                               
+                                                name="imagefile3"
+                                                accept=".jpg,.png,.jpeg"
+                                                {% if data.slider3 %}
+                                                data-default-file="{{data.slider3.url}}"
+                                                {% endif %}
+                                              />
+                                                </div>
+                                               
+                                            </div>
+                                            <div class="form-group col-lg-12 col-12">
+                                                <button type="submit" class="btn btn-primary mt-4 mb-0" id="submitButton" >Submit</button>
+                                                <a href="" class="btn btn-default mt-4 mb-0"  >Reset</a>
+											</div>
+											
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <!-- ROW CLOSED -->
+
+
+
+                    </div>
+                </form>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            </div>
+            <!--app-content close-->
+			
+            {% include 'superadmin/layouts/footer.html' %}

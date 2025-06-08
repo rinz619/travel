@@ -279,7 +279,7 @@ class StaffTimings(models.Model):
 class WalletUPdates(models.Model):
     agent = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     createdby = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True,related_name="created_wallet")
- 
+    unique_id = models.TextField(null=True, blank=True)
     transactiontype = models.TextField(null=True, blank=True)
     referencenumber = models.TextField(null=True, blank=True)
     bankdetails = models.TextField(null=True, blank=True)
@@ -370,3 +370,15 @@ class SalesCashReceipts(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+
+class LoginImageBanner(models.Model):
+    banenrimage = models.ImageField(upload_to="home",null=True, blank=True)
+    slider1 = models.ImageField(upload_to="home",null=True, blank=True)
+    slider2 = models.ImageField(upload_to="home",null=True, blank=True)
+    slider3 = models.ImageField(upload_to="home",null=True, blank=True)
+    slider4 = models.ImageField(upload_to="home",null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_delete = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

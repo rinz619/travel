@@ -84,7 +84,7 @@
           <div class="app-sidebar">
             <div class="side-header" style="background-color:#ffffff;height: 66px;">
               <a class="header-brand1" href="{% url 'superadmin:dashboard' %}">
-                <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img desktop-logo" alt="logo">
+                <img src="{{banner.banenrimage.url}}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img light-logo" alt="logo">
                 <img style="width:60px;height:60px;margin-left: 65px;" src="{% static 'superadmin/assets/images_ex/red-logo.svg' %}" class="header-brand-img light-logo1" alt="logo">
@@ -224,6 +224,23 @@
   </ul>
 </li>
 
+{% if request.user.user_type == 1 %}
+<li class="slide">
+  <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+    <i class="side-menu__icon fe fe-briefcase"></i>  <!-- Changed -->
+    <span class="side-menu__label">Login Page</span>
+    <i style="color: #ffffff;" class="angle fe fe-chevron-right"></i>
+  </a>
+  <ul class="slide-menu">
+
+   
+    <li><a href="{% url 'superadmin:bannerlogincreate' %}" class="slide-item">Banner Image</a></li>
+   
+    <li><a href="{% url 'superadmin:stafflist' %}" class="slide-item">Slider Image</a></li>
+
+  </ul>
+</li>
+{% endif %}
 
                 
               

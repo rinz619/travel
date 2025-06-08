@@ -39,6 +39,7 @@ def check_previllage(request,menu):
 class index(View):
     def get(self, request):
         context = {}
+        context['banner'] = LoginImageBanner.objects.all().last()
         if request.user.id:
             return redirect('superadmin:dashboard')
         else:
@@ -533,6 +534,24 @@ class cashrecieptcreate(LoginRequiredMixin, View):
         data.amount = request.POST.get('amount')
         data.description = request.POST.get('description')
         
+        
+            
+        try:
+            balance = AccountLedgers.objects.filter(agent=data.agent.id).order_by('-id').first().balance
+            if not balance:
+                balance = 0
+            else:
+                user = User.objects.get(id=data.agent.id)
+                balance = user.wallet
+                user.wallet = float(balance) + float(request.POST.get('grossamount'))
+                user.save()
+        except:
+            user = User.objects.get(id=data.agent.id)
+            balance = user.wallet
+            user.wallet = float(balance) + float(request.POST.get('grossamount'))
+            user.save()
+                  
+                    
         data.save()
         description = f'Payment Type : {data.paymenttype},recieved From : {data.receivedfrom}, Description : {data.description}'
         account.agent_id = request.POST.get('agent')
@@ -540,6 +559,7 @@ class cashrecieptcreate(LoginRequiredMixin, View):
         account.date = datetime.now().date()
         account.credit = request.POST.get('amount')
         account.description = description
+        account.balance = float(balance) + float(data.amount)
         account.save()
         return redirect('superadmin:cashrecieptlist')
 
@@ -692,7 +712,7 @@ class refundlist(LoginRequiredMixin, View):
                 acc = AccountLedgers()
                 acc.agent = wallet.booking.agent
                 acc.unique_id = wallet.unique_id
-                acc.transactiontype = 'CREDIT NOTE'
+                acc.transactiontype = 'Credit Note'
                 acc.pnr = wallet.booking.pnr
                 acc.date = datetime.now().date()
                 acc.credit = wallet.refundamount
@@ -1001,9 +1021,13 @@ class walletslist(LoginRequiredMixin, View):
                 balance = AccountLedgers.objects.filter(agent=wallet.agent.id).order_by('-id').first().balance
                 if not balance:
                     balance = 0
-                    
+                
+                description = f'Transaction Type : {wallet.transactiontype}, Bank Name : {wallet.bankdetails}'
                 acc = AccountLedgers()
                 acc.agent = wallet.agent
+                acc.description = description
+                acc.transactiontype = wallet.transactiontype
+                acc.date = datetime.now().date()
                 acc.unique_id = wallet.unique_id
                 acc.credit = wallet.amount
                 acc.balance = balance + wallet.amount
@@ -1065,8 +1089,22 @@ class walletscreate(LoginRequiredMixin, View):
             data = WalletUPdates.objects.get(id=id)
             messages.info(request, 'Successfully Updated')
         except:
+            now = datetime.now()
+            year_month = f"{now.year % 100:02d}{now.month:02d}"  # e.g., 2505
+            prefix = f"TBTTR{year_month}"
+
+            # Filter and find max matching unique_id starting with this prefix
+            latest = CashReceipts.objects.filter(unique_id__startswith=prefix).aggregate(Max('unique_id'))['unique_id__max']
+
+            if latest:
+                # Extract the numeric suffix from the end
+                last_seq = int(latest[len(prefix):])
+                next_seq = last_seq + 1
+            else:
+                next_seq = 1
+                
             data = WalletUPdates()
-            data.unique_id = 'TBTTR-'+str(random.randint(11111,99999))
+            data.unique_id = f"{prefix}{next_seq}"
             messages.info(request, 'Successfully Added')
 
         attachment = request.FILES.get('attachment')
@@ -1993,3 +2031,44 @@ class attendancereport(LoginRequiredMixin, View):
         context['page'] = page_num
 
         return renderhelper(request, 'staff', 'attendance-view', context)
+
+
+
+
+
+
+
+class bannerlogincreate(LoginRequiredMixin, View):
+    def get(self, request, id=None):
+        context = {}
+        context['data'] = LoginImageBanner.objects.all().last()
+        return renderhelper(request, 'banner', 'banner-create', context)
+
+    def post(self, request, id=None):
+        try:
+            data = LoginImageBanner.objects.get(id=id)
+            messages.info(request, 'Successfully Updated')
+        except:
+            data = LoginImageBanner()
+            messages.info(request, 'Successfully Added')
+
+        slider1 = request.FILES.get('imagefile1')
+        if slider1:
+            print(slider1)
+            data.slider1 = slider1
+        slider2 = request.FILES.get('imagefile2')
+        if slider2:
+            data.slider2 = slider2
+        banenrimage = request.FILES.get('imagefile')
+        if banenrimage:
+            data.banenrimage = banenrimage
+        slider3 = request.FILES.get('imagefile3')
+        if slider3:
+            data.image = slider3
+
+        
+        data.save()
+        return redirect('superadmin:bannerlogincreate')
+
+    # Agents module end
+

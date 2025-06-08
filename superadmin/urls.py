@@ -74,6 +74,11 @@ urlpatterns = [
 
 
 
+    
+    path('bannerlogincreate', views.bannerlogincreate.as_view(), name='bannerlogincreate'),
+
+
+
 
 
     
