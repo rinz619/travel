@@ -11,7 +11,7 @@ def check_prev(id):
 
 @register.simple_tag()
 def check_previllage(request,menu):
-    if request.user.user_type == 1:
+    if request.user.user_type == 1 or request.user.user_type == 3:
         return True
     else:
         ismenu = Previllages.objects.filter(user=request.user.id,option=menu).first()

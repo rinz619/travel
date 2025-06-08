@@ -88,17 +88,19 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'travel_buzz',
-#         'USER':'root',
-#         'PASSWORD':'',
-#         'HOST':'localhost',
-#         'PORT':'3306',
+#         'NAME': 'travel_buzz',         # Make sure this DB exists in MySQL
+#         'USER': 'root',                # Avoid using root in production
+#         'PASSWORD': '',                # Always use a strong password
+#         'HOST': '127.0.0.1',           # Or use '127.0.0.1'
+#         'PORT': '3306',
 #         'OPTIONS': {
 #             'sql_mode': 'traditional',
+#             # Optional: define charset if needed
+#             # 'charset': 'utf8mb4',
 #         }
 #     }
-
 # }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

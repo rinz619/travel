@@ -308,6 +308,8 @@ class offlinebookingslist(LoginRequiredMixin, View):
 
 class offlinebookingscreate(LoginRequiredMixin, View):
     def get(self, request, id=None):
+        Bookings.objects.all().delete()
+        AccountLedgers.objects.all().delete()
         context = {}
         try:
             context['data'] = Bookings.objects.get(id=id)
@@ -344,9 +346,21 @@ class offlinebookingscreate(LoginRequiredMixin, View):
             # now = datetime.now()
             # year_month_format = f"{now.year % 100:02d}{now.month:02d}"
             agent = request.POST.get('agent')
-            balance = AccountLedgers.objects.filter(agent=agent).order_by('-id').first().balance
-            if not balance:
-                balance = 0
+            try:
+                balance = AccountLedgers.objects.filter(agent=agent).order_by('-id').first().balance
+                if not balance:
+                    balance = 0
+                else:
+                    user = User.objects.get(id=agent)
+                    balance = user.wallet
+                    user.wallet = float(balance) - float(request.POST.get('grossamount'))
+                    user.save()
+            except:
+                user = User.objects.get(id=agent)
+                balance = user.wallet
+                user.wallet = float(balance) - float(request.POST.get('grossamount'))
+                user.save()
+
             account = AccountLedgers()
             data = Bookings()
             data.unique_id = f"{prefix}{next_seq}"
@@ -357,6 +371,7 @@ class offlinebookingscreate(LoginRequiredMixin, View):
 
 
         data.agent_id = request.POST.get('agent')
+        data.createdby = request.user
         data.servicetype = request.POST.get('servicetype')
         data.fromairport = request.POST.get('fromairport')
         data.toairport = request.POST.get('toairport')

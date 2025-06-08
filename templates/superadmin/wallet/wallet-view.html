@@ -12,9 +12,9 @@
                         <div class="page-header">
                             <h1 class="page-title">Wallet Updates</h1>
                             <div>
-                                {% if previllage %}
+                                {% comment %} {% if previllage.write or previllage == True  %} {% endcomment %}
                                 <a class="btn btn-primary" href="{% url 'superadmin:walletscreate' %}"><i class="side-menu__icon fe fe-plus mx-1"></i>Add New</a>
-                                {% endif %}
+                                {% comment %} {% endif %} {% endcomment %}
                             </div>
                         </div>
                         <!-- PAGE-HEADER END -->
