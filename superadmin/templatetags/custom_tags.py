@@ -20,6 +20,23 @@ def check_previllage(request,menu):
         else:
             return None
     
+@register.simple_tag()
+def check_menu(request,menu):
+    if request.user.user_type == 1 or request.user.user_type == 3:
+        return True
+    else:
+        menus = menu.split('-')
+        for menu in menus:
+            ismenu = Previllages.objects.filter(user=request.user.id,option=menu).first()
+            if ismenu:
+                if ismenu.read or ismenu.write:
+                    return True
+                    break
+                else:
+                    return None
+            else:
+                return None
+    
 
 @register.simple_tag()
 def get_followup_status(id):

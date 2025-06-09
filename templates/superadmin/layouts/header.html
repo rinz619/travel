@@ -110,7 +110,7 @@
 
 {% if request.user.user_type != 3 %}
 {% check_previllage request 'Agents' as previllage %}
-{% if previllage %}
+{% if previllage.read or previllage.write or previllage == True %}
 <li class="slide">
   <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:agentslist' %}">
     <i class="side-menu__icon fe fe-users"></i>  <!-- Changed -->
@@ -119,7 +119,7 @@
 </li>
 {% endif %}
 {% check_previllage request 'Subadmins' as previllage %}
-{% if previllage %}
+{% if previllage.read or previllage.write or previllage == True %}
 <li class="slide">
   <a class="side-menu__item has-link" data-bs-toggle="slide" href="{% url 'superadmin:subadminslist' %}">
     <i class="side-menu__icon fe fe-user"></i>  <!-- Changed -->
@@ -128,6 +128,8 @@
 </li>
 {% endif %}
 
+{% check_menu request 'Offline Bookings-Refunds' as menu %}
+{% if menu %}
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-calendar"></i>  <!-- Changed -->
@@ -136,16 +138,18 @@
   </a>
   <ul class="slide-menu">
     {% check_previllage request 'Offline Bookings' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
         <li><a href="{% url 'superadmin:offlinebookingslist' %}" class="slide-item">Offline Bookings</a></li>
       {% endif %}
        {% check_previllage request 'Refunds' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:refundlist' %}" class="slide-item">Refunds</a></li>
     {% endif %}
   </ul>
 </li>
-
+{% endif %}
+{% check_menu request 'Cash Receipt-Account Ledger-Update Wallet' as menu %}
+{% if menu %}
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-credit-card"></i>  <!-- Changed -->
@@ -154,21 +158,23 @@
   </a>
   <ul class="slide-menu">
        {% check_previllage request 'Cash Receipt' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:cashrecieptlist' %}" class="slide-item">Cash Receipt</a></li>
     {% endif %}
        {% check_previllage request 'Account Ledger' as previllage %}
-      {% if previllage %}
+     {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:accountledger' %}" class="slide-item">Account Ledger</a></li>
     {% endif %}
        {% check_previllage request 'Update Wallet' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:walletslist' %}" class="slide-item">Update Wallet</a></li>
     {% endif %}
  
   </ul>
 </li>
-
+{% endif %}
+{% check_menu request 'Sales Report-Cash Receipt' as menu %}
+{% if menu %}
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-bar-chart-2"></i>  <!-- Changed -->
@@ -177,17 +183,19 @@
   </a>
   <ul class="slide-menu">
     {% check_previllage request 'Sales Report' as previllage %}
-      {% if previllage %}
+     {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:salesreport' %}" class="slide-item">Sales Report</a></li>
     {% endif %}
     {% check_previllage request 'Cash Receipt' as previllage %}
-      {% if previllage %}
+     {% if previllage.read or previllage.write or previllage == True  %}
         <li><a href="{% url 'superadmin:cashreciept' %}" class="slide-item">Cash Receipt</a></li>
         {% endif %}
 
   </ul>
 </li>
-
+{% endif %}
+{% check_menu request 'Leads-CRM' as menu %}
+{% if menu %}
 
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
@@ -197,13 +205,15 @@
   </a>
   <ul class="slide-menu">
     {% check_previllage request 'Leads' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:leadslist' %}" class="slide-item">Leads</a></li>
     {% endif %}
 
   </ul>
 </li>
-
+{% endif %}
+{% check_menu request 'Attendance Report-Staff Management' as menu %}
+{% if menu %}
 <li class="slide">
   <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
     <i class="side-menu__icon fe fe-briefcase"></i>  <!-- Changed -->
@@ -213,16 +223,17 @@
   <ul class="slide-menu">
 
     {% check_previllage request 'Attendance report' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:attendancereport' %}" class="slide-item">Attendance Report</a></li>
     {% endif %}
     {% check_previllage request 'Staff' as previllage %}
-      {% if previllage %}
+      {% if previllage.read or previllage.write or previllage == True  %}
     <li><a href="{% url 'superadmin:stafflist' %}" class="slide-item">Staff Management</a></li>
     {% endif %}
 
   </ul>
 </li>
+{% endif %}
 
 {% if request.user.user_type == 1 %}
 <li class="slide">
